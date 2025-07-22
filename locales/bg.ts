@@ -774,9 +774,9 @@ export const bg = {
   },
   contactsPage: {
     title: "Контакти",
-    address: { title: "Адрес", line1: "гр. Стара Загора, 6003", line2: "кв. \"Казански\", ул. \"Армейска\" № 26" },
-    phones: { title: "Телефони", director: "Директор:", office: "Канцелария:" },
-    email: { title: "Имейл", address: "contact@kganchev-school.bg" },
+    address: { title: "Адрес", line1: "гр. Стара Загора, 6000", line2: "кв. \"Казански\", ул. \"Добруджа\" № 15" },
+    phones: { title: "Телефони", director: "Директор", office: "Канцелария" },
+    email: { title: "Имейл", address: "info-2400124@edu.mon.bg" },
     map: { placeholder: "Карта на местоположението" }
   },
   infoAccessPage: {
