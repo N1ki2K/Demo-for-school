@@ -1,36 +1,86 @@
-
 import React from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
+import { EditableText } from '../../components/cms/EditableText';
+import {EditableList } from '../../components/cms/EditableList';
 
 const CouncilPage: React.FC = () => {
   const { t } = useLanguage();
   return (
     <PageWrapper title={t.councilPage.title}>
       <div className="space-y-6">
-        <p>{t.councilPage.intro}</p>
+        <EditableText
+          id="council-intro"
+          defaultContent={t.councilPage.intro}
+          tag="p"
+        />
         
-        <h2 className="text-2xl font-semibold text-brand-blue-dark pt-4">{t.councilPage.functionsTitle}</h2>
-        <ul className="list-disc list-inside space-y-2">
-          <li>{t.councilPage.functions.f1}</li>
-          <li>{t.councilPage.functions.f2}</li>
-          <li>{t.councilPage.functions.f3}</li>
-          <li>{t.councilPage.functions.f4}</li>
-          <li>{t.councilPage.functions.f5}</li>
-        </ul>
+        <EditableText
+          id="council-functions-title"
+          defaultContent={t.councilPage.functionsTitle}
+          tag="h2"
+          className="text-2xl font-semibold text-brand-blue-dark pt-4"
+        />
+        <EditableList
+          id="council-functions"
+          defaultItems={[
+            t.councilPage.functions.f1,
+            t.councilPage.functions.f2,
+            t.councilPage.functions.f3,
+            t.councilPage.functions.f4,
+            t.councilPage.functions.f5
+          ]}
+          className="list-disc list-inside space-y-2"
+        />
 
-        <h2 className="text-2xl font-semibold text-brand-blue-dark pt-4">{t.councilPage.membersTitle}</h2>
-        <ul className="list-decimal list-inside space-y-2">
-            <li><strong>{t.councilPage.members.m1.role}:</strong> {t.councilPage.members.m1.name}</li>
-            <li><strong>{t.councilPage.members.m2.role}:</strong></li>
-            <ul className="list-disc list-inside ml-6">
-                <li>{t.councilPage.members.m2.names.n1}</li>
-                <li>{t.councilPage.members.m2.names.n2}</li>
-                <li>{t.councilPage.members.m2.names.n3}</li>
-                <li>{t.councilPage.members.m2.names.n4}</li>
-            </ul>
-        </ul>
-        <p dangerouslySetInnerHTML={{ __html: t.councilPage.contact }} />
+        <EditableText
+          id="council-members-title"
+          defaultContent={t.councilPage.membersTitle}
+          tag="h2"
+          className="text-2xl font-semibold text-brand-blue-dark pt-4"
+        />
+        <div className="space-y-4">
+          <div>
+            <strong>
+              <EditableText
+                id="council-chairman-role"
+                defaultContent={t.councilPage.members.m1.role}
+                tag="span"
+              />
+              :
+            </strong>{' '}
+            <EditableText
+              id="council-chairman-name"
+              defaultContent={t.councilPage.members.m1.name}
+              tag="span"
+            />
+          </div>
+          <div>
+            <strong>
+              <EditableText
+                id="council-members-role"
+                defaultContent={t.councilPage.members.m2.role}
+                tag="span"
+              />
+              :
+            </strong>
+            <EditableList
+              id="council-members-list"
+              defaultItems={[
+                t.councilPage.members.m2.names.n1,
+                t.councilPage.members.m2.names.n2,
+                t.councilPage.members.m2.names.n3,
+                t.councilPage.members.m2.names.n4
+              ]}
+              className="list-disc list-inside ml-6 mt-2"
+            />
+          </div>
+        </div>
+        <EditableText
+          id="council-contact"
+          defaultContent={t.councilPage.contact}
+          tag="p"
+        />
       </div>
     </PageWrapper>
   );

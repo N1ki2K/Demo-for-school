@@ -1,9 +1,9 @@
-
 import React from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
+import { EditableText } from '../../components/cms/EditableText';
 
-const ScheduleTable: React.FC<{ title: string; schedule: Record<string, string[]> }> = ({ title, schedule }) => {
+const ScheduleTable: React.FC<{ title: string; schedule: Record<string, string[]>; tableId: string }> = ({ title, schedule, tableId }) => {
   const { t } = useLanguage();
   const headers = [
     t.schedulesPage.table.day,
@@ -17,20 +17,45 @@ const ScheduleTable: React.FC<{ title: string; schedule: Record<string, string[]
 
   return (
     <section className="mb-12">
-      <h2 className="text-2xl font-semibold text-brand-blue-dark mb-4">{title}</h2>
+      <EditableText
+        id={`schedule-${tableId}-title`}
+        defaultContent={title}
+        tag="h2"
+        className="text-2xl font-semibold text-brand-blue-dark mb-4"
+      />
       <div className="overflow-x-auto bg-white rounded-lg shadow">
         <table className="w-full text-sm text-center">
           <thead className="bg-brand-blue-light text-white">
             <tr>
-              {headers.map((header, index) => <th key={index} className="p-2">{header}</th>)}
+              {headers.map((header, index) => (
+                <th key={index} className="p-2">
+                  <EditableText
+                    id={`schedule-header-${index}`}
+                    defaultContent={header}
+                    tag="span"
+                  />
+                </th>
+              ))}
             </tr>
           </thead>
           <tbody>
-            {Object.entries(schedule).map(([day, subjects]) => (
+            {Object.entries(schedule).map(([day, subjects], dayIndex) => (
               <tr key={day} className="border-b hover:bg-gray-50">
-                <td className="p-2 font-semibold">{day}</td>
-                {subjects.map((subject, index) => (
-                  <td key={index} className="p-2">{subject}</td>
+                <td className="p-2 font-semibold">
+                  <EditableText
+                    id={`schedule-${tableId}-day-${dayIndex}`}
+                    defaultContent={day}
+                    tag="span"
+                  />
+                </td>
+                {subjects.map((subject, subjectIndex) => (
+                  <td key={subjectIndex} className="p-2">
+                    <EditableText
+                      id={`schedule-${tableId}-${dayIndex}-${subjectIndex}`}
+                      defaultContent={subject}
+                      tag="span"
+                    />
+                  </td>
                 ))}
               </tr>
             ))}
@@ -64,14 +89,37 @@ const SchedulesPage: React.FC = () => {
   
   return (
     <PageWrapper title={t.schedulesPage.title}>
-      <p className="mb-10">{t.schedulesPage.intro}</p>
+      <EditableText
+        id="schedules-intro"
+        defaultContent={t.schedulesPage.intro}
+        tag="p"
+        className="mb-10"
+      />
       
-      <ScheduleTable title={t.schedulesPage.grade1.title} schedule={schedule1stGrade} />
-      <ScheduleTable title={t.schedulesPage.grade5.title} schedule={schedule5thGrade} />
+      <ScheduleTable 
+        title={t.schedulesPage.grade1.title} 
+        schedule={schedule1stGrade}
+        tableId="grade1"
+      />
+      <ScheduleTable 
+        title={t.schedulesPage.grade5.title} 
+        schedule={schedule5thGrade}
+        tableId="grade5"
+      />
 
       <section>
-        <h2 className="text-2xl font-semibold text-brand-blue-dark mt-8 mb-4">{t.schedulesPage.consultations.title}</h2>
-        <p className="text-gray-700">{t.schedulesPage.consultations.text}</p>
+        <EditableText
+          id="schedules-consultations-title"
+          defaultContent={t.schedulesPage.consultations.title}
+          tag="h2"
+          className="text-2xl font-semibold text-brand-blue-dark mt-8 mb-4"
+        />
+        <EditableText
+          id="schedules-consultations-text"
+          defaultContent={t.schedulesPage.consultations.text}
+          tag="p"
+          className="text-gray-700"
+        />
       </section>
     </PageWrapper>
   );

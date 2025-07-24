@@ -5,6 +5,7 @@ import { NavItem } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import Search from './Search';
+import { LoginButton } from './cms/LoginButton';
 
 const Dropdown: React.FC<{ items: NavItem[]; parentPath: string; closeMenu: () => void }> = ({ items, parentPath, closeMenu }) => {
   return (
@@ -326,6 +327,7 @@ const Header: React.FC = () => {
             <div ref={otherControlsRef} className="flex items-center space-x-4 ml-6 flex-shrink-0">
                <Search />
                <LanguageSwitcher />
+               <LoginButton />
             </div>
           </nav>
         </div>
@@ -354,8 +356,11 @@ const Header: React.FC = () => {
         <div className="lg:hidden animate-fade-in-down">
           <ul className="px-4 pt-2 pb-4 space-y-2 sm:px-6">
             {navLinks.map(renderMobileNavLink)}
-            <li className="pt-4 mt-4 border-t border-brand-blue-light">
+            <li className="pt-4 mt-4 border-t border-brand-blue-light flex flex-col space-y-3">
               <LanguageSwitcher isMobile={true} />
+              <div className="flex justify-center">
+                <LoginButton />
+              </div>
             </li>
           </ul>
         </div>

@@ -1,57 +1,85 @@
 import React from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
+import { EditableText } from '../../components/cms/EditableText';
+import { EditableImage } from '../../components/cms/EditableImage';
+import { EditableList } from '../../components/cms/EditableList';
 
 const HistoryPage: React.FC = () => {
   const { t } = useLanguage();
   return (
     <PageWrapper title={t.historyPage.title}>
       <div className="space-y-6">
-        <p className="text-lg leading-relaxed">{t.historyPage.p1}</p>
-        <p className="text-lg leading-relaxed">{t.historyPage.p2}</p>
+        <EditableText
+          id="history-p1"
+          defaultContent={t.historyPage.p1}
+          tag="p"
+          className="text-lg leading-relaxed"
+        />
+        <EditableText
+          id="history-p2"
+          defaultContent={t.historyPage.p2}
+          tag="p"
+          className="text-lg leading-relaxed"
+        />
         
         <figure className="my-8">
-            <img 
-                className="w-full h-auto max-h-96 object-cover rounded-lg shadow-md" 
-                src="https://picsum.photos/1200/400?random=10" 
-                alt={t.historyPage.imageAlt} 
+            <EditableImage
+              id="history-main-image"
+              defaultSrc="https://picsum.photos/1200/400?random=10"
+              alt={t.historyPage.imageAlt}
+              className="w-full h-auto max-h-96 object-cover rounded-lg shadow-md"
             />
             <figcaption className="text-center text-sm text-gray-500 mt-2">
-                {t.historyPage.imageCaption}
+                <EditableText
+                  id="history-image-caption"
+                  defaultContent={t.historyPage.imageCaption}
+                  tag="span"
+                />
             </figcaption>
         </figure>
         
-        <p className="text-lg leading-relaxed">{t.historyPage.p3}</p>
-        <p className="text-lg leading-relaxed">{t.historyPage.p4}</p>
+        <EditableText
+          id="history-p3"
+          defaultContent={t.historyPage.p3}
+          tag="p"
+          className="text-lg leading-relaxed"
+        />
+        <EditableText
+          id="history-p4"
+          defaultContent={t.historyPage.p4}
+          tag="p"
+          className="text-lg leading-relaxed"
+        />
 
         {/* Achievements Section */}
         <div className="bg-blue-50 p-6 rounded-lg mt-8">
-            <h2 className="text-2xl font-bold text-blue-900 mb-4">
-                {t.historyPage.achievements.title}
-            </h2>
-            <ul className="space-y-2">
-                {t.historyPage.achievements.list.map((achievement, index) => (
-                    <li key={index} className="flex items-start">
-                        <span className="text-blue-600 mr-2 text-lg">•</span>
-                        <span className="text-gray-700">{achievement}</span>
-                    </li>
-                ))}
-            </ul>
+            <EditableText
+              id="achievements-title"
+              defaultContent={t.historyPage.achievements.title}
+              tag="h2"
+              className="text-2xl font-bold text-blue-900 mb-4"
+            />
+            <EditableList
+              id="achievements-list"
+              defaultItems={t.historyPage.achievements.list}
+              className="space-y-2"
+            />
         </div>
 
         {/* Directors Section */}
         <div className="bg-gray-50 p-6 rounded-lg mt-8">
-            <h2 className="text-2xl font-bold text-gray-900 mb-4">
-                {t.historyPage.directors.title}
-            </h2>
-            <ul className="space-y-2">
-                {t.historyPage.directors.list.map((director, index) => (
-                    <li key={index} className="flex items-start">
-                        <span className="text-gray-600 mr-2 text-lg">•</span>
-                        <span className="text-gray-700">{director}</span>
-                    </li>
-                ))}
-            </ul>
+            <EditableText
+              id="directors-title"
+              defaultContent={t.historyPage.directors.title}
+              tag="h2"
+              className="text-2xl font-bold text-gray-900 mb-4"
+            />
+            <EditableList
+              id="directors-list"
+              defaultItems={t.historyPage.directors.list}
+              className="space-y-2"
+            />
         </div>
       </div>
     </PageWrapper>
