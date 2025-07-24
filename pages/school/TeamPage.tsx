@@ -234,4 +234,4 @@ const TeamPage: React.FC = () => {
   );
 };
 
-export default TeamPage;const { t } = useLanguage();
+export default TeamPage;
