@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="bg">
   <head>
@@ -9,44 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-      /* Basic fade-in animation */
-      @keyframes fadeIn {
-        from { opacity: 0; }
-        to { opacity: 1; }
-      }
-      .animate-fade-in {
-        animation: fadeIn 0.5s ease-in-out;
-      }
-      /* Fade-in-down animation for dropdowns/mobile menu */
-      @keyframes fadeInDown {
-        from {
-          opacity: 0;
-          transform: translateY(-10px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in-down {
-        animation: fadeInDown 0.3s ease-out;
-      }
-      /* Fade-in-up animation for hero text */
-      @keyframes fadeInUp {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
-      .animate-fade-in-up {
-        animation: fadeInUp 0.5s ease-out forwards;
-      }
-    </style>
+    <link rel="stylesheet" href="./index.css">
     <script>
       tailwind.config = {
         theme: {
@@ -80,7 +42,6 @@
   }
 }
 </script>
-<link rel="stylesheet" href="/index.css">
 </head>
   <body class="bg-gray-50 text-gray-800">
     <div id="root"></div>
