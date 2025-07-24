@@ -1,6 +1,7 @@
 // components/cms/EditableImage.tsx
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface EditableImageProps {
   id: string;
@@ -16,9 +17,29 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   className = '' 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  const { locale } = useLanguage();
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
   const src = getContent(id, defaultSrc);
+
+  const texts = {
+    bg: {
+      edit: 'Редактирай',
+      imageUrl: 'URL на изображението:',
+      save: 'Запази',
+      cancel: 'Отказ',
+      placeholder: 'https://example.com/image.jpg'
+    },
+    en: {
+      edit: 'Edit',
+      imageUrl: 'Image URL:',
+      save: 'Save',
+      cancel: 'Cancel',
+      placeholder: 'https://example.com/image.jpg'
+    }
+  };
+
+  const t = texts[locale];
 
   const handleClick = () => {
     if (isEditing) {
@@ -47,20 +68,20 @@ export const EditableImage: React.FC<EditableImageProps> = ({
             onClick={handleClick}
             className="bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
           >
-            Edit
+            {t.edit}
           </button>
         </div>
       )}
       {showUrlInput && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
           <form onSubmit={handleUrlSubmit} className="bg-white p-4 rounded-lg">
-            <label className="block text-sm font-medium mb-2">Image URL:</label>
+            <label className="block text-sm font-medium mb-2">{t.imageUrl}</label>
             <input
               type="url"
               value={tempUrl}
               onChange={(e) => setTempUrl(e.target.value)}
               className="w-full px-3 py-2 border rounded-md mb-3"
-              placeholder="https://example.com/image.jpg"
+              placeholder={t.placeholder}
               autoFocus
             />
             <div className="flex gap-2">
@@ -68,14 +89,14 @@ export const EditableImage: React.FC<EditableImageProps> = ({
                 type="submit"
                 className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
               >
-                Save
+                {t.save}
               </button>
               <button
                 type="button"
                 onClick={() => setShowUrlInput(false)}
                 className="bg-gray-400 text-white px-4 py-2 rounded hover:bg-gray-500"
               >
-                Cancel
+                {t.cancel}
               </button>
             </div>
           </form>
