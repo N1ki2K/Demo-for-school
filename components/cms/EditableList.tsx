@@ -1,6 +1,7 @@
 // components/cms/EditableList.tsx
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
+import { useLanguage } from '../../context/LanguageContext';
 
 interface EditableListProps {
   id: string;
@@ -16,9 +17,31 @@ export const EditableList: React.FC<EditableListProps> = ({
   ordered = false 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  const { locale } = useLanguage();
   const [isEditable, setIsEditable] = useState(false);
   const items = getContent(id, defaultItems);
   const [tempItems, setTempItems] = useState<string[]>([]);
+
+  const texts = {
+    bg: {
+      editList: 'Редактирай списък',
+      addItem: 'Добави елемент',
+      remove: 'Премахни',
+      save: 'Запази',
+      cancel: 'Отказ',
+      placeholder: 'Елемент от списъка...'
+    },
+    en: {
+      editList: 'Edit List',
+      addItem: 'Add Item',
+      remove: 'Remove',
+      save: 'Save',
+      cancel: 'Cancel',
+      placeholder: 'List item...'
+    }
+  };
+
+  const t = texts[locale];
 
   const handleEdit = () => {
     if (isEditing) {
@@ -62,13 +85,13 @@ export const EditableList: React.FC<EditableListProps> = ({
                 value={item}
                 onChange={(e) => updateItem(index, e.target.value)}
                 className="flex-1 px-2 py-1 border rounded"
-                placeholder="List item..."
+                placeholder={t.placeholder}
               />
               <button
                 onClick={() => removeItem(index)}
                 className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
               >
-                Remove
+                {t.remove}
               </button>
             </div>
           ))}
@@ -77,19 +100,19 @@ export const EditableList: React.FC<EditableListProps> = ({
               onClick={addItem}
               className="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700"
             >
-              Add Item
+              {t.addItem}
             </button>
             <button
               onClick={handleSave}
               className="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700"
             >
-              Save
+              {t.save}
             </button>
             <button
               onClick={handleCancel}
               className="bg-gray-400 text-white px-3 py-1 rounded text-sm hover:bg-gray-500"
             >
-              Cancel
+              {t.cancel}
             </button>
           </div>
         </div>
@@ -111,7 +134,7 @@ export const EditableList: React.FC<EditableListProps> = ({
           onClick={handleEdit}
           className="absolute -top-2 -right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
         >
-          Edit List
+          {t.editList}
         </button>
       )}
     </div>
