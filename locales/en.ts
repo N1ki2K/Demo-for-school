@@ -122,15 +122,33 @@ export const en = {
     message: "It seems you've taken a wrong turn. Don't worry, it happens to the best of us.",
     homeButton: 'Go Back Home',
   },
-  historyPage: {
-    title: 'History of the School',
-    p1: '"Kolyo Ganchev" Primary School in Stara Zagora, named after a distinguished Bulgarian revolutionary, first opened its doors in the autumn of 1965. Created in response to the growing needs of the expanding city, the school quickly became an educational and cultural center for the neighborhood.',
-    p2: 'The first principal, Mr. Petar Ivanov, along with a small but enthusiastic team of teachers, laid the foundations of an institution that would educate generations in a spirit of patriotism, curiosity, and a pursuit of knowledge.',
-    imageAlt: 'Old photo of the school',
-    imageCaption: 'Archive photo of the school building (circa 1970)',
-    p3: 'In the 1980s, the school expanded with the construction of a new wing, which included modern physics, chemistry, and biology labs, as well as a large gymnasium. This period was marked by numerous student successes in national olympiads and competitions, establishing "Kolyo Ganchev" Primary School as one of the leading schools in the region.',
-    p4: 'Today, more than half a century after its establishment, the school continues to be a faithful guardian of traditions while boldly looking to the future. With a renewed team, modernized facilities, and a focus on innovative teaching methods, we strive to prepare our students for the challenges of the 21st century.',
+historyPage: {
+  title: 'History of the School',
+  p1: '"Kolyo Ganchev" Primary School in Stara Zagora, named after a distinguished Bulgarian revolutionary, first opened its doors in the autumn of 1965. Created in response to the growing needs of the expanding city, the school quickly became an educational and cultural center for the neighborhood.',
+  p2: 'The first principal, Mr. Petar Ivanov, along with a small but enthusiastic team of teachers, laid the foundations of an institution that would educate generations in a spirit of patriotism, curiosity, and a pursuit of knowledge.',
+  imageAlt: 'Old photo of the school',
+  imageCaption: 'Archive photo of the school building (circa 1970)',
+  p3: 'In the 1980s, the school expanded with the construction of a new wing, which included modern physics, chemistry, and biology labs, as well as a large gymnasium. This period was marked by numerous student successes in national olympiads and competitions, establishing "Kolyo Ganchev" Primary School as one of the leading schools in the region.',
+  p4: 'Today, more than half a century after its establishment, the school continues to be a faithful guardian of traditions while boldly looking to the future. With a renewed team, modernized facilities, and a focus on innovative teaching methods, we strive to prepare our students for the challenges of the 21st century.',
+  achievements: {
+    title: 'Key Achievements',
+    list: [
+      'In 1963/1964, the school’s experimental field was a national champion.',
+      'In 1964/1965, the football team became vice-champion of Bulgaria.',
+      'In 2006, 1st place at the National Student Sports Olympiad "Globul Start".',
+      'In 2001, student Dimitar Nikolaev Mitev was named Mathematician of the Year.'
+    ]
   },
+  directors: {
+    title: 'School Principals Through the Years',
+    list: [
+      'Katya T. Gaydarova (1955/1956 - 1957/1958) – the first principal',
+      'Gospodin Petkov Kalvachev (1959/1960 - 1987/1988) – longest-serving principal',
+      'Eng. Ivan Markov Kolaksazov (1998/1999 - 2012)',
+      'Galina Petkova (from 31.01.2013 to present)'
+    ]
+  }
+},
   patronPage: {
     title: 'Our Patron – Kolyo Ganchev',
     p1: '<strong>Kolyo Ganchev Vatev</strong>, also known as Ganyuolu, was a Bulgarian revolutionary, a prominent participant in the Stara Zagora Uprising of 1875, and a close associate of Vasil Levski. His life is an example of self-sacrifice and boundless love for the Fatherland.',
@@ -141,19 +159,28 @@ export const en = {
     imageCaption: 'Artistic reconstruction of the image of Kolyo Ganchev.',
   },
   teamPage: {
-    title: 'School Team',
-    intro: 'Meet our team of dedicated professionals who work tirelessly for the success and well-being of our students.',
-    roles: {
-      director: 'Principal',
-      deputyDirector: 'Deputy Principal',
-      belTeacher: 'Bulgarian Language Teacher',
-      mathTeacher: 'Mathematics Teacher',
-      englishTeacher: 'English Language Teacher',
-      primaryTeacher: 'Primary School Teacher',
-      peTeacher: 'Physical Education Teacher',
-      counselor: 'School Counselor',
-    }
+  title: 'School Team',
+  intro: 'Meet our team of dedicated professionals who work tirelessly for the success and well-being of our students.',
+  director: {
+    title: 'Principal',
+    name: 'Galina Petkova'
   },
+  teachers: {
+    title: 'Teachers',
+    description: 'Our teaching staff consists of experienced and dedicated professionals who work with love and professionalism for every child\'s development.',
+    list: [
+      { name: 'Neli Dimova', role: 'Primary Teacher' },
+      { name: 'Sonya Aladzhova', role: 'Primary Teacher' },
+      { name: 'Plamena Marinova', role: 'Primary Teacher' },
+      { name: 'Diana Belcheva', role: 'Primary Teacher' }
+    ]
+  },
+  photoTitle: 'Our Team',
+  leadershipTitle: 'Leadership',
+  photoCaption: 'Group photo of the school staff of "Kolyo Ganchev"'
+},
+
+
   councilPage: {
     title: 'Public Council',
     intro: 'The Public Council is a body for civil control and support of the school\'s management. It consists of representatives of parents, the municipality, and prominent public figures.',
@@ -595,16 +622,73 @@ export const en = {
     }
   },
   yourHourPage: {
-    title: 'Project "Your Hour"',
-    p1: 'Project BG05M2OP001-2.004-0004 "Development of students\' abilities and increasing their motivation for learning through activities developing specific knowledge, skills, and competencies (Your Hour)" - Phase 1, funded by the Operational Program "Science and Education for Smart Growth", co-financed by the European Union through the European Structural and Investment Funds.',
-    goalsTitle: 'Project Goals:',
-    goals: {
-        g1: 'To develop learning skills, competencies, creative and sports abilities of students in thematic areas that are outside the compulsory school activities.',
-        g2: 'To overcome educational difficulties and prevent school dropout.',
-        g3: 'To create effective mechanisms for transition between the different stages and levels of education.',
+  title: 'Project "Your Hour"',
+  subtitle: 'Development of Students\' Abilities',
+  projectCode: 'Project Code: BG05M2OP001-2.004-0004',
+  projectInfo: {
+    budget: {
+      label: 'Budget',
+      amount: '1,500,000 BGN'
     },
-    p2: 'Within the project, interest clubs and groups for learning difficulties were formed in our school, which involved dozens of students and contributed to their personal and educational development.',
+    duration: {
+      label: 'Duration',
+      period: '2016 – 2020'
+    },
+    targetGroup: {
+      title: 'Target Group',
+      description: 'Students from grades I to XII who need additional support and interest-based activities.'
+    }
   },
+  intro: 'The "Your Hour" project is a national program funded by the EU, aiming to support the individual development of every student through additional activities and trainings.',
+  overview: {
+    title: 'Overview',
+    mainGoal: 'The main goal is to create conditions for developing students\' potential and interests.',
+    goals: [
+      'Increase motivation for learning.',
+      'Reduce the risk of school dropout.',
+      'Develop social and emotional skills.',
+      'Support personal interests and talents.'
+    ]
+  },
+  specificGoals: {
+    title: 'Specific Goals',
+    goals: [
+      'Create interest-based clubs.',
+      'Provide individual consultations and mentoring.',
+      'Improve communication skills.'
+    ]
+  },
+  schoolPrograms: {
+    title: 'School Programs',
+    description: 'The school offers various programs and clubs related to students\' interests.',
+    activities: {
+      title: 'Activities',
+      list: ['Math Club', 'Science Club', 'Creative Workshops']
+    }
+  },
+  platform: {
+    title: 'Platform',
+    description: 'Access to an online platform to track activities and results.',
+    url: 'https://tvoiatchas.mon.bg'
+  },
+  council: {
+    title: 'Council',
+    description: 'The school council monitors and supports the successful implementation of the project.'
+  },
+  expectedResults: {
+    title: 'Expected Results',
+    results: [
+      'Improved educational achievements.',
+      'Better social integration.',
+      'Sustainable interest-based clubs.'
+    ]
+  },
+  implementation: {
+    title: 'Implementation',
+    description: 'The project is implemented in cooperation with the Ministry of Education, teachers, and parents.'
+  }
+},
+
   supportSuccessPage: {
       title: 'Project "Support for Success"',
       p1: 'Project BG05M2OP001-2.011-0001 "Support for Success", funded by the Operational Program "Science and Education for Smart Growth" 2014-2020, co-financed by the European Union through the European Structural and Investment Funds.',
@@ -663,13 +747,6 @@ export const en = {
       next: "Next image",
     }
   },
-  contactsPage: {
-    title: "Contacts",
-    address: { title: "Address", line1: "Stara Zagora, 6003", line2: "Kazanski residential district, 26 Armeyska St" },
-    phones: { title: "Phones", director: "Principal:", office: "Office:" },
-    email: { title: "Email", address: "contact@kganchev-school.bg" },
-    map: { placeholder: "Location Map" }
-  },
   infoAccessPage: {
     title: "Access to Information",
     intro: "In accordance with the Access to Public Information Act (APIA), \"Kolyo Ganchev\" Primary School ensures transparency and accessibility to information about its activities. Here you can familiarize yourself with the rules and procedures for submitting applications.",
@@ -703,5 +780,40 @@ export const en = {
         },
         p2: "The full report is available for review at the school's office."
     }
+  },
+  
+  contactsPage: {
+  title: "Contacts",
+  address: {
+    title: "Address",
+    line1: "Stara Zagora, Kazanski District",
+    line2: "15 Dobrudzha St.",
+  },
+  phones: {
+    title: "Phones",
+    director: "Principal",
+    office: "Office",
+  },
+  email: {
+    title: "Email",
+    address: "info-2400124@edu.mon.bg"
+  },
+  workTime: {
+    title: "Working Hours",
+    weekdaysLabel: "Monday - Friday",
+    weekendLabel: "Saturday - Sunday",
+    weekdays: "07:30 - 17:30",
+    weekend: "Closed",
+    note: "* For visits outside working hours, please contact us in advance"
+  },
+  location: {
+    title: "Location",
+    info: "Click on the marker for more information"
+  },
+  transport: {
+    title: "Transport",
+    lines: ["Bus lines: 2, 5, 12"]
   }
+}
+
 };
