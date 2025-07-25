@@ -61,7 +61,7 @@
 }
 
 .cms-editable::before {
-  content: 'Click to edit';
+  content: var(--tooltip-text, 'Click to edit');
   position: absolute;
   top: -24px;
   left: 0;
@@ -81,6 +81,20 @@
 .cms-editable:hover::before {
   opacity: 1;
 }
+
+/* Special class for images - has hover effect but no tooltip */
+.cms-editable-image {
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.cms-editable-image:hover {
+  outline: 2px dashed #3B82F6;
+  outline-offset: 2px;
+  cursor: pointer;
+}
+
+/* No ::before pseudo-element for images, so no tooltip */
 
 .cms-editing {
   outline: 2px solid #3B82F6 !important;

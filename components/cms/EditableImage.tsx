@@ -20,7 +20,10 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   const { locale } = useLanguage();
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
-  const src = getContent(id, defaultSrc);
+  
+  // Create language-specific ID for images as well
+  const languageSpecificId = `${id}_${locale}`;
+  const src = getContent(languageSpecificId, defaultSrc);
 
   const texts = {
     bg: {
@@ -50,12 +53,12 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateContent(id, tempUrl);
+    updateContent(languageSpecificId, tempUrl);
     setShowUrlInput(false);
   };
 
   return (
-    <div className={`relative ${isEditing ? 'cms-editable' : ''}`}>
+    <div className={`relative ${isEditing ? 'cms-editable-image' : ''}`}>
       <img
         src={src}
         alt={alt}

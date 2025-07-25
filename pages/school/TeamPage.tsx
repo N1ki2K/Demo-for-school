@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
 import { EditableText} from '../../components/cms/EditableText';
-import { EditableImage } from '../../components/cms/EditableText';
+import { EditableImage } from '../../components/cms/EditableImage';
 import { StaffManagement, StaffMember } from '../../components/cms/StaffManagement';
 import { useCMS } from '../../context/CMSContext';
 
