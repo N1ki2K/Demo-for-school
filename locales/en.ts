@@ -4,7 +4,7 @@ export const en = {
     toggleMenu: 'Open main menu',
   },
   footer: {
-    schoolName: 'Kolyo Ganchev School',
+    schoolName: 'Kolyo Ganchev Elementary School',
     motto: 'Education with care for the future.',
     contacts: {
       title: 'Contacts',
@@ -22,7 +22,7 @@ export const en = {
       usefulLinks: 'Useful Links',
       gallery: 'Gallery',
     },
-    copyright: 'Kolyo Ganchev School. All rights reserved.',
+    copyright: 'Kolyo Ganchev Elementary School. All rights reserved.',
     design: 'Design and development by a talented team.',
   },
   nav: {
