@@ -76,7 +76,7 @@ export const en = {
   },
   homePage: {
     hero: {
-      title: 'Welcome to "Kolyo Ganchev" School',
+      title: 'Welcome to "Kolyo Ganchev" Elementary School',
       subtitle: 'A place where knowledge and dreams meet.',
       cta: 'Admissions 2024/2025',
       alt: 'Schoolyard',
