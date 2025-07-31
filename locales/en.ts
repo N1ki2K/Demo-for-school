@@ -205,7 +205,7 @@ historyPage: {
         }
       },
     },
-    contact: 'To contact the Public Council, please send your inquiries to: <a href="mailto:council@kganchev-school.bg" class="text-brand-blue-light hover:underline">council@kganchev-school.bg</a>.',
+    contact: 'To contact the Public Council, please send your inquiries to: council@kganchev-school.bg.',
   },
   calendarPage: {
     title: "Academic Calendar 2024/2025",
@@ -515,9 +515,9 @@ historyPage: {
     intro: "Here we have gathered answers to some of the most frequently asked questions from parents and students.",
     faqs: {
         q1: "What documents do I need to enroll in 1st grade?",
-        a1: "The required documents are described in detail in the <a href=\"#/documents/admissions\" class=\"text-brand-blue-light hover:underline\">Admissions</a> section. They usually include an application form, a copy of the child's birth certificate, and a certificate of completed preparatory group.",
+        a1: "The required documents are described in detail in the Admissions section. They usually include an application form, a copy of the child's birth certificate, and a certificate of completed preparatory group.",
         q2: "How can I contact the class teacher?",
-        a2: "You can contact the class teacher through the electronic diary, by email, or during the designated office hours. The consultation schedule is available in the <a href=\"#/documents/schedules\" class=\"text-brand-blue-light hover:underline\">Weekly Schedules</a> section.",
+        a2: "You can contact the class teacher through the electronic diary, by email, or during the designated office hours. The consultation schedule is available in the Weekly Schedules section.",
         q3: "Does the school offer after-school care?",
         a3: "Yes, the school offers all-day organization of the school day (after-school care) for students from 1st to 4th grade. Places are limited and are filled on a priority basis according to certain criteria.",
         q4: "How are absences excused?",
@@ -766,7 +766,7 @@ historyPage: {
         methods: {
             m1: "In writing: At the school's office at: Stara Zagora, Kazanski residential district, 26 Armeyska St.",
             m2: "Orally: At the school's office, where a protocol will be drawn up.",
-            m3: "Electronically: To the email <a href=\"mailto:contact@kganchev-school.bg\" class=\"text-brand-blue-light hover:underline\">contact@kganchev-school.bg</a>, where the application must be signed with an electronic signature."
+            m3: "Electronically: To the email contact@kganchev-school.bg, where the application must be signed with an electronic signature."
         },
         p2: "The application must contain the applicant's full name, a description of the requested information, and the preferred form for receiving access (review, oral reference, copies on paper or technical media)."
     },
