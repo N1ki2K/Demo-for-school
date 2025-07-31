@@ -1,6 +1,6 @@
 export const en = {
   header: {
-    title: 'Kolyo Ganchev School',
+    title: 'Kolyo Ganchev Elementary School',
     toggleMenu: 'Open main menu',
   },
   footer: {
