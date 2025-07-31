@@ -151,7 +151,7 @@ historyPage: {
 },
   patronPage: {
     title: 'Our Patron – Kolyo Ganchev',
-    p1: '<strong>Kolyo Ganchev Vatev</strong>, also known as Ganyuolu, was a Bulgarian revolutionary, a prominent participant in the Stara Zagora Uprising of 1875, and a close associate of Vasil Levski. His life is an example of self-sacrifice and boundless love for the Fatherland.',
+    p1: 'Kolyo Ganchev Vatev, also known as Ganyuolu, was a Bulgarian revolutionary, a prominent participant in the Stara Zagora Uprising of 1875, and a close associate of Vasil Levski. His life is an example of self-sacrifice and boundless love for the Fatherland.',
     p2: 'He was born in 1843 in the village of Muralkovo (now Kolyo Ganchevo), Stara Zagora region. Orphaned at a young age, he was raised by his uncle. In 1871, he became a member of the Stara Zagora Secret Revolutionary Committee, founded by Vasil Levski. He quickly gained the trust of his comrades with his courage and organizational talent.',
     p3: 'Kolyo Ganchev was one of the main organizers and leaders of the Stara Zagora Uprising. After a betrayal, he was captured and sentenced to death by hanging. The sentence was carried out on September 27, 1875, in Stara Zagora.',
     p4: 'His sacrifice is not forgotten. Today, we proudly bear his name and strive to educate our students in the spirit of his patriotism, courage, and dedication to the ideals of freedom and justice.',
@@ -291,7 +291,7 @@ historyPage: {
     intro: "In compliance with the principles of transparency and accountability, we publish information about the school's budget and its execution. The data presented is for illustrative purposes.",
     budget2024: {
         title: "School Budget for 2024",
-        description: "The budget for \"Kolyo Ganchev\" Primary School for 2024 is planned at <strong>1,250,000 BGN</strong>, allocated to main expenditure items to ensure a quality educational process and maintenance of the material base."
+        description: "The budget for \"Kolyo Ganchev\" Primary School for 2024 is planned at 1,250,000 BGN, allocated to main expenditure items to ensure a quality educational process and maintenance of the material base."
     },
     table: {
         header: { item: "Expenditure Item", amount: "Planned Amount (BGN)", share: "Share (%)" },
@@ -454,7 +454,7 @@ historyPage: {
         title: "Main Rules for Conducting ORES",
         p1: "ORES is conducted upon declaration of an emergency epidemic situation or other force majeure circumstances, in accordance with an order from the Minister of Education and Science.",
         r1: "The training is conducted synchronously through video conference links according to the approved weekly schedule.",
-        r2: "The main platform for communication and sharing materials is <strong>Google Classroom</strong>.",
+        r2: "The main platform for communication and sharing materials is Google Classroom.",
         r3: "Students' attendance and absences are recorded in the electronic journal.",
         r4: "Students are required to join online classes on time with their cameras and microphones on (at the teacher's request).",
         r5: "Assessment is carried out in accordance with Regulation No. 11, applying various methods for checking and evaluating knowledge."
@@ -531,7 +531,7 @@ historyPage: {
         title: "Parent-Teacher Meeting - 5th Grade",
         date: "10.10.2024",
         p1: "Dear Parents,",
-        p2: "We invite you to a parent-teacher meeting for the 5th grade, which will be held on <strong>20.10.2024 (Thursday) at 18:00</strong> in room No. 205.",
+        p2: "We invite you to a parent-teacher meeting for the 5th grade, which will be held on 20.10.2024 (Thursday) at 18:00 in room No. 205.",
         agendaTitle: "Agenda:",
         agenda: {
             i1: "Adaptation of students to the middle school stage.",
@@ -545,7 +545,7 @@ historyPage: {
         title: "Conducting the 'Green School'",
         date: "05.10.2024",
         p1: "Dear Parents and Students,",
-        p2: "The planned \"Green School\" for primary school students will take place from <strong>15.05.2025 to 19.05.2025</strong> in Koprivshtitsa.",
+        p2: "The planned \"Green School\" for primary school students will take place from 15.05.2025 to 19.05.2025 in Koprivshtitsa.",
         p3: "You will receive detailed information about the program, price, and necessary documents from the class teachers at the upcoming parent-teacher meeting.",
         signature: "From the administration"
     }
@@ -764,9 +764,9 @@ historyPage: {
         title: "How to Submit an Application?",
         p1: "An application for access to public information can be submitted in one of the following ways:",
         methods: {
-            m1: "<strong>In writing:</strong> At the school's office at: Stara Zagora, Kazanski residential district, 26 Armeyska St.",
-            m2: "<strong>Orally:</strong> At the school's office, where a protocol will be drawn up.",
-            m3: "<strong>Electronically:</strong> To the email <a href=\"mailto:contact@kganchev-school.bg\" class=\"text-brand-blue-light hover:underline\">contact@kganchev-school.bg</a>, where the application must be signed with an electronic signature."
+            m1: "In writing: At the school's office at: Stara Zagora, Kazanski residential district, 26 Armeyska St.",
+            m2: "Orally: At the school's office, where a protocol will be drawn up.",
+            m3: "Electronically: To the email <a href=\"mailto:contact@kganchev-school.bg\" class=\"text-brand-blue-light hover:underline\">contact@kganchev-school.bg</a>, where the application must be signed with an electronic signature."
         },
         p2: "The application must contain the applicant's full name, a description of the requested information, and the preferred form for receiving access (review, oral reference, copies on paper or technical media)."
     },
