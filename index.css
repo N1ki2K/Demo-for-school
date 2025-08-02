@@ -70,7 +70,7 @@
   padding: 2px 8px;
   border-radius: 4px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 600;
   opacity: 0;
   transition: opacity 0.2s ease;
   pointer-events: none;
@@ -229,7 +229,7 @@
   }
 
   .prose a {
-    @apply text-brand-blue-light hover:text-brand-gold transition-colors;
+    @apply text-brand-blue-text hover:text-brand-gold-text font-semibold transition-colors;
   }
 
   .prose table {
@@ -279,11 +279,11 @@
 
 /* Brand-specific styles */
 .brand-gradient {
-  background: linear-gradient(135deg, #0A2E55 0%, #1E487B 100%);
+  background: linear-gradient(135deg, #40E0D0 0%, #7FFFD4 100%);
 }
 
 .brand-gold-gradient {
-  background: linear-gradient(135deg, #C8A464 0%, #E6D1A6 100%);
+  background: linear-gradient(135deg, #FDC921 0%, #FED544 100%);
 }
 
 /* Print styles */

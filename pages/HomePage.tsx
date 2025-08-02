@@ -16,7 +16,7 @@ const HeroSection: React.FC = () => {
           alt={t.homePage.hero.alt}
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-brand-blue bg-opacity-70"></div>
+        <div className="absolute inset-0 bg-brand-blue bg-opacity-40"></div>
       </div>
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
         <EditableText
@@ -29,7 +29,7 @@ const HeroSection: React.FC = () => {
           id="hero-subtitle"
           defaultContent={t.homePage.hero.subtitle}
           tag="p"
-          className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-gold-light animate-fade-in-up"
+          className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-gold-light font-bold animate-fade-in-up"
         />
         <div className="mt-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
           <Link to="/documents/admissions" className="bg-brand-gold text-brand-blue-dark font-bold py-3 px-8 rounded-full hover:bg-brand-gold-light transition-transform duration-300 transform hover:scale-105">

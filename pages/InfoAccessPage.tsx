@@ -23,7 +23,7 @@ const InfoAccessPage: React.FC = () => {
             id="info-access-rules-title"
             defaultContent={i.rules.title}
             tag="h2"
-            className="text-2xl font-semibold text-brand-blue-dark mb-4"
+            className="text-2xl font-semibold text-brand-blue-text mb-4"
           />
           <div className="space-y-4 text-gray-700">
             <EditableText
@@ -54,7 +54,7 @@ const InfoAccessPage: React.FC = () => {
             id="info-access-howto-title"
             defaultContent={i.howTo.title}
             tag="h2"
-            className="text-2xl font-semibold text-brand-blue-dark mb-4"
+            className="text-2xl font-semibold text-brand-blue-text mb-4"
           />
           <div className="space-y-4 text-gray-700">
             <EditableText
@@ -85,7 +85,7 @@ const InfoAccessPage: React.FC = () => {
             id="info-access-report-title"
             defaultContent={i.report.title}
             tag="h2"
-            className="text-2xl font-semibold text-brand-blue-dark mb-4"
+            className="text-2xl font-semibold text-brand-blue-text mb-4"
           />
           <div className="space-y-4 text-gray-700">
             <EditableText

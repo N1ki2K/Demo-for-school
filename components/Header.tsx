@@ -17,7 +17,7 @@ const Dropdown: React.FC<{ items: NavItem[]; parentPath: string; closeMenu: () =
             to={`${parentPath}${item.path}`}
             onClick={closeMenu}
             className={({ isActive }) =>
-              `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
+              `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-text transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
             }
           >
             {item.label}
@@ -38,7 +38,7 @@ const MoreDropdownItem: React.FC<{ item: NavItem; closeMenu: () => void }> = ({ 
                 to={item.path}
                 onClick={closeMenu}
                 className={({ isActive }) =>
-                    `block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
+                    `block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-text transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
                 }
             >
                 {item.label}
@@ -50,7 +50,7 @@ const MoreDropdownItem: React.FC<{ item: NavItem; closeMenu: () => void }> = ({ 
         <div>
             <button
                 onClick={() => setSubmenuOpen(!isSubmenuOpen)}
-                className="w-full flex justify-between items-center px-4 py-2 text-sm text-left font-semibold text-gray-800 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200"
+                className="w-full flex justify-between items-center px-4 py-2 text-sm text-left font-semibold text-gray-800 hover:bg-brand-gold-light hover:text-brand-blue-text transition-colors duration-200"
             >
                 <span>{item.label}</span>
                 <svg className={`w-4 h-4 ml-1 transition-transform duration-200 ${isSubmenuOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -63,7 +63,7 @@ const MoreDropdownItem: React.FC<{ item: NavItem; closeMenu: () => void }> = ({ 
                             to={`${item.path}${child.path}`}
                             onClick={closeMenu}
                             className={({ isActive }) =>
-                                `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
+                                `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-text transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
                             }
                         >
                             {child.label}
@@ -247,7 +247,7 @@ const Header: React.FC = () => {
           <>
              <button
               onClick={() => handleDropdownToggle(link.label)}
-              className="flex items-center justify-between w-full px-4 py-2 text-left text-white hover:bg-brand-blue-light rounded-md"
+              className="flex items-center justify-between w-full px-4 py-2 text-left text-white font-semibold hover:bg-brand-blue-light rounded-md"
             >
               {link.label}
               <svg className={`w-4 h-4 ml-1 transition-transform duration-200 ${openDropdown === link.label ? 'transform rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
@@ -273,7 +273,7 @@ const Header: React.FC = () => {
             to={link.path}
             onClick={closeAllMenus}
             className={({ isActive }) =>
-              `block px-4 py-2 text-white hover:bg-brand-blue-light rounded-md ${isActive ? 'text-brand-gold-light font-bold' : ''}`
+              `block px-4 py-2 text-white font-semibold hover:bg-brand-blue-light rounded-md ${isActive ? 'text-brand-gold-light font-bold' : ''}`
             }
           >
             {link.label}
@@ -287,8 +287,8 @@ const Header: React.FC = () => {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerContainerRef} className="flex items-center justify-between h-20">
           <Link ref={logoRef} to="/" onClick={closeAllMenus} className="flex items-center space-x-3 rtl:space-x-reverse flex-shrink-0">
-              <svg className="w-12 h-12 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v-5"></path></svg>
-              <span className="self-center text-xl font-semibold whitespace-nowrap hidden sm:block">{t.header.title}</span>
+              <svg className="w-12 h-12 text-brand-gold font-bold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M12 14l9-5-9-5-9 5 9 5zm0 0v-5"></path></svg>
+              <span className="self-center text-xl font-bold whitespace-nowrap hidden sm:block">{t.header.title}</span>
           </Link>
           
           <div className="flex items-center lg:hidden">

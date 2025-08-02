@@ -47,7 +47,7 @@ const Search: React.FC = () => {
         <>
             <button
                 onClick={openSearch}
-                className="p-2 text-white hover:text-brand-gold-light transition-colors"
+                className="p-2 text-white font-semibold hover:text-brand-gold-light transition-colors"
                 aria-label={t.search.label}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -62,7 +62,7 @@ const Search: React.FC = () => {
                 >
                     <button 
                         onClick={closeSearch} 
-                        className="absolute top-6 right-8 text-white text-5xl font-bold hover:text-brand-gold-light"
+                        className="absolute top-6 right-8 text-white text-5xl font-black hover:text-brand-gold-light"
                         aria-label={t.search.close}
                     >
                         &times;
@@ -79,9 +79,9 @@ const Search: React.FC = () => {
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
                                 placeholder={t.search.placeholder}
-                                className="w-full p-4 pr-12 text-lg text-white bg-transparent border-b-2 border-brand-gold focus:outline-none focus:border-white placeholder-gray-400"
+                                className="w-full p-4 pr-12 text-lg text-white font-medium bg-transparent border-b-2 border-brand-gold focus:outline-none focus:border-white placeholder-gray-400"
                             />
-                            <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-gold hover:text-white" aria-label={t.search.submit}>
+                            <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-gold-dark font-bold hover:text-white" aria-label={t.search.submit}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>

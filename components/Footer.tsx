@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   const { t } = useLanguage();
 
   return (
-    <footer className="bg-brand-blue-dark text-white">
+    <footer className="bg-brand-blue-dark text-white font-medium">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
@@ -15,7 +15,7 @@ const Footer: React.FC = () => {
               id="footer-school-name"
               defaultContent={t.footer.schoolName}
               tag="h3"
-              className="text-lg font-semibold text-brand-gold mb-4"
+              className="text-lg font-bold text-brand-gold-light mb-4"
             />
             <EditableText
               id="footer-motto"
@@ -29,7 +29,7 @@ const Footer: React.FC = () => {
               id="footer-contacts-title"
               defaultContent={t.footer.contacts.title}
               tag="h3"
-              className="text-lg font-semibold text-brand-gold mb-4"
+              className="text-lg font-bold text-brand-gold-light mb-4"
             />
             <ul className="space-y-2 text-gray-300">
               <li>
@@ -84,7 +84,7 @@ const Footer: React.FC = () => {
               id="footer-quicklinks-title"
               defaultContent={t.footer.quickLinks.title}
               tag="h3"
-              className="text-lg font-semibold text-brand-gold mb-4"
+              className="text-lg font-bold text-brand-gold-light mb-4"
             />
             <ul className="space-y-2">
               <li>

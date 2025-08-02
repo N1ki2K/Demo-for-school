@@ -19,7 +19,7 @@ const LanguageSwitcher: React.FC<Props> = ({ isMobile = false }) => {
           <button
             onClick={() => handleLanguageChange('bg')}
             className={`px-6 py-2 text-base font-bold rounded-md transition-colors duration-300 ${
-              locale === 'bg' ? 'bg-brand-gold text-brand-blue-dark' : 'bg-brand-blue-light text-white'
+              locale === 'bg' ? 'bg-brand-gold text-brand-blue-text font-black' : 'bg-brand-blue-light text-black'
             }`}
             aria-label="Смени на български"
           >
@@ -28,7 +28,7 @@ const LanguageSwitcher: React.FC<Props> = ({ isMobile = false }) => {
           <button
             onClick={() => handleLanguageChange('en')}
             className={`px-6 py-2 text-base font-bold rounded-md transition-colors duration-300 ${
-              locale === 'en' ? 'bg-brand-gold text-brand-blue-dark' : 'bg-brand-blue-light text-white'
+              locale === 'en' ? 'bg-brand-gold text-brand-blue-text font-black' : 'bg-brand-blue-light text-black'
             }`}
             aria-label="Switch to English"
           >
@@ -43,7 +43,7 @@ const LanguageSwitcher: React.FC<Props> = ({ isMobile = false }) => {
       <button
         onClick={() => handleLanguageChange('bg')}
         className={`px-3 py-1 text-sm font-bold rounded-full transition-colors duration-300 ${
-          locale === 'bg' ? 'bg-brand-gold text-brand-blue-dark' : 'text-white hover:bg-brand-blue'
+          locale === 'bg' ? 'bg-brand-gold text-brand-blue-text font-black' : 'text-black hover:bg-brand-blue'
         }`}
         aria-label="Смени на български"
       >
@@ -52,7 +52,7 @@ const LanguageSwitcher: React.FC<Props> = ({ isMobile = false }) => {
       <button
         onClick={() => handleLanguageChange('en')}
         className={`px-3 py-1 text-sm font-bold rounded-full transition-colors duration-300 ${
-          locale === 'en' ? 'bg-brand-gold text-brand-blue-dark' : 'text-white hover:bg-brand-blue'
+          locale === 'en' ? 'bg-brand-gold text-brand-blue-text font-black' : 'text-black hover:bg-brand-blue'
         }`}
         aria-label="Switch to English"
       >
