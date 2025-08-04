@@ -149,9 +149,10 @@ const Header: React.FC = () => {
       const MORE_BUTTON_WIDTH = 90; // Estimated width for the "More" button + its margin
 
       const otherControlsWidth = otherControls.offsetWidth;
-      
+      const SAFETY_MARGIN = 48; // This is your "red line" buffer.
+          
       const totalAvailableSpaceForNav = headerContainer.offsetWidth - logo.offsetWidth - NAV_MARGIN_LEFT;
-      const availableSpace = totalAvailableSpaceForNav - otherControlsWidth;
+      const availableSpace = totalAvailableSpaceForNav - otherControlsWidth - SAFETY_MARGIN;
 
       const cumulativeWidths: number[] = [];
       let totalWidth = 0;
@@ -308,7 +309,7 @@ const Header: React.FC = () => {
           </div>
 
           <nav ref={navContainerRef} className="hidden lg:flex items-center flex-grow justify-end ml-6">
-            <ul className="flex items-center space-x-6 text-md font-medium">
+            <ul className="flex items-center space-x-6 text-md font-medium flex-shrink-0">
               {visibleLinks.map(renderDesktopNavItem)}
             </ul>
              {hiddenLinks.length > 0 && (
@@ -334,7 +335,7 @@ const Header: React.FC = () => {
       </div>
       
       {/* Off-screen measurement list - uses simple spans for reliable width calculation */}
-      <ul ref={measurementRef} className="absolute top-0 left-0 invisible -z-10 flex space-x-6 text-md font-medium">
+      <ul ref={measurementRef} className="absolute top-0 left-0 invisible -z-10 flex space-x-6 text-md font-medium overflow-hidden">
           {navLinks.map(link => (
             <li key={link.label} className="flex-shrink-0">
                 {link.children ? (

@@ -45,11 +45,11 @@ const Layout: React.FC = () => {
        {showButton && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-8 right-8 bg-brand-blue hover:bg-brand-blue-light text-white font-bold p-3 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-gold"
+          className="fixed bottom-4 right-4 sm:bottom-8 sm:right-8 bg-brand-blue hover:bg-brand-blue-light text-white p-2 sm:p-3 rounded-full shadow-lg transition-transform duration-300 transform hover:scale-110 focus:outline-none focus:ring-2 focus:ring-brand-gold"
           aria-label="Scroll to top"
           style={{ zIndex: 40 }}
         >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
           </svg>
         </button>

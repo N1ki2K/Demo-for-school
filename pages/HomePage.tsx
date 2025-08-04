@@ -18,21 +18,21 @@ const HeroSection: React.FC = () => {
         />
         <div className="absolute inset-0 bg-brand-blue bg-opacity-40"></div>
       </div>
-      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 text-center">
+      <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32 text-center">
         <EditableText
           id="hero-title"
           defaultContent={t.homePage.hero.title}
           tag="h1"
-          className="text-4xl md:text-6xl font-bold tracking-tight text-white animate-fade-in-up"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white animate-fade-in-up leading-tight"
         />
         <EditableText
           id="hero-subtitle"
           defaultContent={t.homePage.hero.subtitle}
           tag="p"
-          className="mt-6 max-w-2xl mx-auto text-lg md:text-xl text-brand-gold-light font-bold animate-fade-in-up"
+          className="mt-4 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-brand-gold-light animate-fade-in-up px-4"
         />
-        <div className="mt-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-          <Link to="/documents/admissions" className="bg-brand-gold text-brand-blue-dark font-bold py-3 px-8 rounded-full hover:bg-brand-gold-light transition-transform duration-300 transform hover:scale-105">
+        <div className="mt-8 sm:mt-10 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+          <Link to="/documents/admissions" className="inline-block bg-brand-gold text-brand-blue-dark font-bold py-3 px-6 sm:px-8 rounded-full hover:bg-brand-gold-light transition-transform duration-300 transform hover:scale-105 text-sm sm:text-base">
             <EditableText
               id="hero-cta"
               defaultContent={t.homePage.hero.cta}
@@ -157,53 +157,53 @@ const HomePage: React.FC = () => {
     <div className="bg-gray-50">
       <HeroSection />
 
-      <section className="py-16 md:py-24">
+      <section className="py-12 sm:py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <EditableText
             id="news-title"
             defaultContent={t.homePage.news.title}
             tag="h2"
-            className="text-3xl md:text-4xl font-bold text-center text-brand-blue mb-12"
+            className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
           />
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
           </div>
         </div>
       </section>
 
-      <section className="bg-white py-16 md:py-24">
+      <section className="bg-white py-12 sm:py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
                 <EditableText
                   id="features-title"
                   defaultContent={t.homePage.features.title}
                   tag="h2"
-                  className="text-3xl md:text-4xl font-bold text-brand-blue"
+                  className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue"
                 />
                 <EditableText
                   id="features-subtitle"
                   defaultContent={t.homePage.features.subtitle}
                   tag="p"
-                  className="mt-4 text-lg text-gray-600 max-w-3xl mx-auto"
+                  className="mt-4 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4"
                 />
             </div>
-            <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+            <div className="mt-8 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 text-center">
               {features.map((feature, index) => (
-                <div key={index} className="p-6">
-                    <div className="flex items-center justify-center h-16 w-16 rounded-full bg-brand-gold-light text-brand-blue mx-auto mb-4">
+                <div key={index} className="p-4 sm:p-6">
+                    <div className="flex items-center justify-center h-14 w-14 sm:h-16 sm:w-16 rounded-full bg-brand-gold-light text-brand-blue mx-auto mb-4">
                         {feature.icon}
                     </div>
                     <EditableText
                       id={feature.titleId}
                       defaultContent={feature.defaultTitle}
                       tag="h3"
-                      className="text-xl font-semibold text-brand-blue-dark"
+                      className="text-lg sm:text-xl font-semibold text-brand-blue-dark"
                     />
                     <EditableText
                       id={feature.descId}
                       defaultContent={feature.defaultDescription}
                       tag="p"
-                      className="mt-2 text-gray-600"
+                      className="mt-2 text-sm sm:text-base text-gray-600"
                     />
                 </div>
               ))}
