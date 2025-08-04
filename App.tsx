@@ -33,6 +33,9 @@ import ContactsPage from './pages/ContactsPage';
 import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import Home from './pages/Home';
+import CreatePost from './pages/CreatePost';
+
 
 const App: React.FC = () => {
   return (
@@ -40,7 +43,7 @@ const App: React.FC = () => {
       <CMSProvider>
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Layout />}>
+            <Route path="/" element={<Home />}>
               <Route index element={<HomePage />} />
               
               {/* Училището */}
@@ -76,6 +79,8 @@ const App: React.FC = () => {
               <Route path="/contacts" element={<ContactsPage />} />
               <Route path="/info-access" element={<InfoAccessPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
+              {/* DB */}
+              <Route path="/create" element={<CreatePost />} />
 
               <Route path="*" element={<NotFoundPage />} />
             </Route>
@@ -83,6 +88,7 @@ const App: React.FC = () => {
         </HashRouter>
       </CMSProvider>
     </LanguageProvider>
+    
   );
 };
 

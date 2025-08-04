@@ -48,4 +48,5 @@ export const getNavLinks = (t: any): NavItem[] => [
   },
   { label: t.nav.contacts, path: '/contacts' },
   { label: t.nav.infoAccess, path: '/info-access' },
+  { label: t.nav.createPost, path: '/create' }
 ];
