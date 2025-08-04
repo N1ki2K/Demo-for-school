@@ -8,8 +8,8 @@ const Footer: React.FC = () => {
 
   return (
     <footer className="bg-brand-blue-dark text-white">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
           <div>
             <EditableText
               id="footer-school-name"
@@ -126,8 +126,8 @@ const Footer: React.FC = () => {
             </ul>
           </div>
         </div>
-        <div className="mt-12 pt-8 border-t border-gray-700 text-center text-gray-400">
-          <p>
+        <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-700 text-center text-gray-400">
+          <p className="text-sm sm:text-base">
             &copy; {new Date().getFullYear()}{' '}
             <EditableText
               id="footer-copyright"
@@ -139,7 +139,7 @@ const Footer: React.FC = () => {
             id="footer-design"
             defaultContent={t.footer.design}
             tag="p"
-            className="text-sm mt-1"
+            className="text-xs sm:text-sm mt-1"
           />
         </div>
       </div>
