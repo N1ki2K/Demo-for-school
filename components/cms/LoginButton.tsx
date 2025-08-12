@@ -4,7 +4,7 @@ import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 export const LoginButton: React.FC = () => {
-  const { isLoggedIn, isEditing, login, logout, setIsEditing } = useCMS();
+  const { isLoggedIn, isEditing, isLoading, error, login, logout, setIsEditing, clearError } = useCMS();
   const { locale } = useLanguage();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [username, setUsername] = useState('');
@@ -54,21 +54,24 @@ export const LoginButton: React.FC = () => {
 
   const t = texts[locale];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(username, password);
+    setLoginError('');
+    clearError();
+    
+    const success = await login(username, password);
     if (success) {
       setShowLoginModal(false);
       setUsername('');
       setPassword('');
       setLoginError('');
     } else {
-      setLoginError(t.invalidCredentials);
+      setLoginError(error || t.invalidCredentials);
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
 
   const toggleEditMode = () => {
@@ -90,8 +93,8 @@ export const LoginButton: React.FC = () => {
         </button>
 
         {showLoginModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
+          <div className="login-modal-overlay fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center" style={{zIndex: 10000, paddingTop: '300px'}}>
+            <div className="login-modal-content bg-white p-6 rounded-lg w-full max-w-md mx-4" style={{zIndex: 10001}}>
               <h2 className="text-xl font-bold mb-4 text-gray-900">{t.cmsLogin}</h2>
               <form onSubmit={handleLogin}>
                 <div className="mb-4">
@@ -125,9 +128,10 @@ export const LoginButton: React.FC = () => {
                 <div className="flex gap-3 mb-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+                    disabled={isLoading}
+                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {t.loginButton}
+                    {isLoading ? 'Loading...' : t.loginButton}
                   </button>
                   <button
                     type="button"

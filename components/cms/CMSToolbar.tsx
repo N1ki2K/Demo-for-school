@@ -2,15 +2,18 @@
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { CMSDashboard } from './CMSDashboard';
 
 export const CMSToolbar: React.FC = () => {
   const { isEditing, isLoggedIn } = useCMS();
   const { locale } = useLanguage();
   const [showHelp, setShowHelp] = useState(false);
+  const [showDashboard, setShowDashboard] = useState(false);
 
   const texts = {
     bg: {
       editModeActive: 'Режим на редактиране активен',
+      dashboard: 'Табло',
       help: 'Помощ',
       cmsHelp: 'CMS Помощ',
       textEditing: 'Редактиране на текст:',
@@ -25,6 +28,7 @@ export const CMSToolbar: React.FC = () => {
     },
     en: {
       editModeActive: 'Edit Mode Active',
+      dashboard: 'Dashboard',
       help: 'Help',
       cmsHelp: 'CMS Help',
       textEditing: 'Text Editing:',
@@ -55,6 +59,16 @@ export const CMSToolbar: React.FC = () => {
             </svg>
             {t.editModeActive}
           </div>
+          <button
+            onClick={() => setShowDashboard(true)}
+            className="px-3 py-2 bg-purple-100 text-purple-800 rounded-md hover:bg-purple-200 transition-colors text-sm font-medium"
+            title={t.dashboard}
+          >
+            <svg className="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+            {t.dashboard}
+          </button>
           <button
             onClick={() => setShowHelp(!showHelp)}
             className="p-2 bg-blue-100 text-blue-800 rounded-md hover:bg-blue-200 transition-colors"
@@ -104,6 +118,10 @@ export const CMSToolbar: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {showDashboard && (
+        <CMSDashboard />
       )}
     </>
   );

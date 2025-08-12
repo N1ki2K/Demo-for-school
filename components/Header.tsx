@@ -108,6 +108,7 @@ const Header: React.FC = () => {
   const [visibleLinks, setVisibleLinks] = useState<NavItem[]>(navLinks);
   const [hiddenLinks, setHiddenLinks] = useState<NavItem[]>([]);
   const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Refs for measurement
   const headerRef = useRef<HTMLElement>(null);
@@ -213,6 +214,19 @@ const Header: React.FC = () => {
     };
   }, []);
 
+  // Scroll effect for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const renderDesktopNavItem = (link: NavItem) => (
     <li key={link.label} className="relative group flex-shrink-0">
       {link.children ? (
@@ -284,7 +298,9 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header ref={headerRef} className="bg-brand-blue text-white shadow-md sticky top-0 z-50">
+    <header ref={headerRef} className={`bg-brand-blue text-white fixed top-0 left-0 right-0 z-40 transition-all duration-300 backdrop-blur-sm ${
+      isScrolled ? 'shadow-lg bg-opacity-95' : 'shadow-md'
+    }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerContainerRef} className="flex items-center justify-between h-20">
           <Link ref={logoRef} to="/" onClick={closeAllMenus} className="flex items-center space-x-3 rtl:space-x-reverse flex-shrink-0">

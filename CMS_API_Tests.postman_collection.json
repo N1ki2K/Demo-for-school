@@ -1,0 +1,303 @@
+{
+  "info": {
+    "name": "School CMS API Tests",
+    "description": "Complete API testing collection for the School CMS",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:3001/api",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.environment.set('token', response.token);",
+                  "    pm.collectionVariables.set('token', response.token);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"admin123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/login",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "login"]
+            }
+          }
+        },
+        {
+          "name": "Get Current User",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/me",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "me"]
+            }
+          }
+        },
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/health",
+              "host": ["{{base_url}}"],
+              "path": ["health"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Content Management",
+      "item": [
+        {
+          "name": "Get All Content",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content",
+              "host": ["{{base_url}}"],
+              "path": ["content"]
+            }
+          }
+        },
+        {
+          "name": "Create Content Section",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": \"test-section-1\",\n  \"type\": \"text\",\n  \"label\": \"Test Section\",\n  \"content\": \"This is a test content section\",\n  \"page_id\": \"homepage\",\n  \"position\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content",
+              "host": ["{{base_url}}"],
+              "path": ["content"]
+            }
+          }
+        },
+        {
+          "name": "Update Content Section",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"text\",\n  \"label\": \"Updated Test Section\",\n  \"content\": \"This content has been updated via API\",\n  \"page_id\": \"homepage\",\n  \"position\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/content/test-section-1",
+              "host": ["{{base_url}}"],
+              "path": ["content", "test-section-1"]
+            }
+          }
+        },
+        {
+          "name": "Get Single Content Section",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/test-section-1",
+              "host": ["{{base_url}}"],
+              "path": ["content", "test-section-1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Content Section",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/content/test-section-1",
+              "host": ["{{base_url}}"],
+              "path": ["content", "test-section-1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Staff Management",
+      "item": [
+        {
+          "name": "Get All Staff",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/staff",
+              "host": ["{{base_url}}"],
+              "path": ["staff"]
+            }
+          }
+        },
+        {
+          "name": "Create Staff Member",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"role\": \"Teacher\",\n  \"email\": \"john.doe@school.com\",\n  \"phone\": \"+1234567890\",\n  \"bio\": \"Experienced mathematics teacher\",\n  \"is_director\": false,\n  \"position\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff",
+              "host": ["{{base_url}}"],
+              "path": ["staff"]
+            }
+          }
+        },
+        {
+          "name": "Update Staff Member",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Smith\",\n  \"role\": \"Senior Teacher\",\n  \"email\": \"john.smith@school.com\",\n  \"phone\": \"+1234567890\",\n  \"bio\": \"Senior mathematics teacher with 10 years experience\",\n  \"is_director\": false,\n  \"position\": 1\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/staff/STAFF_ID_HERE",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "STAFF_ID_HERE"]
+            }
+          }
+        },
+        {
+          "name": "Delete Staff Member",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/staff/STAFF_ID_HERE",
+              "host": ["{{base_url}}"],
+              "path": ["staff", "STAFF_ID_HERE"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Media Management",
+      "item": [
+        {
+          "name": "Get Media Files",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/upload/files?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["upload", "files"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Upload Single File",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": ""
+                },
+                {
+                  "key": "altText",
+                  "value": "Test image",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/upload/single",
+              "host": ["{{base_url}}"],
+              "path": ["upload", "single"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

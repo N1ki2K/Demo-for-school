@@ -33,8 +33,8 @@ import ContactsPage from './pages/ContactsPage';
 import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
-import Home from './pages/Home';
-import CreatePost from './pages/CreatePost';
+// import Home from './pages/Home';
+// import CreatePost from './pages/CreatePost';
 
 
 const App: React.FC = () => {
@@ -43,7 +43,7 @@ const App: React.FC = () => {
       <CMSProvider>
         <HashRouter>
           <Routes>
-            <Route path="/" element={<Home />}>
+            <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
               
               {/* Училището */}
@@ -80,7 +80,7 @@ const App: React.FC = () => {
               <Route path="/info-access" element={<InfoAccessPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
               {/* DB */}
-              <Route path="/create" element={<CreatePost />} />
+              {/* <Route path="/create" element={<CreatePost />} /> */}
 
               <Route path="*" element={<NotFoundPage />} />
             </Route>

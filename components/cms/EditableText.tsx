@@ -26,6 +26,16 @@ export const EditableText: React.FC<EditableTextProps> = ({
   // Create language-specific ID
   const languageSpecificId = `${id}_${locale}`;
   const content = getContent(languageSpecificId, defaultContent);
+  
+  // Debug logging
+  console.log('EditableText Debug:', {
+    id,
+    locale,
+    languageSpecificId,
+    content,
+    defaultContent,
+    hasContent: content !== defaultContent
+  });
 
   const texts = {
     bg: {
@@ -58,20 +68,57 @@ export const EditableText: React.FC<EditableTextProps> = ({
   useEffect(() => {
     if (!isEditable && textRef.current) {
       const newContent = getContent(languageSpecificId, defaultContent);
+      console.log('Updating text content due to language/content change:', {
+        languageSpecificId,
+        newContent,
+        defaultContent,
+        isEditable
+      });
       textRef.current.textContent = newContent;
     }
   }, [locale, languageSpecificId, defaultContent, isEditable, getContent]);
 
-  const handleClick = () => {
+  // Update content when global edit mode changes
+  useEffect(() => {
+    if (!isEditing && !isEditable && textRef.current) {
+      const newContent = getContent(languageSpecificId, defaultContent);
+      console.log('Updating content due to edit mode change:', {
+        isEditing,
+        isEditable,
+        languageSpecificId,
+        newContent,
+        currentText: textRef.current.textContent
+      });
+      textRef.current.textContent = newContent;
+    }
+  }, [isEditing, isEditable, languageSpecificId, defaultContent, getContent]);
+
+  const handleClick = (e: React.MouseEvent) => {
     if (isEditing && !isEditable) {
+      e.preventDefault(); // Prevent any default behavior (like following links)
+      e.stopPropagation(); // Stop event from bubbling up
       setIsEditable(true);
     }
   };
 
-  const handleBlur = () => {
+  const handleBlur = async () => {
     if (isEditable) {
       const newContent = textRef.current?.textContent || '';
-      updateContent(languageSpecificId, newContent);
+      try {
+        await updateContent(languageSpecificId, newContent, 'text', `${id} (${locale})`);
+        console.log('Content saved successfully:', languageSpecificId, newContent);
+        
+        // Force update the text content to ensure it persists
+        if (textRef.current) {
+          textRef.current.textContent = newContent;
+        }
+      } catch (error) {
+        console.error('Failed to save content:', error);
+        // Revert to previous content on error
+        if (textRef.current) {
+          textRef.current.textContent = content;
+        }
+      }
       setIsEditable(false);
     }
   };

@@ -20,6 +20,37 @@ html, body {
   max-width: 100%;
 }
 
+/* Sticky Header Enhancements */
+.sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.sticky-header.scrolled {
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  background-color: rgba(37, 99, 235, 0.95);
+}
+
+/* Ensure content doesn't hide behind sticky header */
+body {
+  scroll-padding-top: 80px;
+}
+
+/* Force login modal to appear above everything */
+.login-modal-overlay {
+  z-index: 10000 !important;
+  position: fixed !important;
+}
+
+.login-modal-content {
+  z-index: 10001 !important;
+  position: relative !important;
+}
+
 /* Custom animations */
 @keyframes fadeIn {
   from { opacity: 0; }
@@ -73,6 +104,19 @@ html, body {
   outline: 2px dashed #3B82F6;
   outline-offset: 2px;
   cursor: pointer;
+}
+
+/* Disable all links and interactive elements when in CMS edit mode */
+.cms-editable a,
+.cms-editable button,
+.cms-editable [href],
+.cms-editable [onclick] {
+  pointer-events: none !important;
+  cursor: text !important;
+}
+
+.cms-editable * {
+  cursor: pointer !important;
 }
 
 .cms-editable::before {
