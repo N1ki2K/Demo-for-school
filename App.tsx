@@ -33,6 +33,7 @@ import ContactsPage from './pages/ContactsPage';
 import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import DynamicPage from './pages/DynamicPage';
 // import Home from './pages/Home';
 // import CreatePost from './pages/CreatePost';
 
@@ -82,7 +83,8 @@ const App: React.FC = () => {
               {/* DB */}
               {/* <Route path="/create" element={<CreatePost />} /> */}
 
-              <Route path="*" element={<NotFoundPage />} />
+              {/* Dynamic pages - catch-all for CMS-created pages */}
+              <Route path="*" element={<DynamicPage />} />
             </Route>
           </Routes>
         </HashRouter>

@@ -2,6 +2,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useLocation } from 'react-router-dom';
 
 interface EditableTextProps {
   id: string;
@@ -20,12 +21,28 @@ export const EditableText: React.FC<EditableTextProps> = ({
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
   const { locale } = useLanguage();
+  const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);
   const textRef = useRef<HTMLElement>(null);
   
   // Create language-specific ID
   const languageSpecificId = `${id}_${locale}`;
   const content = getContent(languageSpecificId, defaultContent);
+  
+  // Helper function to map URL path to page ID
+  const getPageIdFromPath = (path: string): string => {
+    if (path === '/') return 'home';
+    if (path === '/contacts') return 'contacts';
+    if (path === '/gallery') return 'gallery';
+    if (path === '/info-access') return 'info-access';
+    if (path === '/useful-links') return 'useful-links';
+    if (path.startsWith('/school/')) return `school-${path.split('/').pop()}`;
+    if (path.startsWith('/documents/')) return `documents-${path.split('/').pop()}`;
+    if (path.startsWith('/projects/')) return `projects-${path.split('/').pop()}`;
+    return 'unknown';
+  };
+  
+  const currentPageId = getPageIdFromPath(location.pathname);
   
   // Debug logging
   console.log('EditableText Debug:', {
@@ -105,8 +122,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
     if (isEditable) {
       const newContent = textRef.current?.textContent || '';
       try {
-        await updateContent(languageSpecificId, newContent, 'text', `${id} (${locale})`);
-        console.log('Content saved successfully:', languageSpecificId, newContent);
+        // Include page context in the content update
+        await updateContent(languageSpecificId, newContent, 'text', `${id} (${locale})`, currentPageId);
+        console.log('Content saved successfully:', languageSpecificId, newContent, 'Page:', currentPageId);
         
         // Force update the text content to ensure it persists
         if (textRef.current) {

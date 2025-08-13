@@ -33,8 +33,9 @@ interface CMSContextType {
   setIsEditing: (editing: boolean) => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
-  updateContent: (sectionId: string, content: any, type?: string, label?: string) => Promise<void>;
+  updateContent: (sectionId: string, content: any, type?: string, label?: string, pageId?: string) => Promise<void>;
   getContent: (sectionId: string, defaultContent: any) => any;
+  getContentByPage: (pageId: string, language: string) => Promise<EditableSection[]>;
   editableSections: Record<string, EditableSection>;
   updateStaff: (staff: StaffMember[]) => Promise<void>;
   getStaff: () => StaffMember[];
@@ -151,7 +152,7 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     }
   };
 
-  const updateContent = async (sectionId: string, content: any, type: string = 'text', label: string = sectionId) => {
+  const updateContent = async (sectionId: string, content: any, type: string = 'text', label: string = sectionId, pageId?: string) => {
     try {
       setIsLoading(true);
       const section = {
@@ -159,6 +160,7 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
         type,
         label,
         content: typeof content === 'string' ? content : JSON.stringify(content),
+        page_id: pageId || null,
       };
       
       console.log('Saving content section:', section);
@@ -174,6 +176,7 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
             type: type as any,
             label,
             content,
+            page_id: pageId,
           }
         };
         console.log('Updated editableSections:', updated);
@@ -227,6 +230,16 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     return staffData;
   };
 
+  const getContentByPage = async (pageId: string, language: string): Promise<EditableSection[]> => {
+    try {
+      const content = await apiService.getContentByPageAndLanguage(pageId, language);
+      return content;
+    } catch (error) {
+      console.error('Error getting content by page:', error);
+      return [];
+    }
+  };
+
   const clearError = () => {
     setError(null);
   };
@@ -241,6 +254,7 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     logout,
     updateContent,
     getContent,
+    getContentByPage,
     editableSections,
     updateStaff,
     getStaff,

@@ -11,6 +11,7 @@ import authRoutes from './routes/auth';
 import contentRoutes from './routes/content';
 import staffRoutes from './routes/staff';
 import uploadRoutes from './routes/upload';
+import pagesRoutes from './routes/pages';
 
 dotenv.config();
 
@@ -38,6 +39,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/staff', staffRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/pages', pagesRoutes);
 
 app.get('/api/health', (req, res) => {
   res.json({ status: 'OK', timestamp: new Date().toISOString() });

@@ -9,7 +9,10 @@
       "Bash(taskkill:*)",
       "Bash(powershell:*)",
       "Bash(sqlite3:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(set PORT=3002)"
     ],
     "deny": [],
     "ask": []

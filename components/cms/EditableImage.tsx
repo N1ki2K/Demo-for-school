@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useLocation } from 'react-router-dom';
 
 interface EditableImageProps {
   id: string;
@@ -18,12 +19,28 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
   const { locale } = useLanguage();
+  const location = useLocation();
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
   
   // Create language-specific ID for images as well
   const languageSpecificId = `${id}_${locale}`;
   const src = getContent(languageSpecificId, defaultSrc);
+  
+  // Helper function to map URL path to page ID
+  const getPageIdFromPath = (path: string): string => {
+    if (path === '/') return 'home';
+    if (path === '/contacts') return 'contacts';
+    if (path === '/gallery') return 'gallery';
+    if (path === '/info-access') return 'info-access';
+    if (path === '/useful-links') return 'useful-links';
+    if (path.startsWith('/school/')) return `school-${path.split('/').pop()}`;
+    if (path.startsWith('/documents/')) return `documents-${path.split('/').pop()}`;
+    if (path.startsWith('/projects/')) return `projects-${path.split('/').pop()}`;
+    return 'unknown';
+  };
+  
+  const currentPageId = getPageIdFromPath(location.pathname);
 
   const texts = {
     bg: {
@@ -53,7 +70,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   const handleUrlSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    updateContent(languageSpecificId, tempUrl);
+    updateContent(languageSpecificId, tempUrl, 'image', `${id} (${locale})`, currentPageId);
     setShowUrlInput(false);
   };
 

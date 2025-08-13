@@ -55,7 +55,7 @@ router.post('/', authenticateToken, (req: AuthRequest, res: Response) => {
   db.run(
     `INSERT INTO staff_members (id, name, role, email, phone, bio, image_url, is_director, position) 
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [id, name, role, email, phone, bio, image_url, is_director ? 1 : 0, position || 0],
+    [id, name, role, email, phone, bio, image_url, Boolean(is_director) ? 1 : 0, position || 0],
     function(err) {
       if (err) {
         console.error('Insert error:', err);
@@ -84,7 +84,7 @@ router.put('/:id', authenticateToken, (req: AuthRequest, res: Response) => {
          position = COALESCE(?, position),
          updated_at = CURRENT_TIMESTAMP 
      WHERE id = ?`,
-    [name, role, email, phone, bio, image_url, is_director ? 1 : 0, position, id],
+    [name, role, email, phone, bio, image_url, Boolean(is_director) ? 1 : 0, position, id],
     function(err) {
       if (err) {
         console.error('Update error:', err);

@@ -28,13 +28,38 @@ const ContentManagementDashboard: React.FC = () => {
   const [pageSections, setPageSections] = useState<ContentSection[]>([]);
   const [loadingContent, setLoadingContent] = useState<boolean>(false);
 
-  // Define available pages
+  // Define available pages based on actual routes
   const pages: Page[] = [
     { id: 'home', name: 'Home Page', path: '/' },
-    { id: 'school', name: 'My School', path: '/school' },
-    { id: 'academics', name: 'Academics', path: '/academics' },
-    { id: 'admissions', name: 'Admissions', path: '/admissions' },
     { id: 'contacts', name: 'Contacts', path: '/contacts' },
+    { id: 'gallery', name: 'Gallery', path: '/gallery' },
+    { id: 'info-access', name: 'Info Access', path: '/info-access' },
+    { id: 'useful-links', name: 'Useful Links', path: '/useful-links' },
+    // School section
+    { id: 'school-history', name: 'School History', path: '/school/history' },
+    { id: 'school-patron', name: 'School Patron', path: '/school/patron' },
+    { id: 'school-team', name: 'School Team', path: '/school/team' },
+    { id: 'school-council', name: 'School Council', path: '/school/council' },
+    // Documents section
+    { id: 'documents-calendar', name: 'Calendar', path: '/documents/calendar' },
+    { id: 'documents-schedules', name: 'Schedules', path: '/documents/schedules' },
+    { id: 'documents-budget', name: 'Budget Reports', path: '/documents/budget' },
+    { id: 'documents-rules', name: 'Rules', path: '/documents/rules' },
+    { id: 'documents-ethics', name: 'Ethics Code', path: '/documents/ethics' },
+    { id: 'documents-admin-services', name: 'Admin Services', path: '/documents/admin-services' },
+    { id: 'documents-admissions', name: 'Admissions', path: '/documents/admissions' },
+    { id: 'documents-road-safety', name: 'Road Safety', path: '/documents/road-safety' },
+    { id: 'documents-ores', name: 'ORES', path: '/documents/ores' },
+    { id: 'documents-continuing-education', name: 'Continuing Education', path: '/documents/continuing-education' },
+    { id: 'documents-faq', name: 'FAQ', path: '/documents/faq' },
+    { id: 'documents-announcement', name: 'Announcements', path: '/documents/announcement' },
+    { id: 'documents-students', name: 'Students', path: '/documents/students' },
+    { id: 'documents-olympiads', name: 'Olympiads', path: '/documents/olympiads' },
+    // Projects section
+    { id: 'projects-your-hour', name: 'Your Hour', path: '/projects/your-hour' },
+    { id: 'projects-support-for-success', name: 'Support for Success', path: '/projects/support-for-success' },
+    { id: 'projects-education-for-tomorrow', name: 'Education for Tomorrow', path: '/projects/education-for-tomorrow' },
+    // Global elements
     { id: 'global', name: 'Global (Header/Footer)', path: 'global' }
   ];
 
@@ -76,7 +101,7 @@ const ContentManagementDashboard: React.FC = () => {
     if (!editingSection) return;
     
     try {
-      await updateContent(editingSection, editContent, 'text', editingSection);
+      await updateContent(editingSection, editContent, 'text', editingSection, selectedPage);
       setEditingSection(null);
       setEditContent('');
       // Reload content to show updated data
@@ -99,7 +124,7 @@ const ContentManagementDashboard: React.FC = () => {
     const sectionLabel = `${sectionName} (${selectedLanguage})`;
     
     try {
-      await updateContent(sectionId, 'New content', 'text', sectionLabel);
+      await updateContent(sectionId, 'New content', 'text', sectionLabel, selectedPage);
       // Reload content to show new section
       loadPageContent();
     } catch (error) {

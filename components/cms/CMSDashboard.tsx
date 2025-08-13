@@ -4,8 +4,9 @@ import { MediaManagerDashboard } from './MediaManagerDashboard';
 import { ContentEditor } from './ContentEditor';
 import { StaffManagementDashboard } from './StaffManagementDashboard';
 import ContentManagementDashboard from './ContentManagementDashboard';
+import PageSectionManager from './PageSectionManager';
 
-type DashboardTab = 'content' | 'staff' | 'media' | 'settings';
+type DashboardTab = 'content' | 'staff' | 'media' | 'pages' | 'settings';
 
 export const CMSDashboard: React.FC = () => {
   const { isLoggedIn, isEditing, isLoading, error, clearError } = useCMS();
@@ -19,6 +20,7 @@ export const CMSDashboard: React.FC = () => {
     { id: 'content', label: 'Content', icon: '📝' },
     { id: 'staff', label: 'Staff', icon: '👥' },
     { id: 'media', label: 'Media', icon: '🖼️' },
+    { id: 'pages', label: 'Pages & Sections', icon: '📄' },
     { id: 'settings', label: 'Settings', icon: '⚙️' },
   ] as const;
 
@@ -92,6 +94,7 @@ export const CMSDashboard: React.FC = () => {
             {activeTab === 'content' && <ContentManagementDashboard />}
             {activeTab === 'staff' && <StaffManagementDashboard />}
             {activeTab === 'media' && <MediaManagerDashboard />}
+            {activeTab === 'pages' && <PageSectionManager />}
             {activeTab === 'settings' && <SettingsPanel />}
           </div>
         </div>

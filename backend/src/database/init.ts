@@ -69,16 +69,18 @@ const createTables = (): Promise<void> => {
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`,
 
-      // Pages table for dynamic page management
+      // Pages table for navigation management
       `CREATE TABLE IF NOT EXISTS pages (
         id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        slug TEXT UNIQUE NOT NULL,
-        meta_description TEXT,
-        is_published BOOLEAN DEFAULT 1,
-        template TEXT DEFAULT 'default',
+        name TEXT NOT NULL,
+        path TEXT UNIQUE NOT NULL,
+        parent_id TEXT,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        show_in_menu BOOLEAN DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (parent_id) REFERENCES pages (id) ON DELETE CASCADE
       )`,
 
       // Media files table
@@ -137,9 +139,56 @@ const seedInitialData = async (): Promise<void> => {
         } else {
           console.log('✅ Database initialized with default admin user');
           console.log('📝 Default login: admin / admin123');
-          resolve();
+          
+          // Seed default pages
+          seedPages().then(resolve).catch(reject);
         }
       }
     );
+  });
+};
+
+const seedPages = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const defaultPages = [
+      { id: 'home', name: 'Home', path: '/', parent_id: null, position: 0, is_active: 1, show_in_menu: 1 },
+      { id: 'school', name: 'School', path: '/school', parent_id: null, position: 1, is_active: 1, show_in_menu: 1 },
+      { id: 'school-history', name: 'History', path: '/history', parent_id: 'school', position: 0, is_active: 1, show_in_menu: 1 },
+      { id: 'school-patron', name: 'Patron', path: '/patron', parent_id: 'school', position: 1, is_active: 1, show_in_menu: 1 },
+      { id: 'school-team', name: 'Team', path: '/team', parent_id: 'school', position: 2, is_active: 1, show_in_menu: 1 },
+      { id: 'school-council', name: 'Council', path: '/council', parent_id: 'school', position: 3, is_active: 1, show_in_menu: 1 },
+      { id: 'documents', name: 'Documents', path: '/documents', parent_id: null, position: 2, is_active: 1, show_in_menu: 1 },
+      { id: 'documents-calendar', name: 'Calendar', path: '/calendar', parent_id: 'documents', position: 0, is_active: 1, show_in_menu: 1 },
+      { id: 'documents-schedules', name: 'Schedules', path: '/schedules', parent_id: 'documents', position: 1, is_active: 1, show_in_menu: 1 },
+      { id: 'useful-links', name: 'Useful Links', path: '/useful-links', parent_id: null, position: 3, is_active: 1, show_in_menu: 1 },
+      { id: 'gallery', name: 'Gallery', path: '/gallery', parent_id: null, position: 4, is_active: 1, show_in_menu: 1 },
+      { id: 'projects', name: 'Projects', path: '/projects', parent_id: null, position: 5, is_active: 1, show_in_menu: 1 },
+      { id: 'projects-your-hour', name: 'Your Hour', path: '/your-hour', parent_id: 'projects', position: 0, is_active: 1, show_in_menu: 1 },
+      { id: 'contacts', name: 'Contacts', path: '/contacts', parent_id: null, position: 6, is_active: 1, show_in_menu: 1 },
+      { id: 'info-access', name: 'Info Access', path: '/info-access', parent_id: null, position: 7, is_active: 1, show_in_menu: 1 },
+      { id: 'global', name: 'Global (Header/Footer)', path: 'global', parent_id: null, position: 99, is_active: 1, show_in_menu: 0 }
+    ];
+
+    let inserted = 0;
+    const total = defaultPages.length;
+
+    defaultPages.forEach((page) => {
+      db.run(
+        'INSERT OR IGNORE INTO pages (id, name, path, parent_id, position, is_active, show_in_menu) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [page.id, page.name, page.path, page.parent_id, page.position, page.is_active, page.show_in_menu],
+        function(err) {
+          if (err) {
+            console.error(`Error seeding page ${page.name}:`, err);
+            reject(err);
+          } else {
+            inserted++;
+            if (inserted === total) {
+              console.log('📄 Default pages seeded successfully');
+              resolve();
+            }
+          }
+        }
+      );
+    });
   });
 };
