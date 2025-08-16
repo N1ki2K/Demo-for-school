@@ -147,6 +147,21 @@ const PageSectionManager: React.FC = () => {
     }
   };
 
+  const handlePermanentDeletePage = async (pageId: string) => {
+    const page = pages.find(p => p.id === pageId);
+    if (!page) return;
+
+    if (confirm(`PERMANENT DELETE: Are you sure you want to permanently delete "${page.name}"? This will permanently remove the page and ALL its content. This action cannot be undone!`)) {
+      try {
+        await apiService.deletePage(pageId, true); // true = permanent delete
+        await loadPages();
+      } catch (error) {
+        console.error('Failed to permanently delete page:', error);
+        alert('Failed to permanently delete page. Please try again.');
+      }
+    }
+  };
+
   const activePage = pages.find(p => p.id === selectedPage);
 
   return (
@@ -330,6 +345,12 @@ const PageSectionManager: React.FC = () => {
                               className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600"
                             >
                               Restore
+                            </button>
+                            <button
+                              onClick={() => handlePermanentDeletePage(page.id)}
+                              className="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700"
+                            >
+                              Delete Forever
                             </button>
                           </div>
                         </div>

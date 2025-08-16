@@ -196,8 +196,10 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   };
 
   const getContent = (sectionId: string, defaultContent: any) => {
-    const content = editableSections[sectionId]?.content || defaultContent;
-    console.log('Getting content for:', sectionId, 'Content:', content, 'Has section:', !!editableSections[sectionId]);
+    const section = editableSections[sectionId];
+    // Return CMS content only if it exists and is not empty
+    const content = (section?.content && section.content.trim() !== '') ? section.content : defaultContent;
+    console.log('Getting content for:', sectionId, 'Content:', content, 'Has section:', !!section, 'Section content:', section?.content);
     return content;
   };
 
@@ -214,7 +216,9 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
           await apiService.createStaffMember({ ...member, position: i });
         }
       }
-      setStaffData(staff);
+      
+      // Reload staff data from API to ensure consistency with database
+      await loadStaff();
     } catch (error) {
       if (error instanceof ApiError) {
         setError(`Failed to update staff: ${error.message}`);

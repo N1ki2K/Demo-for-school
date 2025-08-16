@@ -18,6 +18,9 @@ export const EditableList: React.FC<EditableListProps> = ({
   ordered = false 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  
+  // Force read-only mode - disable inline editing
+  const forceReadOnly = true;
   const { locale } = useLanguage();
   const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);
@@ -64,7 +67,7 @@ export const EditableList: React.FC<EditableListProps> = ({
   const t = texts[locale];
 
   const handleEdit = () => {
-    if (isEditing) {
+    if (isEditing && !forceReadOnly) {
       setTempItems([...items]);
       setIsEditable(true);
     }
@@ -149,7 +152,7 @@ export const EditableList: React.FC<EditableListProps> = ({
           <li key={index}>{item}</li>
         ))}
       </ListTag>
-      {isEditing && (
+      {isEditing && !forceReadOnly && (
         <button
           onClick={handleEdit}
           className="absolute -top-2 -right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"

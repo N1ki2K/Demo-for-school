@@ -42,9 +42,13 @@ router.get('/page/:pageId', (req, res: Response) => {
     params = [];
   } else {
     // Other pages: filter by page_id or sections that start with pageId
+    // Handle both exact page_id match and section id patterns
+    const sectionIdPattern = `${pageId}-%`;
+    const alternatePattern = `${pageId.replace(/-/g, '_')}-%`; // Also try underscore version
+    
     query = `SELECT * FROM content_sections 
-             WHERE (page_id = ? OR id LIKE ?) AND is_active = 1 ORDER BY position`;
-    params = [pageId, `${pageId}-%`];
+             WHERE (page_id = ? OR id LIKE ? OR id LIKE ?) AND is_active = 1 ORDER BY position`;
+    params = [pageId, sectionIdPattern, alternatePattern];
   }
   
   db.all(query, params, (err, sections: ContentSection[]) => {

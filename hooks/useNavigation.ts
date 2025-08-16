@@ -69,11 +69,36 @@ export const useNavigation = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const transformPageToNavItem = (page: PageData): NavItem => ({
-    label: page.name,
-    path: page.path,
-    children: page.children ? page.children.map(transformPageToNavItem) : undefined,
-  });
+  const transformPageToNavItem = (page: PageData): NavItem => {
+    // Map database page names to translated labels
+    const getTranslatedLabel = (pageId: string, pageName: string): string => {
+      const labelMap: Record<string, string> = {
+        'home': t.nav.home,
+        'school': t.nav.school.title,
+        'school-history': t.nav.school.history,
+        'school-patron': t.nav.school.patron,
+        'school-team': t.nav.school.team,
+        'school-council': t.nav.school.council,
+        'documents': t.nav.documents.title,
+        'documents-calendar': t.nav.documents.calendar,
+        'documents-schedules': t.nav.documents.schedules,
+        'projects': t.nav.projects.title,
+        'projects-your-hour': t.nav.projects.yourHour,
+        'useful-links': t.nav.usefulLinks,
+        'gallery': t.nav.gallery,
+        'contacts': t.nav.contacts,
+        'info-access': t.nav.infoAccess
+      };
+      
+      return labelMap[pageId] || pageName;
+    };
+
+    return {
+      label: getTranslatedLabel(page.id, page.name),
+      path: page.path,
+      children: page.children ? page.children.map(transformPageToNavItem) : undefined,
+    };
+  };
 
   const loadNavigation = async () => {
     try {

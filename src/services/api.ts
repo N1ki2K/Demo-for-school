@@ -99,44 +99,9 @@ class ApiService {
 
   async getContentByPageAndLanguage(pageId: string, language: string) {
     try {
-      // First try to get content by page
+      // Get content by page ID from database - this is the correct way
       const pageContent = await this.getContentByPage(pageId);
       const languageFilteredContent = pageContent.filter(section => section.id.endsWith(`_${language}`));
-      
-      // If no page-specific content found, get all content and filter by language and inferred page association
-      if (languageFilteredContent.length === 0) {
-        const allContent = await this.getContentSections();
-        const filtered = allContent.filter(section => {
-          const id = section.id;
-          // Check if it ends with the language
-          if (!id.endsWith(`_${language}`)) return false;
-          
-          // For specific page patterns, try to infer page association
-          const baseId = id.replace(`_${language}`, '');
-          
-          // Map common content patterns to pages
-          if (pageId === 'home') {
-            return baseId.includes('hero') || baseId.includes('news') || baseId.includes('features');
-          }
-          if (pageId === 'contacts') {
-            return baseId.includes('address') || baseId.includes('phone') || baseId.includes('email') || 
-                   baseId.includes('contact') || baseId.includes('worktime');
-          }
-          if (pageId === 'global') {
-            return baseId.includes('header') || baseId.includes('footer') || baseId.includes('nav');
-          }
-          
-          // For document/project pages, check if the base ID contains the page identifier
-          if (pageId.startsWith('documents-') || pageId.startsWith('projects-') || pageId.startsWith('school-')) {
-            const pageKeyword = pageId.replace('documents-', '').replace('projects-', '').replace('school-', '');
-            return baseId.includes(pageKeyword) || baseId.includes(pageId);
-          }
-          
-          return false;
-        });
-        
-        return filtered;
-      }
       
       return languageFilteredContent;
     } catch (error) {
@@ -192,15 +157,13 @@ class ApiService {
   }
 
   async createStaffMember(member: any) {
-    // Convert frontend field names to backend field names
+    // The member object already uses snake_case field names (is_director, image_url)
+    // so we don't need field conversion - just pass it through
     const backendMember = {
       ...member,
-      image_url: member.imageUrl,
-      is_director: member.isDirector,
+      // Ensure boolean conversion for is_director
+      is_director: Boolean(member.is_director),
     };
-    // Remove frontend field names
-    delete backendMember.imageUrl;
-    delete backendMember.isDirector;
     
     return this.request('/staff', {
       method: 'POST',
@@ -209,15 +172,13 @@ class ApiService {
   }
 
   async updateStaffMember(id: string, member: any) {
-    // Convert frontend field names to backend field names
+    // The member object already uses snake_case field names (is_director, image_url)
+    // so we don't need field conversion - just pass it through
     const backendMember = {
       ...member,
-      image_url: member.imageUrl,
-      is_director: member.isDirector,
+      // Ensure boolean conversion for is_director
+      is_director: Boolean(member.is_director),
     };
-    // Remove frontend field names
-    delete backendMember.imageUrl;
-    delete backendMember.isDirector;
     
     return this.request(`/staff/${id}`, {
       method: 'PUT',
@@ -324,8 +285,9 @@ class ApiService {
     });
   }
 
-  async deletePage(id: string) {
-    return this.request(`/pages/${id}`, {
+  async deletePage(id: string, permanent: boolean = false) {
+    const queryParam = permanent ? '?permanent=true' : '';
+    return this.request(`/pages/${id}${queryParam}`, {
       method: 'DELETE',
     });
   }

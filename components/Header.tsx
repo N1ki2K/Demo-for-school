@@ -14,7 +14,7 @@ const Dropdown: React.FC<{ items: NavItem[]; parentPath: string; closeMenu: () =
         {items.map((item) => (
           <NavLink
             key={item.path}
-            to={`${parentPath}${item.path}`}
+            to={item.path}
             onClick={closeMenu}
             className={({ isActive }) =>
               `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
@@ -60,7 +60,7 @@ const MoreDropdownItem: React.FC<{ item: NavItem; closeMenu: () => void }> = ({ 
                     {item.children.map(child => (
                         <NavLink
                             key={child.path}
-                            to={`${item.path}${child.path}`}
+                            to={child.path}
                             onClick={closeMenu}
                             className={({ isActive }) =>
                                 `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
@@ -272,7 +272,7 @@ const Header: React.FC = () => {
                   {link.children.map((child) => (
                     <NavLink
                       key={child.path}
-                      to={link.path + child.path}
+                      to={child.path}
                       onClick={closeAllMenus}
                       className={({ isActive }) => `block py-2 text-white hover:text-brand-gold-light transition-colors duration-200 ${isActive ? 'text-brand-gold-light font-semibold' : ''}`}
                     >

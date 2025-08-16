@@ -116,6 +116,19 @@ const ContentManagementDashboard: React.FC = () => {
     setEditContent('');
   };
 
+  const handleDeleteSection = async (sectionId: string, sectionLabel: string) => {
+    if (confirm(`Are you sure you want to delete "${sectionLabel}"? This action cannot be undone.`)) {
+      try {
+        await apiService.deleteContentSection(sectionId);
+        // Reload content to show updated list
+        loadPageContent();
+      } catch (error) {
+        console.error('Failed to delete section:', error);
+        alert('Failed to delete section. Please try again.');
+      }
+    }
+  };
+
   const createNewSection = async () => {
     const sectionName = prompt('Enter section name (e.g., "about-title"):');
     if (!sectionName) return;
@@ -221,12 +234,20 @@ const ContentManagementDashboard: React.FC = () => {
                     <h4 className="font-medium text-gray-900">{section.label}</h4>
                     <p className="text-sm text-gray-500">ID: {section.id}</p>
                   </div>
-                  <button
-                    onClick={() => handleEditSection(section)}
-                    className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
-                  >
-                    Edit
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => handleEditSection(section)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded text-sm hover:bg-blue-600 transition-colors"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteSection(section.id, section.label)}
+                      className="px-3 py-1 bg-red-500 text-white rounded text-sm hover:bg-red-600 transition-colors"
+                    >
+                      Delete
+                    </button>
+                  </div>
                 </div>
 
                 {editingSection === section.id ? (

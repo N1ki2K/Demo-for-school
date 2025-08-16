@@ -18,6 +18,9 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   className = '' 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  
+  // Force read-only mode - disable inline editing
+  const forceReadOnly = true;
   const { locale } = useLanguage();
   const location = useLocation();
   const [showUrlInput, setShowUrlInput] = useState(false);
@@ -62,7 +65,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   const t = texts[locale];
 
   const handleClick = () => {
-    if (isEditing) {
+    if (isEditing && !forceReadOnly) {
       setTempUrl(src);
       setShowUrlInput(true);
     }
@@ -75,14 +78,14 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   };
 
   return (
-    <div className={`relative ${isEditing ? 'cms-editable-image' : ''}`}>
+    <div className={`relative ${isEditing && !forceReadOnly ? 'cms-editable-image' : ''}`}>
       <img
         src={src}
         alt={alt}
         className={className}
         onClick={handleClick}
       />
-      {isEditing && (
+      {isEditing && !forceReadOnly && (
         <div className="absolute top-2 right-2">
           <button
             onClick={handleClick}

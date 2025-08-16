@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
 import { EditableText } from '../../components/cms/EditableText';
 import { EditableImage } from '../../components/cms/EditableImage';
-import { StaffManagement, StaffMember } from '../../components/cms/StaffManagement';
+import { StaffMember } from '../../components/cms/StaffManagement';
 import { useCMS } from '../../context/CMSContext';
 
 interface TeamMember {
@@ -87,7 +87,12 @@ const TeamCard: React.FC<TeamMember & { email?: string; phone?: string; bio?: st
 
 const TeamPage: React.FC = () => {
   const { t } = useLanguage();
-  const { getStaff, updateStaff } = useCMS();
+  const { getStaff, loadStaff } = useCMS();
+
+  // Load staff data when component mounts
+  useEffect(() => {
+    loadStaff();
+  }, [loadStaff]);
 
   const customStaff = getStaff();
 
@@ -114,7 +119,6 @@ const TeamPage: React.FC = () => {
 
   return (
     <PageWrapper title={t.teamPage.title}>
-      <StaffManagement staffList={allStaff} onStaffUpdate={updateStaff} />
 
       {/* Introduction */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 p-8 rounded-xl mb-12 border border-blue-100">

@@ -50,11 +50,12 @@ export const StaffManagement: React.FC<StaffManagementProps> = ({
       name: formData.name || '',
       role: formData.role || '',
       imageUrl: formData.imageUrl || `https://picsum.photos/400/400?random=${Math.floor(Math.random() * 1000)}`,
-      isDirector: formData.isDirector || false,
+      isDirector: Boolean(formData.isDirector),
       email: formData.email || '',
       phone: formData.phone || '',
       bio: formData.bio || ''
     };
+
 
     if (editingMember) {
       // Update existing member

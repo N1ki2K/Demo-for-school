@@ -12,7 +12,9 @@
       "Bash(curl:*)",
       "Bash(mv:*)",
       "Bash(rm:*)",
-      "Bash(set PORT=3002)"
+      "Bash(set PORT=3002)",
+      "Bash(cmd //c taskkill:*)",
+      "Bash(cmd //c:*)"
     ],
     "deny": [],
     "ask": []

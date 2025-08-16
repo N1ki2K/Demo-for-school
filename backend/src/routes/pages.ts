@@ -170,23 +170,45 @@ router.put('/:id', authenticateToken, (req: AuthRequest, res: Response) => {
 // Delete page (soft delete)
 router.delete('/:id', authenticateToken, (req: AuthRequest, res: Response) => {
   const { id } = req.params;
+  const { permanent } = req.query;
   
-  db.run(
-    'UPDATE pages SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-    [id],
-    function(err) {
-      if (err) {
-        console.error('Delete error:', err);
-        return res.status(500).json({ error: 'Failed to delete page' });
+  if (permanent === 'true') {
+    // Permanent delete - actually remove from database
+    db.run(
+      'DELETE FROM pages WHERE id = ?',
+      [id],
+      function(err) {
+        if (err) {
+          console.error('Permanent delete error:', err);
+          return res.status(500).json({ error: 'Failed to permanently delete page' });
+        }
+        
+        if (this.changes === 0) {
+          return res.status(404).json({ error: 'Page not found' });
+        }
+        
+        res.json({ message: 'Page permanently deleted successfully' });
       }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Page not found' });
+    );
+  } else {
+    // Soft delete - just hide the page
+    db.run(
+      'UPDATE pages SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
+      [id],
+      function(err) {
+        if (err) {
+          console.error('Delete error:', err);
+          return res.status(500).json({ error: 'Failed to delete page' });
+        }
+        
+        if (this.changes === 0) {
+          return res.status(404).json({ error: 'Page not found' });
+        }
+        
+        res.json({ message: 'Page deleted successfully' });
       }
-      
-      res.json({ message: 'Page deleted successfully' });
-    }
-  );
+    );
+  }
 });
 
 // Bulk update page positions (for drag-and-drop reordering)

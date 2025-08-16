@@ -16,7 +16,25 @@ const DynamicPage: React.FC = () => {
 
   // Convert path to page ID - handle both /path and path formats
   const normalizedPath = path?.startsWith('/') ? path : `/${path}`;
-  const pageId = normalizedPath?.replace(/^\//, '').replace(/\/$/, '') || 'home';
+  let pageId = normalizedPath?.replace(/^\//, '').replace(/\/$/, '') || 'home';
+  
+  // Map URL paths to the correct page IDs from migration data
+  const pathMappings: Record<string, string> = {
+    'school/history': 'school-history',
+    'school/patron': 'school-patron', 
+    'school/team': 'school-team',
+    'school/council': 'school-council',
+    'documents/calendar': 'documents-calendar',
+    'documents/schedules': 'documents-schedules',
+    'projects/your-hour': 'projects-your-hour',
+    'useful-links': 'useful-links',
+    'info-access': 'info-access'
+  };
+  
+  // Apply path mapping if it exists
+  if (pathMappings[pageId]) {
+    pageId = pathMappings[pageId];
+  }
 
   useEffect(() => {
     const loadPageContent = async () => {

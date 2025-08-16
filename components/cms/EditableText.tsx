@@ -20,6 +20,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
   placeholder 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  
+  // Force read-only mode - disable inline editing
+  const forceReadOnly = true;
   const { locale } = useLanguage();
   const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);
@@ -111,7 +114,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   }, [isEditing, isEditable, languageSpecificId, defaultContent, getContent]);
 
   const handleClick = (e: React.MouseEvent) => {
-    if (isEditing && !isEditable) {
+    if (isEditing && !isEditable && !forceReadOnly) {
       e.preventDefault(); // Prevent any default behavior (like following links)
       e.stopPropagation(); // Stop event from bubbling up
       setIsEditable(true);
@@ -157,23 +160,26 @@ export const EditableText: React.FC<EditableTextProps> = ({
 
   // Determine what content to display
   const displayContent = () => {
-    if (content && content !== defaultContent) {
+    // Check if we have meaningful CMS content (not empty or just the default)
+    if (content && content.trim() !== '' && content !== defaultContent) {
       return content;
     }
     
-    if (isEditing && (!content || content === defaultContent)) {
+    // If we're in editing mode and have no meaningful content, show placeholder
+    if (isEditing && (!content || content.trim() === '' || content === defaultContent)) {
       return finalPlaceholder;
     }
     
+    // Fall back to default content (your translations)
     return defaultContent;
   };
 
   return (
     <Tag
       ref={textRef as any}
-      className={`${className} ${isEditing ? 'cms-editable' : ''} ${isEditable ? 'cms-editing' : ''}`}
+      className={`${className} ${isEditing && !forceReadOnly ? 'cms-editable' : ''} ${isEditable ? 'cms-editing' : ''}`}
       onClick={handleClick}
-      contentEditable={isEditable}
+      contentEditable={isEditable && !forceReadOnly}
       suppressContentEditableWarning={isEditable}
       onBlur={isEditable ? handleBlur : undefined}
       onKeyDown={isEditable ? handleKeyDown : undefined}
