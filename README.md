@@ -1,3 +1,4 @@
+this is a test to see if i can push changes to git from arch linux with git bash terminal
 # Visual CMS Integration Guide
 
 This project now includes a comprehensive Visual Content Management System (CMS) that allows administrators to edit content directly on the website without touching code.
