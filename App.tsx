@@ -33,6 +33,7 @@ import ContactsPage from './pages/ContactsPage';
 import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import DynamicPage from './pages/DynamicPage';
 
 const App: React.FC = () => {
   return (
@@ -77,7 +78,8 @@ const App: React.FC = () => {
               <Route path="/info-access" element={<InfoAccessPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
 
-              <Route path="*" element={<NotFoundPage />} />
+              {/* Dynamic routes for custom pages */}
+              <Route path="*" element={<DynamicPage />} />
             </Route>
           </Routes>
         </HashRouter>

@@ -63,6 +63,18 @@ export const en = {
     infoAccess: 'Access to Information',
     more: 'More',
   },
+  pageCategories: {
+    main: 'Main Pages',
+    home: 'Home',
+    school: 'The School',
+    documents: 'Documents',
+    'useful-links': 'Useful Links',
+    gallery: 'Gallery', 
+    projects: 'Projects',
+    contacts: 'Contacts',
+    'info-access': 'Access to Information',
+    custom: 'Custom Pages'
+  },
   search: {
     label: 'Search',
     close: 'Close',

@@ -63,6 +63,18 @@ export const bg = {
     infoAccess: 'Достъп до информация',
     more: 'Още',
   },
+  pageCategories: {
+    main: 'Основни страници',
+    home: 'Начало',
+    school: 'Училището',
+    documents: 'Документи',
+    'useful-links': 'Полезни връзки',
+    gallery: 'Галерия',
+    projects: 'Работа по проекти',
+    contacts: 'Контакти',
+    'info-access': 'Достъп до информация',
+    custom: 'Персонализирани страници'
+  },
   search: {
     label: 'Търсене',
     close: 'Затвори',
