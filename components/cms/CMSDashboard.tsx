@@ -2,6 +2,8 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiService } from '../../src/services/api';
+import ContactManagerTab from './ContactManagerTab';
+import InfoAccessManagerTab from './InfoAccessManagerTab';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -1331,6 +1333,7 @@ const PublicCouncilTab: React.FC = () => {
 };
 
 const MediaManagerTab: React.FC = () => {
+  const { t } = useLanguage();
   const { isLoading, error } = useCMS();
   const [picturesImages, setPicturesImages] = useState<any[]>([]);
   const [isLoadingImages, setIsLoadingImages] = useState(true);
@@ -1415,10 +1418,10 @@ const MediaManagerTab: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
         <h3 className="text-lg font-semibold text-blue-800 mb-2">
-          📁 Pictures Folder Manager
+          📁 {t.cms.mediaManager.title}
         </h3>
         <p className="text-sm text-blue-700">
-          Upload and manage all images in the Pictures folder. These images can then be used throughout the website.
+          {t.cms.mediaManager.description}
         </p>
       </div>
 
@@ -1430,7 +1433,7 @@ const MediaManagerTab: React.FC = () => {
 
       {/* Upload Section */}
       <div className="bg-white border rounded-lg p-4">
-        <h4 className="text-md font-semibold mb-4 text-gray-700">Upload New Images</h4>
+        <h4 className="text-md font-semibold mb-4 text-gray-700">{t.cms.mediaManager.uploadTitle}</h4>
         
         <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
           <input
@@ -1455,10 +1458,10 @@ const MediaManagerTab: React.FC = () => {
             </svg>
             <div className="mt-4">
               <p className="text-lg text-gray-600">
-                {isUploading ? 'Uploading...' : 'Click to upload images or drag and drop'}
+                {isUploading ? t.cms.mediaManager.uploading : t.cms.mediaManager.uploadText}
               </p>
               <p className="text-sm text-gray-500">
-                Supports: JPG, PNG, GIF, WebP, SVG (Max: 5MB each)
+                {t.cms.mediaManager.uploadSupports}
               </p>
             </div>
           </label>
@@ -1466,12 +1469,12 @@ const MediaManagerTab: React.FC = () => {
 
         {/* Image Size Guidelines */}
         <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-          <h5 className="text-sm font-semibold text-yellow-800 mb-2">📏 Image Size Guidelines:</h5>
+          <h5 className="text-sm font-semibold text-yellow-800 mb-2">📏 {t.cms.mediaManager.sizeGuidelines}</h5>
           <ul className="text-xs text-yellow-700 space-y-1">
-            <li><strong>Profile Pictures:</strong> 300×300 pixels (square) - for team member photos</li>
-            <li><strong>Gallery Images:</strong> 600×400 pixels (landscape) - for photo gallery</li>
-            <li><strong>Banner Images:</strong> 1200×400 pixels (wide) - for page headers</li>
-            <li><strong>General:</strong> Keep files under 500KB for best performance</li>
+            <li>{t.cms.mediaManager.profilePictures}</li>
+            <li>{t.cms.mediaManager.galleryImages}</li>
+            <li>{t.cms.mediaManager.bannerImages}</li>
+            <li>{t.cms.mediaManager.general}</li>
           </ul>
         </div>
       </div>
@@ -1480,21 +1483,21 @@ const MediaManagerTab: React.FC = () => {
       <div className="bg-white border rounded-lg p-4">
         <div className="flex justify-between items-center mb-4">
           <h4 className="text-md font-semibold text-gray-700">
-            Pictures Folder ({picturesImages.length} images)
+            {t.cms.mediaManager.picturesFolder.replace('{count}', picturesImages.length.toString())}
           </h4>
           <button
             onClick={loadPicturesImages}
             disabled={isLoadingImages}
             className="text-blue-600 hover:text-blue-800 text-sm disabled:opacity-50"
           >
-            🔄 Refresh
+            🔄 {t.cms.mediaManager.refresh}
           </button>
         </div>
 
         {isLoadingImages ? (
           <div className="text-center py-8">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
-            <p className="text-gray-500 mt-2">Loading Pictures folder...</p>
+            <p className="text-gray-500 mt-2">{t.cms.mediaManager.loading}</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
@@ -1526,7 +1529,7 @@ const MediaManagerTab: React.FC = () => {
                     <button
                       onClick={() => navigator.clipboard.writeText(image.url)}
                       className="text-blue-600 hover:text-blue-800 p-1"
-                      title="Copy URL"
+                      title={t.cms.mediaManager.copyUrl}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
@@ -1535,7 +1538,7 @@ const MediaManagerTab: React.FC = () => {
                     <button
                       onClick={() => handleDeleteImage(image.filename)}
                       className="text-red-600 hover:text-red-800 p-1"
-                      title="Delete image"
+                      title={t.cms.mediaManager.deleteImage}
                     >
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -1551,13 +1554,717 @@ const MediaManagerTab: React.FC = () => {
                 <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
-                <h3 className="mt-2 text-sm font-medium text-gray-900">No images in Pictures folder</h3>
-                <p className="mt-1 text-sm text-gray-500">Upload some images to get started.</p>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">{t.cms.mediaManager.noImages}</h3>
+                <p className="mt-1 text-sm text-gray-500">{t.cms.mediaManager.uploadStart}</p>
               </div>
             )}
           </div>
         )}
       </div>
+    </div>
+  );
+};
+
+const DocumentManagerTab: React.FC = () => {
+  const { t } = useLanguage();
+  const { isLoading, error } = useCMS();
+  const [documents, setDocuments] = useState<any[]>([]);
+  const [isLoadingDocuments, setIsLoadingDocuments] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Load documents from Documents folder
+  useEffect(() => {
+    loadDocuments();
+  }, []);
+
+  const loadDocuments = async () => {
+    try {
+      setIsLoadingDocuments(true);
+      const response = await apiService.getDocuments();
+      setDocuments(response.documents || []);
+    } catch (error) {
+      console.error('❌ Failed to load Documents folder:', error);
+    } finally {
+      setIsLoadingDocuments(false);
+    }
+  };
+
+  const handleFileUpload = async (files: FileList) => {
+    const fileArray = Array.from(files);
+    let successCount = 0;
+    let errorCount = 0;
+
+    setIsUploading(true);
+
+    for (const file of fileArray) {
+      try {
+        console.log(`📄 Uploading document: ${file.name}, size: ${file.size}, type: ${file.type}`);
+        const result = await apiService.uploadDocument(file);
+        console.log('✅ Document uploaded successfully:', result);
+        successCount++;
+      } catch (error) {
+        console.error('❌ Failed to upload document:', error);
+        errorCount++;
+        alert(`Failed to upload ${file.name}: ${error.message || 'Please try again.'}`);
+      }
+    }
+
+    setIsUploading(false);
+
+    if (successCount > 0) {
+      alert(t.cms.documentManager.uploadSuccess.replace('{count}', successCount.toString()));
+      loadDocuments();
+    }
+
+    if (errorCount > 0) {
+      console.log(`⚠️ Upload completed with ${errorCount} errors out of ${fileArray.length} files`);
+    }
+  };
+
+  const handleDeleteDocument = async (filename: string) => {
+    if (!confirm(t.cms.documentManager.deleteConfirm.replace('{filename}', filename))) {
+      return;
+    }
+
+    try {
+      await apiService.deleteDocument(filename);
+      alert(t.cms.documentManager.deleteSuccess);
+      loadDocuments();
+    } catch (error) {
+      console.error('❌ Failed to delete document:', error);
+      alert(t.cms.documentManager.deleteFailed.replace('{error}', error.message || 'Unknown error'));
+    }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const getDocumentIcon = (type: string): string => {
+    switch (type) {
+      case 'pdf': return '📄';
+      case 'word': return '📝';
+      case 'excel': return '📊';
+      case 'powerpoint': return '📊';
+      case 'text': return '📃';
+      default: return '📋';
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          📄 {t.cms.documentManager.title}
+        </h3>
+        <p className="text-sm text-blue-700">
+          {t.cms.documentManager.description}
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Upload Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">{t.cms.documentManager.uploadTitle}</h4>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <input
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.rtf"
+            onChange={(e) => {
+              if (e.target.files) {
+                handleFileUpload(e.target.files);
+              }
+            }}
+            disabled={isUploading}
+            className="hidden"
+            id="document-upload"
+          />
+          <label
+            htmlFor="document-upload"
+            className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="mt-4">
+              <p className="text-lg text-gray-600">
+                {isUploading ? t.cms.documentManager.uploading : t.cms.documentManager.uploadText}
+              </p>
+              <p className="text-sm text-gray-500">
+                {t.cms.documentManager.uploadSupports}
+              </p>
+            </div>
+          </label>
+        </div>
+
+        {/* Document Size Guidelines */}
+        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h5 className="text-sm font-semibold text-yellow-800 mb-2">📏 {t.cms.documentManager.sizeGuidelines}</h5>
+          <ul className="text-xs text-yellow-700 space-y-1">
+            {t.cms.documentManager.documentGuidelines.map((guideline, index) => (
+              <li key={index}>{guideline}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+
+      {/* Documents Grid */}
+      <div className="bg-white border rounded-lg p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="text-md font-semibold text-gray-700">
+            {t.cms.documentManager.documentsFolder.replace('{count}', documents.length.toString())}
+          </h4>
+          <button
+            onClick={loadDocuments}
+            disabled={isLoadingDocuments}
+            className="text-blue-600 hover:text-blue-800 text-sm disabled:opacity-50"
+          >
+            🔄 {t.cms.documentManager.refresh}
+          </button>
+        </div>
+
+        {isLoadingDocuments ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="text-gray-500 mt-2">{t.cms.documentManager.loading}</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            {documents.map((document) => (
+              <div key={document.filename} className="bg-gray-50 border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow">
+                <div className="flex items-center mb-3">
+                  <div className="text-4xl mr-3">
+                    {getDocumentIcon(document.type)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-medium text-gray-700 truncate" title={document.filename}>
+                      {document.filename}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {t.cms.documentManager.documentTypes[document.type] || t.cms.documentManager.documentTypes.other}
+                    </p>
+                  </div>
+                </div>
+                <div className="text-xs text-gray-500 space-y-1 mb-3">
+                  <p>{formatFileSize(document.size)}</p>
+                  <p>{formatDate(document.modified)}</p>
+                </div>
+                <div className="flex justify-between items-center">
+                  <a
+                    href={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${document.url}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:text-blue-800 p-1"
+                    title={t.cms.documentManager.openDocument}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                  <button
+                    onClick={() => {
+                      const url = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${document.url}`;
+                      navigator.clipboard.writeText(url);
+                      alert('URL copied to clipboard!');
+                    }}
+                    className="text-gray-600 hover:text-gray-800 p-1"
+                    title={t.cms.documentManager.copyUrl}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteDocument(document.filename)}
+                    className="text-red-600 hover:text-red-800 p-1"
+                    title={t.cms.documentManager.deleteDocument}
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+            
+            {documents.length === 0 && (
+              <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">{t.cms.documentManager.noDocuments}</h3>
+                <p className="mt-1 text-sm text-gray-500">{t.cms.documentManager.uploadStart}</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const NewsManagerTab: React.FC = () => {
+  const { t } = useLanguage();
+  const { isLoading, error } = useCMS();
+  const [newsArticles, setNewsArticles] = useState<any[]>([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingArticle, setEditingArticle] = useState<any>(null);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+
+  // Form state
+  const [formData, setFormData] = useState({
+    title_bg: '',
+    title_en: '',
+    excerpt_bg: '',
+    excerpt_en: '',
+    content_bg: '',
+    content_en: '',
+    featured_image_url: '',
+    featured_image_alt: '',
+    is_published: true,
+    is_featured: false,
+    published_date: new Date().toISOString().split('T')[0]
+  });
+
+  // Load news articles
+  useEffect(() => {
+    loadNews();
+  }, []);
+
+  const loadNews = async () => {
+    try {
+      setIsLoadingNews(true);
+      const articles = await apiService.getAllNewsForAdmin();
+      setNewsArticles(articles || []);
+    } catch (error) {
+      console.error('❌ Failed to load news articles:', error);
+    } finally {
+      setIsLoadingNews(false);
+    }
+  };
+
+  const handleAddNews = () => {
+    setFormData({
+      title_bg: '',
+      title_en: '',
+      excerpt_bg: '',
+      excerpt_en: '',
+      content_bg: '',
+      content_en: '',
+      featured_image_url: '',
+      featured_image_alt: '',
+      is_published: true,
+      is_featured: false,
+      published_date: new Date().toISOString().split('T')[0]
+    });
+    setEditingArticle(null);
+    setShowAddForm(true);
+  };
+
+  const handleEditNews = (article: any) => {
+    setFormData({
+      title_bg: article.title_bg || '',
+      title_en: article.title_en || '',
+      excerpt_bg: article.excerpt_bg || '',
+      excerpt_en: article.excerpt_en || '',
+      content_bg: article.content_bg || '',
+      content_en: article.content_en || '',
+      featured_image_url: article.featured_image_url || '',
+      featured_image_alt: article.featured_image_alt || '',
+      is_published: Boolean(article.is_published),
+      is_featured: Boolean(article.is_featured),
+      published_date: article.published_date ? article.published_date.split('T')[0] : new Date().toISOString().split('T')[0]
+    });
+    setEditingArticle(article);
+    setShowAddForm(true);
+  };
+
+  const handleSaveNews = async () => {
+    // Validation
+    if (!formData.title_bg || !formData.title_en || !formData.excerpt_bg || !formData.excerpt_en) {
+      alert(t.cms.newsManager.form.requiredFields);
+      return;
+    }
+
+    try {
+      const articleData = {
+        ...formData,
+        published_date: formData.published_date + 'T00:00:00.000Z'
+      };
+
+      if (editingArticle) {
+        await apiService.updateNewsArticle(editingArticle.id, articleData);
+        alert(t.cms.newsManager.messages.updateSuccess);
+      } else {
+        await apiService.createNewsArticle(articleData);
+        alert(t.cms.newsManager.messages.createSuccess);
+      }
+
+      setShowAddForm(false);
+      loadNews();
+    } catch (error) {
+      console.error('❌ Failed to save news article:', error);
+      const errorMsg = editingArticle ? 
+        t.cms.newsManager.messages.updateError.replace('{error}', error.message || 'Unknown error') :
+        t.cms.newsManager.messages.createError.replace('{error}', error.message || 'Unknown error');
+      alert(errorMsg);
+    }
+  };
+
+  const handleDeleteNews = async (article: any) => {
+    if (!confirm(t.cms.newsManager.messages.deleteConfirm)) {
+      return;
+    }
+
+    try {
+      await apiService.deleteNewsArticle(article.id);
+      alert(t.cms.newsManager.messages.deleteSuccess);
+      loadNews();
+    } catch (error) {
+      console.error('❌ Failed to delete news article:', error);
+      alert(t.cms.newsManager.messages.deleteError.replace('{error}', error.message || 'Unknown error'));
+    }
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  const handleImageSelect = (imageUrl: string, filename: string) => {
+    setFormData(prev => ({
+      ...prev,
+      featured_image_url: imageUrl,
+      featured_image_alt: filename
+    }));
+    setShowImagePicker(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          📰 {t.cms.newsManager.title}
+        </h3>
+        <p className="text-sm text-blue-700">
+          {t.cms.newsManager.description}
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Add News Button */}
+      <div className="flex justify-between items-center">
+        <h4 className="text-lg font-semibold text-gray-800">{t.cms.newsManager.newsList}</h4>
+        <button
+          onClick={handleAddNews}
+          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
+        >
+          ➕ {t.cms.newsManager.addNews}
+        </button>
+      </div>
+
+      {/* News List */}
+      {isLoadingNews ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-500 mt-2">Loading news articles...</p>
+        </div>
+      ) : (
+        <div className="bg-white border rounded-lg">
+          {newsArticles.length === 0 ? (
+            <div className="text-center py-12">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 011 2v1m2 13a2 2 0 01-2-2V7m2 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v1" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{t.cms.newsManager.noNews}</h3>
+              <p className="mt-1 text-sm text-gray-500">{t.cms.newsManager.createFirst}</p>
+            </div>
+          ) : (
+            <div className="divide-y divide-gray-200">
+              {newsArticles.map((article) => (
+                <div key={article.id} className="p-4 hover:bg-gray-50">
+                  <div className="flex items-start justify-between">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <h5 className="text-lg font-medium text-gray-900 truncate">
+                          {article.title_bg}
+                        </h5>
+                        <div className="flex space-x-1">
+                          {article.is_published && (
+                            <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
+                              {t.cms.newsManager.status.published}
+                            </span>
+                          )}
+                          {!article.is_published && (
+                            <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
+                              {t.cms.newsManager.status.draft}
+                            </span>
+                          )}
+                          {article.is_featured && (
+                            <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
+                              {t.cms.newsManager.status.featured}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <p className="text-sm text-gray-600 mb-2">{article.excerpt_bg}</p>
+                      <p className="text-xs text-gray-500">
+                        {formatDate(article.published_date)}
+                      </p>
+                    </div>
+                    <div className="ml-4 flex-shrink-0 flex space-x-2">
+                      <button
+                        onClick={() => handleEditNews(article)}
+                        className="text-blue-600 hover:text-blue-800 p-1"
+                        title={t.cms.newsManager.actions.edit}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteNews(article)}
+                        className="text-red-600 hover:text-red-800 p-1"
+                        title={t.cms.newsManager.actions.delete}
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Add/Edit Form Modal */}
+      {showAddForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold">
+                {editingArticle ? t.cms.newsManager.editNews : t.cms.newsManager.addNews}
+              </h3>
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Titles */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.titleBg}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title_bg}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title_bg: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Заглавие на български"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.titleEn}
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.title_en}
+                    onChange={(e) => setFormData(prev => ({ ...prev, title_en: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Title in English"
+                  />
+                </div>
+              </div>
+
+              {/* Excerpts */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.excerptBg}
+                  </label>
+                  <textarea
+                    value={formData.excerpt_bg}
+                    onChange={(e) => setFormData(prev => ({ ...prev, excerpt_bg: e.target.value }))}
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Кратко описание на български"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.excerptEn}
+                  </label>
+                  <textarea
+                    value={formData.excerpt_en}
+                    onChange={(e) => setFormData(prev => ({ ...prev, excerpt_en: e.target.value }))}
+                    rows={3}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Short description in English"
+                  />
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.contentBg}
+                  </label>
+                  <textarea
+                    value={formData.content_bg}
+                    onChange={(e) => setFormData(prev => ({ ...prev, content_bg: e.target.value }))}
+                    rows={6}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Пълно съдържание на български"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.contentEn}
+                  </label>
+                  <textarea
+                    value={formData.content_en}
+                    onChange={(e) => setFormData(prev => ({ ...prev, content_en: e.target.value }))}
+                    rows={6}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="Full content in English"
+                  />
+                </div>
+              </div>
+
+              {/* Featured Image */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  {t.cms.newsManager.form.featuredImage}
+                </label>
+                <div className="flex items-center space-x-4">
+                  <button
+                    type="button"
+                    onClick={() => setShowImagePicker(true)}
+                    className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
+                  >
+                    {t.cms.newsManager.form.selectImage}
+                  </button>
+                  {formData.featured_image_url && (
+                    <>
+                      <img
+                        src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${formData.featured_image_url}`}
+                        alt="Featured"
+                        className="w-16 h-16 object-cover rounded"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setFormData(prev => ({ ...prev, featured_image_url: '', featured_image_alt: '' }))}
+                        className="text-red-600 hover:text-red-800 text-sm"
+                      >
+                        {t.cms.newsManager.form.removeImage}
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              {/* Settings */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    {t.cms.newsManager.form.publishedDate}
+                  </label>
+                  <input
+                    type="date"
+                    value={formData.published_date}
+                    onChange={(e) => setFormData(prev => ({ ...prev, published_date: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  />
+                </div>
+                <div className="flex items-center space-x-6">
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_published}
+                      onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.checked }))}
+                      className="mr-2"
+                    />
+                    {t.cms.newsManager.form.isPublished}
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={formData.is_featured}
+                      onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
+                      className="mr-2"
+                    />
+                    {t.cms.newsManager.form.isFeatured}
+                  </label>
+                </div>
+              </div>
+            </div>
+
+            {/* Form Actions */}
+            <div className="flex justify-end space-x-4 mt-6">
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                {t.cms.newsManager.actions.cancel}
+              </button>
+              <button
+                onClick={handleSaveNews}
+                disabled={isLoading}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {isLoading ? 'Saving...' : t.cms.newsManager.actions.save}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <ImagePicker
+          onImageSelect={handleImageSelect}
+          currentImage={formData.featured_image_url}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
     </div>
   );
 };
@@ -2015,6 +2722,26 @@ const CMSDashboard: React.FC = () => {
       id: 'media',
       label: t.cms.tabs.media,
       content: <MediaManagerTab />
+    },
+    {
+      id: 'documents',
+      label: t.cms.tabs.documents,
+      content: <DocumentManagerTab />
+    },
+    {
+      id: 'news',
+      label: t.cms.tabs.news,
+      content: <NewsManagerTab />
+    },
+    {
+      id: 'contacts',
+      label: t.cms.tabs.contacts,
+      content: <ContactManagerTab />
+    },
+    {
+      id: 'info-access',
+      label: t.cms.tabs.infoAccess,
+      content: <InfoAccessManagerTab />
     },
     {
       id: 'history',
