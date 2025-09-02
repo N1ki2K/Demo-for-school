@@ -1,169 +1,2081 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useCMS } from '../../context/CMSContext';
-import { MediaManagerDashboard } from './MediaManagerDashboard';
-import { ContentEditor } from './ContentEditor';
-import { StaffManagementDashboard } from './StaffManagementDashboard';
-import ContentManagementDashboard from './ContentManagementDashboard';
-import PageSectionManager from './PageSectionManager';
+import { useLanguage } from '../../context/LanguageContext';
+import { apiService } from '../../src/services/api';
 
-type DashboardTab = 'content' | 'staff' | 'media' | 'pages' | 'settings';
+// Reusable Image Picker Component for selecting from Pictures folder
+interface ImagePickerProps {
+  onImageSelect: (imageUrl: string, filename: string) => void;
+  currentImage?: string;
+  onClose: () => void;
+}
 
-export const CMSDashboard: React.FC = () => {
-  const { isLoggedIn, isEditing, isLoading, error, clearError } = useCMS();
-  const [activeTab, setActiveTab] = useState<DashboardTab>('content');
+const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelect, currentImage, onClose }) => {
+  const { t } = useLanguage();
+  const [picturesImages, setPicturesImages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  if (!isLoggedIn || !isEditing) {
-    return null;
-  }
+  useEffect(() => {
+    loadPicturesImages();
+  }, []);
 
-  const tabs = [
-    { id: 'content', label: 'Content', icon: '📝' },
-    { id: 'staff', label: 'Staff', icon: '👥' },
-    { id: 'media', label: 'Media', icon: '🖼️' },
-    { id: 'pages', label: 'Pages & Sections', icon: '📄' },
-    { id: 'settings', label: 'Settings', icon: '⚙️' },
-  ] as const;
+  const loadPicturesImages = async () => {
+    try {
+      setIsLoading(true);
+      const response = await apiService.getPicturesImages();
+      setPicturesImages(response.images || []);
+    } catch (error) {
+      console.error('❌ Failed to load Pictures folder images:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredImages = picturesImages.filter(image =>
+    image.filename.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
 
   return (
-    <div className="fixed inset-0 bg-gray-900 bg-opacity-75 z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg shadow-xl w-full max-w-6xl h-full max-h-[90vh] flex flex-col">
-        {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b">
-          <h2 className="text-2xl font-bold text-gray-900">CMS Dashboard</h2>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">📁 {t.cms.imagePicker.title}</h3>
           <button
-            onClick={() => window.location.reload()}
-            className="text-gray-400 hover:text-gray-600"
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            ×
           </button>
         </div>
+        
+        {/* Search */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder={t.cms.imagePicker.search}
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
 
-        {/* Error Display */}
-        {error && (
-          <div className="mx-4 mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded flex items-center justify-between">
-            <span>{error}</span>
-            <button
-              onClick={clearError}
-              className="text-red-600 hover:text-red-800"
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+        {isLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="text-gray-500 mt-2">{t.cms.imagePicker.loading}</p>
           </div>
-        )}
-
-        {/* Loading Indicator */}
-        {isLoading && (
-          <div className="mx-4 mt-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded">
-            <div className="flex items-center">
-              <svg className="animate-spin h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-              </svg>
-              Loading...
-            </div>
-          </div>
-        )}
-
-        <div className="flex flex-1 overflow-hidden">
-          {/* Sidebar */}
-          <div className="w-64 bg-gray-50 border-r overflow-y-auto">
-            <nav className="p-4 space-y-2">
-              {tabs.map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md transition-colors ${
-                    activeTab === tab.id
-                      ? 'bg-blue-100 text-blue-700'
-                      : 'text-gray-700 hover:bg-gray-100'
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 max-h-96 overflow-y-auto">
+            {filteredImages.map((image) => {
+              const imageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${image.url}`;
+              const isSelected = currentImage === imageUrl || currentImage === image.url;
+              
+              return (
+                <div 
+                  key={image.filename} 
+                  className={`border-2 rounded-lg p-2 cursor-pointer transition-all hover:shadow-md ${
+                    isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
                   }`}
+                  onClick={() => onImageSelect(imageUrl, image.filename)}
                 >
-                  <span className="text-lg">{tab.icon}</span>
-                  <span className="font-medium">{tab.label}</span>
-                </button>
-              ))}
-            </nav>
+                  <div className="aspect-square mb-2 bg-gray-200 rounded overflow-hidden">
+                    <img 
+                      src={imageUrl}
+                      alt={image.filename}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.currentTarget.src = 'https://via.placeholder.com/150x150/cccccc/666666?text=Error';
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs font-medium text-gray-700 truncate" title={image.filename}>
+                    {image.filename}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {formatFileSize(image.size)}
+                  </p>
+                  {isSelected && (
+                    <div className="text-center mt-1">
+                      <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">
+                        ✓ Selected
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+            
+            {filteredImages.length === 0 && (
+              <div className="col-span-full text-center py-8">
+                <p className="text-gray-500">
+                  {searchTerm ? `No images found matching "${searchTerm}"` : t.cms.imagePicker.noImages}
+                </p>
+                {!searchTerm && (
+                  <p className="text-sm text-gray-400 mt-1">
+                    {t.cms.imagePicker.noImages}
+                  </p>
+                )}
+              </div>
+            )}
           </div>
+        )}
 
-          {/* Main Content */}
-          <div className="flex-1 overflow-y-auto p-6">
-            {activeTab === 'content' && <ContentManagementDashboard />}
-            {activeTab === 'staff' && <StaffManagementDashboard />}
-            {activeTab === 'media' && <MediaManagerDashboard />}
-            {activeTab === 'pages' && <PageSectionManager />}
-            {activeTab === 'settings' && <SettingsPanel />}
-          </div>
+        <div className="flex justify-end gap-3 mt-6 pt-4 border-t">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+          >
+            Cancel
+          </button>
         </div>
       </div>
     </div>
   );
 };
 
-const SettingsPanel: React.FC = () => {
-  const { isLoading } = useCMS();
-  const [settings, setSettings] = useState({
-    siteTitle: 'School Website',
-    siteDescription: 'Welcome to our school',
-    contactEmail: 'info@school.com',
-    contactPhone: '+1234567890',
+const HistoryPageTab: React.FC = () => {
+  const { getContent, updateContent, isLoading, error } = useCMS();
+  const { locale, t } = useLanguage();
+  const [content, setContent] = useState({
+    'history-p1': '',
+    'history-p2': '',
+    'history-p3': '',
+    'history-p4': '',
+    'history-image-caption': '',
+    'achievements-title': '',
+    'achievements-list': [],
+    'directors-title': '',
+    'history-main-image': ''
   });
+  
+  const [showImagePicker, setShowImagePicker] = useState(false);
+
+  // Memoize content to prevent infinite loops
+  const loadedContent = useMemo(() => {
+    if (!t.historyPage) return {};
+    
+    return {
+      'history-p1': getContent(`history-p1_${locale}`, t.historyPage.p1 || ''),
+      'history-p2': getContent(`history-p2_${locale}`, t.historyPage.p2 || ''),
+      'history-p3': getContent(`history-p3_${locale}`, t.historyPage.p3 || ''),
+      'history-p4': getContent(`history-p4_${locale}`, t.historyPage.p4 || ''),
+      'history-image-caption': getContent(`history-image-caption_${locale}`, t.historyPage.imageCaption || ''),
+      'achievements-title': getContent(`achievements-title_${locale}`, t.historyPage.achievements?.title || ''),
+      'achievements-list': getContent(`achievements-list_${locale}`, [
+        t.historyPage.achievements?.list?.[0] || '',
+        t.historyPage.achievements?.list?.[1] || '',
+        t.historyPage.achievements?.list?.[2] || '',
+        t.historyPage.achievements?.list?.[3] || '',
+        t.historyPage.achievements?.list?.[4] || ''
+      ].filter(Boolean)),
+      'directors-title': getContent(`directors-title_${locale}`, t.historyPage.directors?.title || ''),
+      'history-main-image': '' // Will be loaded separately from images table
+    };
+  }, [locale, t.historyPage, getContent]);
+
+  useEffect(() => {
+    if (Object.keys(loadedContent).length > 0) {
+      setContent(loadedContent);
+    }
+  }, [loadedContent]);
+
+  // Load image separately from images table
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        const imageData = await apiService.getImage('history-main-image');
+        if (imageData && imageData.url) {
+          console.log('🖼️ Loaded history main image:', imageData.url);
+          setContent(prev => ({ ...prev, 'history-main-image': imageData.url }));
+          setImagePreview(imageData.url);
+          setImageUrl(imageData.url);
+        } else {
+          const defaultImage = 'https://picsum.photos/1200/400?random=10';
+          setContent(prev => ({ ...prev, 'history-main-image': defaultImage }));
+          setImagePreview(defaultImage);
+          setImageUrl(defaultImage);
+        }
+      } catch (error) {
+        console.log('⚠️ Failed to load history main image, using default');
+        const defaultImage = 'https://picsum.photos/1200/400?random=10';
+        setContent(prev => ({ ...prev, 'history-main-image': defaultImage }));
+        setImagePreview(defaultImage);
+        setImageUrl(defaultImage);
+      }
+    };
+
+    loadImage();
+  }, []);
+
+  const handleInputChange = (field: string, value: string | string[]) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleImageSelect = (imageUrl: string, filename: string) => {
+    setContent(prev => ({
+      ...prev,
+      'history-main-image': imageUrl
+    }));
+    setShowImagePicker(false);
+  };
+
+  const handleSave = async (field: string) => {
+    try {
+      const valueToSave = content[field];
+      
+      if (field === 'history-main-image') {
+        // Handle image using the images API
+        const urlParts = (valueToSave as string).split('/');
+        const filename = urlParts[urlParts.length - 1] || 'history-image.jpg';
+        
+        await apiService.setImageMapping(field, {
+          filename: filename,
+          url: valueToSave as string,
+          alt_text: 'History main image',
+          page_id: 'school-history',
+          description: 'Main image for school history page'
+        });
+      } else {
+        // Handle regular content
+        let type = 'text';
+        const saveId = Array.isArray(valueToSave) ? `${field}_${locale}` : `${field}_${locale}`;
+        
+        if (Array.isArray(valueToSave)) {
+          type = 'list';
+        }
+        
+        await updateContent(saveId, valueToSave, type, `${field} (${locale})`, 'school-history');
+      }
+      
+      alert(`${field} saved successfully!`);
+    } catch (error) {
+      console.error('Failed to save content:', error);
+      alert('Failed to save content. Please try again.');
+    }
+  };
+
+  const handleArrayAdd = (field: string) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: [...(prev[field] as string[]), '']
+    }));
+  };
+
+  const handleArrayRemove = (field: string, index: number) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: (prev[field] as string[]).filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleArrayItemChange = (field: string, index: number, value: string) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: (prev[field] as string[]).map((item, i) => i === index ? value : item)
+    }));
+  };
 
   return (
     <div className="space-y-6">
-      <h3 className="text-xl font-semibold">Site Settings</h3>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div>
-          <label className="block text-sm font-medium mb-2">Site Title</label>
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          History Page Content ({locale.toUpperCase()})
+        </h3>
+        <p className="text-sm text-blue-700">
+          Manage the content for the school history page. Changes are saved individually.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Main Image Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Main Image</h4>
+        
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Current Image
+          </label>
+          <div className="border rounded-lg p-2 bg-gray-50">
+            <img 
+              src={content['history-main-image'] || 'https://picsum.photos/1200/400?random=10'} 
+              alt="History main" 
+              className="w-full h-48 object-cover rounded"
+              onError={(e) => {
+                e.currentTarget.src = 'https://picsum.photos/1200/400?random=10';
+              }}
+            />
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Select Image
+            </label>
+            <button
+              type="button"
+              onClick={() => setShowImagePicker(true)}
+              className="w-full p-3 border border-gray-300 rounded-md text-left hover:bg-gray-50 transition-colors"
+            >
+              📁 Choose from Pictures Folder
+            </button>
+            <p className="text-xs text-gray-500 mt-1">
+              Select an image from the Pictures folder. Upload images in the Media Manager tab first.
+            </p>
+          </div>
+        </div>
+
+        <button
+          onClick={() => handleSave('history-main-image')}
+          disabled={isLoading}
+          className="mt-4 px-4 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+        >
+          {isLoading ? 'Saving...' : 'Save Image'}
+        </button>
+      </div>
+
+      {/* History Paragraphs */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">History Content</h4>
+        
+        {['history-p1', 'history-p2', 'history-p3', 'history-p4'].map((field, index) => (
+          <div key={field} className="mb-6">
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Paragraph {index + 1}
+            </label>
+            <textarea
+              value={content[field]}
+              onChange={(e) => handleInputChange(field, e.target.value)}
+              rows={4}
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+              placeholder={`Enter paragraph ${index + 1} content...`}
+            />
+            <button
+              onClick={() => handleSave(field)}
+              disabled={isLoading}
+              className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        ))}
+      </div>
+
+      {/* Image Caption */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Image Caption</h4>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Main Image Caption
+          </label>
           <input
             type="text"
-            value={settings.siteTitle}
-            onChange={(e) => setSettings({ ...settings, siteTitle: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={content['history-image-caption']}
+            onChange={(e) => handleInputChange('history-image-caption', e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter image caption..."
           />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Contact Email</label>
-          <input
-            type="email"
-            value={settings.contactEmail}
-            onChange={(e) => setSettings({ ...settings, contactEmail: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div className="md:col-span-2">
-          <label className="block text-sm font-medium mb-2">Site Description</label>
-          <textarea
-            value={settings.siteDescription}
-            onChange={(e) => setSettings({ ...settings, siteDescription: e.target.value })}
-            rows={3}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium mb-2">Contact Phone</label>
-          <input
-            type="tel"
-            value={settings.contactPhone}
-            onChange={(e) => setSettings({ ...settings, contactPhone: e.target.value })}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
+          <button
+            onClick={() => handleSave('history-image-caption')}
+            disabled={isLoading}
+            className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
         </div>
       </div>
 
-      <button
-        disabled={isLoading}
-        className="bg-blue-600 text-white px-6 py-2 rounded-md hover:bg-blue-700 transition-colors disabled:opacity-50"
-      >
-        Save Settings
-      </button>
+      {/* Section Titles */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Section Titles</h4>
+        
+        <div className="space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Achievements Section Title
+            </label>
+            <input
+              type="text"
+              value={content['achievements-title']}
+              onChange={(e) => handleInputChange('achievements-title', e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter achievements section title..."
+            />
+            <button
+              onClick={() => handleSave('achievements-title')}
+              disabled={isLoading}
+              className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Achievements List
+            </label>
+            {(content['achievements-list'] as string[]).map((achievement, index) => (
+              <div key={index} className="flex items-center gap-2 mb-2">
+                <input
+                  type="text"
+                  value={achievement}
+                  onChange={(e) => handleArrayItemChange('achievements-list', index, e.target.value)}
+                  className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder={`Achievement ${index + 1}...`}
+                />
+                <button
+                  onClick={() => handleArrayRemove('achievements-list', index)}
+                  className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+            <div className="flex gap-2 mt-2">
+              <button
+                onClick={() => handleArrayAdd('achievements-list')}
+                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+              >
+                Add Achievement
+              </button>
+              <button
+                onClick={() => handleSave('achievements-list')}
+                disabled={isLoading}
+                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {isLoading ? 'Saving...' : 'Save Achievements'}
+              </button>
+            </div>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Directors Section Title
+            </label>
+            <input
+              type="text"
+              value={content['directors-title']}
+              onChange={(e) => handleInputChange('directors-title', e.target.value)}
+              className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Enter directors section title..."
+            />
+            <button
+              onClick={() => handleSave('directors-title')}
+              disabled={isLoading}
+              className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Preview Link */}
+      <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-green-800 mb-2">👀 Preview Changes</h4>
+        <a
+          href="/school/history"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+        >
+          View History Page
+        </a>
+      </div>
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <ImagePicker
+          onImageSelect={handleImageSelect}
+          currentImage={content['history-main-image']}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
     </div>
   );
 };
+
+const SchoolTeamTab: React.FC = () => {
+  const { t } = useLanguage();
+  const { 
+    getSchoolStaff, 
+    createSchoolStaffMember, 
+    updateSchoolStaffMember, 
+    deleteSchoolStaffMember, 
+    updateSchoolStaff,
+    isLoading, 
+    error 
+  } = useCMS();
+  const [staffMembers, setStaffMembers] = useState<any[]>([]);
+  const [editingMember, setEditingMember] = useState<any>(null);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+  const [staffImages, setStaffImages] = useState<{[key: string]: any}>({});
+
+  useEffect(() => {
+    const staff = getSchoolStaff();
+    setStaffMembers(staff.sort((a, b) => (a.position || 0) - (b.position || 0)));
+    
+    // Load staff images
+    loadStaffImages(staff);
+  }, [getSchoolStaff]);
+
+  const loadStaffImages = async (staff: any[]) => {
+    const imagePromises = staff.map(async (member) => {
+      try {
+        const imageData = await apiService.getStaffImage(member.id);
+        return { staffId: member.id, imageData };
+      } catch (error) {
+        // No image found for this staff member
+        return { staffId: member.id, imageData: null };
+      }
+    });
+
+    const results = await Promise.all(imagePromises);
+    const imageMap: {[key: string]: any} = {};
+    
+    results.forEach(({ staffId, imageData }) => {
+      imageMap[staffId] = imageData;
+    });
+    
+    setStaffImages(imageMap);
+    console.log('📸 Loaded staff images:', imageMap);
+  };
+
+  const handleAddMember = () => {
+    const newMember = {
+      id: `staff-${Date.now()}`,
+      name: '',
+      role: '',
+      email: '',
+      phone: '',
+      bio: '',
+      image_url: '',
+      is_director: false,
+      is_active: true,
+      position: staffMembers.length
+    };
+    setEditingMember(newMember);
+    setShowAddForm(true);
+  };
+
+  const handleEditMember = (member: any) => {
+    setEditingMember({ ...member });
+    setShowAddForm(true);
+  };
+
+  const handleSaveMember = async () => {
+    if (!editingMember) return;
+
+    try {
+      const existingMember = staffMembers.find(m => m.id === editingMember.id);
+      
+      if (existingMember) {
+        // Update existing member
+        await updateSchoolStaffMember(editingMember.id, editingMember);
+      } else {
+        // Create new member
+        await createSchoolStaffMember(editingMember);
+      }
+      
+      // Refresh local state
+      const updatedStaff = getSchoolStaff();
+      setStaffMembers(updatedStaff.sort((a, b) => (a.position || 0) - (b.position || 0)));
+      
+      setShowAddForm(false);
+      setEditingMember(null);
+      alert('Team member saved successfully!');
+    } catch (error) {
+      console.error('Failed to save team member:', error);
+      alert('Failed to save team member. Please try again.');
+    }
+  };
+
+  const handleDeleteMember = async (memberId: string) => {
+    if (!confirm('Are you sure you want to delete this team member?')) return;
+
+    try {
+      await deleteSchoolStaffMember(memberId);
+      
+      // Refresh local state
+      const updatedStaff = getSchoolStaff();
+      setStaffMembers(updatedStaff.sort((a, b) => (a.position || 0) - (b.position || 0)));
+      
+      alert('Team member deleted successfully!');
+    } catch (error) {
+      console.error('Failed to delete team member:', error);
+      alert('Failed to delete team member. Please try again.');
+    }
+  };
+
+  const handleImageSelect = async (imageUrl: string, filename: string) => {
+    if (editingMember) {
+      // Save the staff image to the database
+      try {
+        await apiService.setStaffImage(editingMember.id, {
+          image_filename: filename,
+          image_url: imageUrl,
+          alt_text: `Profile image for ${editingMember.name || 'staff member'}`
+        });
+
+        // Update the staff images state
+        setStaffImages(prev => ({
+          ...prev,
+          [editingMember.id]: {
+            image_filename: filename,
+            image_url: imageUrl,
+            alt_text: `Profile image for ${editingMember.name || 'staff member'}`
+          }
+        }));
+
+        console.log('✅ Staff profile image saved:', filename);
+      } catch (error) {
+        console.error('❌ Failed to save staff image:', error);
+        alert(`Failed to save profile image: ${error.message || 'Please try again.'}`);
+      }
+    }
+    setShowImagePicker(false);
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          {t.cms.schoolTeam.title}
+        </h3>
+        <p className="text-sm text-blue-700">
+          Add, edit, and manage school staff members. You can reorder members by changing their position numbers.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Add New Member Button */}
+      <div className="flex justify-between items-center">
+        <h4 className="text-xl font-semibold text-gray-800">Team Members ({staffMembers.length})</h4>
+        <button
+          onClick={handleAddMember}
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add Team Member
+        </button>
+      </div>
+
+      {/* Team Members List */}
+      <div className="grid gap-4">
+        {staffMembers.map((member) => (
+          <div key={member.id} className="bg-white border rounded-lg p-4 flex items-start gap-4">
+            <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden flex-shrink-0">
+              {staffImages[member.id] ? (
+                <img 
+                  src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${staffImages[member.id].image_url}`}
+                  alt={staffImages[member.id].alt_text || member.name} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/64x64/cccccc/666666?text=' + (member.name?.charAt(0) || '?');
+                  }}
+                />
+              ) : (
+                <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600 font-semibold">
+                  {member.name?.charAt(0) || '?'}
+                </div>
+              )}
+            </div>
+            
+            <div className="flex-1">
+              <div className="flex items-start justify-between">
+                <div>
+                  <h5 className="font-semibold text-gray-800 flex items-center gap-2">
+                    {member.name || 'Unnamed'}
+                    {member.is_director && (
+                      <span className="bg-purple-100 text-purple-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Director
+                      </span>
+                    )}
+                    {!member.is_active && (
+                      <span className="bg-red-100 text-red-800 text-xs px-2 py-1 rounded-full font-medium">
+                        Inactive
+                      </span>
+                    )}
+                  </h5>
+                  <p className="text-sm text-gray-600 mt-1">{member.role || 'No role specified'}</p>
+                  {member.email && (
+                    <p className="text-sm text-gray-500 mt-1">📧 {member.email}</p>
+                  )}
+                  {member.phone && (
+                    <p className="text-sm text-gray-500">📞 {member.phone}</p>
+                  )}
+                  {member.bio && (
+                    <p className="text-sm text-gray-700 mt-2 line-clamp-2">{member.bio}</p>
+                  )}
+                </div>
+                
+                <div className="flex items-center gap-2">
+                  <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded">
+                    Pos: {member.position || 0}
+                  </span>
+                  <button
+                    onClick={() => handleEditMember(member)}
+                    className="text-blue-600 hover:text-blue-800 p-1"
+                    title="Edit member"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeleteMember(member.id)}
+                    className="text-red-600 hover:text-red-800 p-1"
+                    title="Delete member"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+        
+        {staffMembers.length === 0 && (
+          <div className="text-center py-8 bg-gray-50 rounded-lg">
+            <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.196-2.196M17 20v-2a3 3 0 00-3-3H8a3 3 0 00-3 3v2a3 3 0 003 3h6a3 3 0 003-3zM13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+            </svg>
+            <h3 className="mt-2 text-sm font-medium text-gray-900">No team members</h3>
+            <p className="mt-1 text-sm text-gray-500">Get started by adding your first team member.</p>
+          </div>
+        )}
+      </div>
+
+      {/* Add/Edit Member Modal */}
+      {showAddForm && editingMember && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">
+              {staffMembers.find(m => m.id === editingMember.id) ? 'Edit Team Member' : 'Add Team Member'}
+            </h3>
+            
+            <div className="space-y-4">
+              {/* Profile Image */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Profile Image</label>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
+                    {staffImages[editingMember.id] ? (
+                      <img 
+                        src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${staffImages[editingMember.id].image_url}`}
+                        alt="Preview" 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gray-300 flex items-center justify-center text-gray-600">
+                        {editingMember.name?.charAt(0) || '?'}
+                      </div>
+                    )}
+                  </div>
+                  <div className="space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowImagePicker(true)}
+                      className="px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
+                    >
+                      📁 Choose from Pictures
+                    </button>
+                    {staffImages[editingMember.id] && (
+                      <button
+                        type="button"
+                        onClick={async () => {
+                          try {
+                            await apiService.deleteStaffImage(editingMember.id);
+                            setStaffImages(prev => {
+                              const newImages = { ...prev };
+                              delete newImages[editingMember.id];
+                              return newImages;
+                            });
+                            alert('Profile image removed successfully!');
+                          } catch (error) {
+                            console.error('Failed to delete staff image:', error);
+                            alert('Failed to remove profile image.');
+                          }
+                        }}
+                        className="block px-3 py-1 bg-red-500 text-white text-xs rounded hover:bg-red-600 transition-colors"
+                      >
+                        Remove Image
+                      </button>
+                    )}
+                  </div>
+                </div>
+                <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                  <p className="text-sm text-blue-800 font-medium mb-1">
+                    📏 Profile Pictures need to be 300×300 pixels (square)
+                  </p>
+                  <p className="text-xs text-blue-600">
+                    Select an image from the Pictures folder. Upload images in the Media Manager tab first.
+                  </p>
+                </div>
+              </div>
+
+              {/* Basic Info */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Full Name *</label>
+                <input
+                  type="text"
+                  value={editingMember.name}
+                  onChange={(e) => setEditingMember(prev => ({ ...prev, name: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="Enter full name"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Role/Position *</label>
+                <input
+                  type="text"
+                  value={editingMember.role}
+                  onChange={(e) => setEditingMember(prev => ({ ...prev, role: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  placeholder="e.g., Principal, Math Teacher, etc."
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Email</label>
+                  <input
+                    type="email"
+                    value={editingMember.email || ''}
+                    onChange={(e) => setEditingMember(prev => ({ ...prev, email: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="email@school.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Phone</label>
+                  <input
+                    type="tel"
+                    value={editingMember.phone || ''}
+                    onChange={(e) => setEditingMember(prev => ({ ...prev, phone: e.target.value }))}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="+1234567890"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-1">Bio/Description</label>
+                <textarea
+                  value={editingMember.bio || ''}
+                  onChange={(e) => setEditingMember(prev => ({ ...prev, bio: e.target.value }))}
+                  rows={3}
+                  className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+                  placeholder="Brief description or bio..."
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-sm font-medium text-gray-600 mb-1">Position Order</label>
+                  <input
+                    type="number"
+                    value={editingMember.position || 0}
+                    onChange={(e) => setEditingMember(prev => ({ ...prev, position: parseInt(e.target.value) || 0 }))}
+                    className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                    placeholder="0"
+                    min="0"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="is_director"
+                      checked={editingMember.is_director || false}
+                      onChange={(e) => setEditingMember(prev => ({ ...prev, is_director: e.target.checked }))}
+                      className="rounded"
+                    />
+                    <label htmlFor="is_director" className="text-sm text-gray-600">Is Director</label>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="is_active"
+                      checked={editingMember.is_active !== false}
+                      onChange={(e) => setEditingMember(prev => ({ ...prev, is_active: e.target.checked }))}
+                      className="rounded"
+                    />
+                    <label htmlFor="is_active" className="text-sm text-gray-600">Active</label>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAddForm(false);
+                  setEditingMember(null);
+                }}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50 transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveMember}
+                disabled={isLoading || !editingMember.name || !editingMember.role}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+              >
+                {isLoading ? 'Saving...' : 'Save Member'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <ImagePicker
+          onImageSelect={handleImageSelect}
+          currentImage={staffImages[editingMember?.id]?.image_url}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
+    </div>
+  );
+};
+
+const PublicCouncilTab: React.FC = () => {
+  const { getContent, updateContent, isLoading, error } = useCMS();
+  const { locale, t } = useLanguage();
+  const [content, setContent] = useState({
+    'council-intro': '',
+    'council-functions-title': '',
+    'council-functions': [],
+    'council-members-title': '',
+    'council-chairman-role': '',
+    'council-chairman-name': '',
+    'council-members-role': '',
+    'council-members-list': [],
+    'council-contact': ''
+  });
+
+  // Memoize content to prevent infinite loops
+  const loadedContent = useMemo(() => {
+    if (!t.councilPage) return {};
+    
+    return {
+      'council-intro': getContent(`council-intro_${locale}`, t.councilPage.intro || ''),
+      'council-functions-title': getContent(`council-functions-title_${locale}`, t.councilPage.functionsTitle || ''),
+      'council-functions': getContent(`council-functions_${locale}`, [
+        t.councilPage.functions?.f1 || '',
+        t.councilPage.functions?.f2 || '',
+        t.councilPage.functions?.f3 || '',
+        t.councilPage.functions?.f4 || '',
+        t.councilPage.functions?.f5 || ''
+      ].filter(Boolean)),
+      'council-members-title': getContent(`council-members-title_${locale}`, t.councilPage.membersTitle || ''),
+      'council-chairman-role': getContent(`council-chairman-role_${locale}`, t.councilPage.members?.m1?.role || ''),
+      'council-chairman-name': getContent(`council-chairman-name_${locale}`, t.councilPage.members?.m1?.name || ''),
+      'council-members-role': getContent(`council-members-role_${locale}`, t.councilPage.members?.m2?.role || ''),
+      'council-members-list': getContent(`council-members-list_${locale}`, [
+        t.councilPage.members?.m2?.names?.n1 || '',
+        t.councilPage.members?.m2?.names?.n2 || '',
+        t.councilPage.members?.m2?.names?.n3 || '',
+        t.councilPage.members?.m2?.names?.n4 || ''
+      ].filter(Boolean)),
+      'council-contact': getContent(`council-contact_${locale}`, t.councilPage.contact || '')
+    };
+  }, [locale, t.councilPage, getContent]);
+
+  useEffect(() => {
+    if (Object.keys(loadedContent).length > 0) {
+      setContent(loadedContent);
+    }
+  }, [loadedContent]);
+
+  const handleInputChange = (field: string, value: string | string[]) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSave = async (field: string) => {
+    try {
+      const valueToSave = content[field];
+      const type = Array.isArray(valueToSave) ? 'list' : 'text';
+      await updateContent(`${field}_${locale}`, valueToSave, type, `${field} (${locale})`, 'school-council');
+      alert(`${field} saved successfully!`);
+    } catch (error) {
+      console.error('Failed to save content:', error);
+      alert('Failed to save content. Please try again.');
+    }
+  };
+
+  const handleArrayAdd = (field: string) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: [...(prev[field] as string[]), '']
+    }));
+  };
+
+  const handleArrayRemove = (field: string, index: number) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: (prev[field] as string[]).filter((_, i) => i !== index)
+    }));
+  };
+
+  const handleArrayItemChange = (field: string, index: number, value: string) => {
+    setContent(prev => ({
+      ...prev,
+      [field]: (prev[field] as string[]).map((item, i) => i === index ? value : item)
+    }));
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          Public Council Page Content ({locale.toUpperCase()})
+        </h3>
+        <p className="text-sm text-blue-700">
+          Manage the content for the public council page. Changes are saved individually.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Introduction */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Introduction</h4>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Introduction Text
+          </label>
+          <textarea
+            value={content['council-intro']}
+            onChange={(e) => handleInputChange('council-intro', e.target.value)}
+            rows={4}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            placeholder="Enter introduction text..."
+          />
+          <button
+            onClick={() => handleSave('council-intro')}
+            disabled={isLoading}
+            className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </div>
+
+      {/* Functions Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Functions Section</h4>
+        
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Functions Section Title
+          </label>
+          <input
+            type="text"
+            value={content['council-functions-title']}
+            onChange={(e) => handleInputChange('council-functions-title', e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter functions section title..."
+          />
+          <button
+            onClick={() => handleSave('council-functions-title')}
+            disabled={isLoading}
+            className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Functions List
+          </label>
+          {(content['council-functions'] as string[]).map((func, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                value={func}
+                onChange={(e) => handleArrayItemChange('council-functions', index, e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder={`Function ${index + 1}...`}
+              />
+              <button
+                onClick={() => handleArrayRemove('council-functions', index)}
+                className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleArrayAdd('council-functions')}
+              className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+            >
+              Add Function
+            </button>
+            <button
+              onClick={() => handleSave('council-functions')}
+              disabled={isLoading}
+              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save Functions'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Members Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Members Section</h4>
+        
+        <div className="mb-6">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Members Section Title
+          </label>
+          <input
+            type="text"
+            value={content['council-members-title']}
+            onChange={(e) => handleInputChange('council-members-title', e.target.value)}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Enter members section title..."
+          />
+          <button
+            onClick={() => handleSave('council-members-title')}
+            disabled={isLoading}
+            className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Chairman Role
+            </label>
+            <input
+              type="text"
+              value={content['council-chairman-role']}
+              onChange={(e) => handleInputChange('council-chairman-role', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Chairman role title..."
+            />
+            <button
+              onClick={() => handleSave('council-chairman-role')}
+              disabled={isLoading}
+              className="mt-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-600 mb-2">
+              Chairman Name
+            </label>
+            <input
+              type="text"
+              value={content['council-chairman-name']}
+              onChange={(e) => handleInputChange('council-chairman-name', e.target.value)}
+              className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              placeholder="Chairman name..."
+            />
+            <button
+              onClick={() => handleSave('council-chairman-name')}
+              disabled={isLoading}
+              className="mt-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save'}
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Members Role Title
+          </label>
+          <input
+            type="text"
+            value={content['council-members-role']}
+            onChange={(e) => handleInputChange('council-members-role', e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            placeholder="Members role title..."
+          />
+          <button
+            onClick={() => handleSave('council-members-role')}
+            disabled={isLoading}
+            className="mt-2 px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+
+        <div className="mt-6">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Council Members List
+          </label>
+          {(content['council-members-list'] as string[]).map((member, index) => (
+            <div key={index} className="flex items-center gap-2 mb-2">
+              <input
+                type="text"
+                value={member}
+                onChange={(e) => handleArrayItemChange('council-members-list', index, e.target.value)}
+                className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                placeholder={`Member ${index + 1} name...`}
+              />
+              <button
+                onClick={() => handleArrayRemove('council-members-list', index)}
+                className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
+              >
+                Remove
+              </button>
+            </div>
+          ))}
+          <div className="flex gap-2 mt-2">
+            <button
+              onClick={() => handleArrayAdd('council-members-list')}
+              className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+            >
+              Add Member
+            </button>
+            <button
+              onClick={() => handleSave('council-members-list')}
+              disabled={isLoading}
+              className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+            >
+              {isLoading ? 'Saving...' : 'Save Members'}
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* Contact Information */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Contact Information</h4>
+        <div className="mb-4">
+          <label className="block text-sm font-medium text-gray-600 mb-2">
+            Contact Text
+          </label>
+          <textarea
+            value={content['council-contact']}
+            onChange={(e) => handleInputChange('council-contact', e.target.value)}
+            rows={3}
+            className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-vertical"
+            placeholder="Enter contact information..."
+          />
+          <button
+            onClick={() => handleSave('council-contact')}
+            disabled={isLoading}
+            className="mt-2 px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
+          >
+            {isLoading ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </div>
+
+      {/* Preview Link */}
+      <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-green-800 mb-2">👀 Preview Changes</h4>
+        <a
+          href="/school/council"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+        >
+          View Council Page
+        </a>
+      </div>
+    </div>
+  );
+};
+
+const MediaManagerTab: React.FC = () => {
+  const { isLoading, error } = useCMS();
+  const [picturesImages, setPicturesImages] = useState<any[]>([]);
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Load images from Pictures folder
+  useEffect(() => {
+    loadPicturesImages();
+  }, []);
+
+  const loadPicturesImages = async () => {
+    try {
+      setIsLoadingImages(true);
+      const response = await apiService.getPicturesImages();
+      console.log('📁 Loaded Pictures folder images:', response);
+      setPicturesImages(response.images || []);
+    } catch (error) {
+      console.error('❌ Failed to load Pictures folder images:', error);
+    } finally {
+      setIsLoadingImages(false);
+    }
+  };
+
+  const handleFileUpload = async (files: FileList) => {
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    try {
+      const uploadPromises = Array.from(files).map(file => 
+        apiService.uploadImageToPictures(file)
+      );
+      
+      const results = await Promise.all(uploadPromises);
+      console.log('✅ Upload results:', results);
+      
+      // Reload the images list
+      await loadPicturesImages();
+      
+      alert(`Successfully uploaded ${results.length} image(s) to Pictures folder!`);
+    } catch (error) {
+      console.error('❌ Upload failed:', error);
+      alert(`Upload failed: ${error.message || 'Please try again.'}`);
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  const handleDeleteImage = async (filename: string) => {
+    if (!confirm(`Are you sure you want to delete "${filename}" from the Pictures folder? This action cannot be undone.`)) {
+      return;
+    }
+
+    try {
+      await apiService.deletePictureImage(filename);
+      setPicturesImages(prev => prev.filter(img => img.filename !== filename));
+      alert('Image deleted successfully!');
+    } catch (error) {
+      console.error('❌ Failed to delete image:', error);
+      alert(`Failed to delete image: ${error.message || 'Please try again.'}`);
+    }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          📁 Pictures Folder Manager
+        </h3>
+        <p className="text-sm text-blue-700">
+          Upload and manage all images in the Pictures folder. These images can then be used throughout the website.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Upload Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Upload New Images</h4>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={(e) => {
+              if (e.target.files) {
+                handleFileUpload(e.target.files);
+              }
+            }}
+            disabled={isUploading}
+            className="hidden"
+            id="media-upload"
+          />
+          <label
+            htmlFor="media-upload"
+            className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="mt-4">
+              <p className="text-lg text-gray-600">
+                {isUploading ? 'Uploading...' : 'Click to upload images or drag and drop'}
+              </p>
+              <p className="text-sm text-gray-500">
+                Supports: JPG, PNG, GIF, WebP, SVG (Max: 5MB each)
+              </p>
+            </div>
+          </label>
+        </div>
+
+        {/* Image Size Guidelines */}
+        <div className="mt-4 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+          <h5 className="text-sm font-semibold text-yellow-800 mb-2">📏 Image Size Guidelines:</h5>
+          <ul className="text-xs text-yellow-700 space-y-1">
+            <li><strong>Profile Pictures:</strong> 300×300 pixels (square) - for team member photos</li>
+            <li><strong>Gallery Images:</strong> 600×400 pixels (landscape) - for photo gallery</li>
+            <li><strong>Banner Images:</strong> 1200×400 pixels (wide) - for page headers</li>
+            <li><strong>General:</strong> Keep files under 500KB for best performance</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Images Grid */}
+      <div className="bg-white border rounded-lg p-4">
+        <div className="flex justify-between items-center mb-4">
+          <h4 className="text-md font-semibold text-gray-700">
+            Pictures Folder ({picturesImages.length} images)
+          </h4>
+          <button
+            onClick={loadPicturesImages}
+            disabled={isLoadingImages}
+            className="text-blue-600 hover:text-blue-800 text-sm disabled:opacity-50"
+          >
+            🔄 Refresh
+          </button>
+        </div>
+
+        {isLoadingImages ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="text-gray-500 mt-2">Loading Pictures folder...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4">
+            {picturesImages.map((image) => (
+              <div key={image.filename} className="bg-gray-50 border rounded-lg p-3 shadow-sm hover:shadow-md transition-shadow">
+                <div className="aspect-square mb-3 bg-gray-200 rounded-lg overflow-hidden">
+                  <img 
+                    src={`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${image.url}`}
+                    alt={image.filename}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.currentTarget.src = 'https://via.placeholder.com/300x300/cccccc/666666?text=Error';
+                    }}
+                  />
+                </div>
+                
+                <div className="space-y-1">
+                  <p className="text-xs font-medium text-gray-700 truncate" title={image.filename}>
+                    {image.filename}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {formatFileSize(image.size)}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {formatDate(image.modified)}
+                  </p>
+                  
+                  <div className="flex justify-between items-center pt-2 border-t">
+                    <button
+                      onClick={() => navigator.clipboard.writeText(image.url)}
+                      className="text-blue-600 hover:text-blue-800 p-1"
+                      title="Copy URL"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteImage(image.filename)}
+                      className="text-red-600 hover:text-red-800 p-1"
+                      title="Delete image"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+            
+            {picturesImages.length === 0 && (
+              <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No images in Pictures folder</h3>
+                <p className="mt-1 text-sm text-gray-500">Upload some images to get started.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const GalleryTab: React.FC = () => {
+  const { isLoading, error } = useCMS();
+  const { locale } = useLanguage();
+  const [galleryImages, setGalleryImages] = useState<any[]>([]);
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
+  const [editingImage, setEditingImage] = useState<any>(null);
+  const [showImagePicker, setShowImagePicker] = useState(false);
+
+  // Load gallery images from database
+  useEffect(() => {
+    const loadGalleryImages = async () => {
+      try {
+        setIsLoadingImages(true);
+        const images = await apiService.getImagesByPage('gallery');
+        console.log('📸 Loaded gallery images:', images);
+        
+        // Sort by position or created_at
+        const sortedImages = images.sort((a, b) => {
+          const posA = parseInt(a.id.replace('gallery-img', '')) || 0;
+          const posB = parseInt(b.id.replace('gallery-img', '')) || 0;
+          return posA - posB;
+        });
+        
+        setGalleryImages(sortedImages);
+      } catch (error) {
+        console.error('❌ Failed to load gallery images:', error);
+      } finally {
+        setIsLoadingImages(false);
+      }
+    };
+
+    loadGalleryImages();
+  }, []);
+
+  const handleAddImage = () => {
+    const nextId = `gallery-img${galleryImages.length + 1}`;
+    setEditingImage({
+      id: nextId,
+      url: '',
+      alt_text: '',
+      description: '',
+      filename: ''
+    });
+    setShowAddForm(true);
+  };
+
+  const handleEditImage = (image: any) => {
+    setEditingImage({ ...image });
+    setShowAddForm(true);
+  };
+
+  const handleDeleteImage = async (imageId: string) => {
+    if (!confirm('Are you sure you want to delete this image from the gallery?')) return;
+
+    try {
+      await apiService.deleteImageMapping(imageId);
+      setGalleryImages(prev => prev.filter(img => img.id !== imageId));
+      alert('Image deleted successfully!');
+    } catch (error) {
+      console.error('Failed to delete image:', error);
+      alert('Failed to delete image. Please try again.');
+    }
+  };
+
+  const handleSaveImage = async () => {
+    if (!editingImage || !editingImage.url) return;
+
+    try {
+      // Check if we're adding a new image (not editing existing)
+      const existingImageWithId = galleryImages.find(img => img.id === editingImage.id);
+      
+      if (!existingImageWithId) {
+        // Check for duplicate URLs when adding new image
+        const duplicateUrl = galleryImages.find(img => img.url === editingImage.url);
+        if (duplicateUrl) {
+          const proceed = confirm(
+            `An image with the same URL already exists in the gallery (ID: ${duplicateUrl.id}). ` +
+            `Do you want to add it anyway as a duplicate?`
+          );
+          if (!proceed) {
+            return;
+          }
+        }
+
+        // Check for duplicate filename when adding new image
+        const filename = editingImage.filename || extractFilenameFromUrl(editingImage.url);
+        const duplicateFilename = galleryImages.find(img => 
+          img.filename === filename || 
+          img.original_name === filename
+        );
+        if (duplicateFilename) {
+          const proceed = confirm(
+            `An image with filename "${filename}" already exists in the gallery (ID: ${duplicateFilename.id}). ` +
+            `Do you want to add it anyway as a duplicate?`
+          );
+          if (!proceed) {
+            return;
+          }
+        }
+      }
+
+      const imageData = {
+        filename: editingImage.filename || extractFilenameFromUrl(editingImage.url),
+        url: editingImage.url,
+        alt_text: editingImage.alt_text || 'Gallery image',
+        page_id: 'gallery',
+        description: editingImage.description || 'Gallery image'
+      };
+      
+      if (existingImageWithId) {
+        await apiService.updateImageMapping(editingImage.id, imageData);
+        setGalleryImages(prev => 
+          prev.map(img => img.id === editingImage.id ? { ...img, ...imageData } : img)
+        );
+      } else {
+        await apiService.setImageMapping(editingImage.id, imageData);
+        setGalleryImages(prev => [...prev, { id: editingImage.id, ...imageData }]);
+      }
+
+      setShowAddForm(false);
+      setEditingImage(null);
+      alert('Image saved successfully!');
+    } catch (error) {
+      console.error('Failed to save image:', error);
+      alert('Failed to save image. Please try again.');
+    }
+  };
+
+  const handleReorderImage = (imageId: string, direction: 'up' | 'down') => {
+    const currentIndex = galleryImages.findIndex(img => img.id === imageId);
+    if (currentIndex === -1) return;
+    
+    const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    if (newIndex < 0 || newIndex >= galleryImages.length) return;
+    
+    const reorderedImages = [...galleryImages];
+    [reorderedImages[currentIndex], reorderedImages[newIndex]] = [reorderedImages[newIndex], reorderedImages[currentIndex]];
+    
+    setGalleryImages(reorderedImages);
+    
+    // Optional: Save new order to backend (requires API implementation)
+    // For now, we'll just handle client-side reordering
+    console.log('🔄 Gallery images reordered');
+  };
+
+  const handleImageSelect = (imageUrl: string, filename: string) => {
+    if (editingImage) {
+      setEditingImage(prev => ({
+        ...prev,
+        url: imageUrl,
+        filename: filename
+      }));
+    }
+    setShowImagePicker(false);
+  };
+
+  const extractFilenameFromUrl = (url: string): string => {
+    const urlParts = url.split('/');
+    return urlParts[urlParts.length - 1] || 'image.jpg';
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-blue-800 mb-2">
+          Gallery Management
+        </h3>
+        <p className="text-sm text-blue-700">
+          Manage gallery images. Add, edit, reorder, and delete images that appear in the photo gallery.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Add New Image Button */}
+      <div className="flex justify-between items-center">
+        <h4 className="text-xl font-semibold text-gray-800">
+          Gallery Images ({galleryImages.length})
+        </h4>
+        <button
+          onClick={handleAddImage}
+          className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-2"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+          Add Gallery Image
+        </button>
+      </div>
+
+      {/* Gallery Images Grid */}
+      {isLoadingImages ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-500 mt-2">Loading gallery images...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+          {galleryImages.map((image, index) => {
+            // Check if this image is a duplicate (same URL or filename as another image)
+            const isDuplicateUrl = galleryImages.some((other, otherIndex) => 
+              other.url === image.url && otherIndex !== index
+            );
+            const isDuplicateFile = galleryImages.some((other, otherIndex) => 
+              (other.filename === image.filename || other.original_name === image.filename) && 
+              otherIndex !== index && image.filename
+            );
+            const isDuplicate = isDuplicateUrl || isDuplicateFile;
+            
+            return (
+            <div key={image.id} className={`bg-white border rounded-lg p-3 shadow-sm ${isDuplicate ? 'border-orange-300 bg-orange-50' : ''}`}>
+              <div className="aspect-square mb-3 bg-gray-200 rounded-lg overflow-hidden">
+                <img 
+                  src={image.url} 
+                  alt={image.alt_text || 'Gallery image'} 
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.src = 'https://via.placeholder.com/300x300/cccccc/666666?text=No+Image';
+                  }}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm font-medium text-gray-700 truncate" title={image.id}>
+                    ID: {image.id}
+                  </p>
+                  {isDuplicate && (
+                    <span className="bg-orange-100 text-orange-800 text-xs px-2 py-1 rounded-full font-medium" title="This image appears to be a duplicate">
+                      ⚠️ Duplicate
+                    </span>
+                  )}
+                </div>
+                {image.alt_text && (
+                  <p className="text-xs text-gray-500 truncate" title={image.alt_text}>
+                    Alt: {image.alt_text}
+                  </p>
+                )}
+                {image.description && (
+                  <p className="text-xs text-gray-500 truncate" title={image.description}>
+                    Desc: {image.description}
+                  </p>
+                )}
+                
+                <div className="flex justify-between items-center pt-2 border-t">
+                  <span className="text-xs text-gray-400">#{index + 1}</span>
+                  <div className="flex gap-1">
+                    <button
+                      onClick={() => handleReorderImage(image.id, 'up')}
+                      disabled={index === 0}
+                      className="text-gray-600 hover:text-gray-800 p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move up"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 15l7-7 7 7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleReorderImage(image.id, 'down')}
+                      disabled={index === galleryImages.length - 1}
+                      className="text-gray-600 hover:text-gray-800 p-1 disabled:opacity-30 disabled:cursor-not-allowed"
+                      title="Move down"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleEditImage(image)}
+                      className="text-blue-600 hover:text-blue-800 p-1"
+                      title="Edit image"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDeleteImage(image.id)}
+                      className="text-red-600 hover:text-red-800 p-1"
+                      title="Delete image"
+                    >
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            );
+          })}
+          
+          {galleryImages.length === 0 && (
+            <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No gallery images</h3>
+              <p className="mt-1 text-sm text-gray-500">Get started by adding your first gallery image.</p>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Add/Edit Image Modal */}
+      {showAddForm && editingImage && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
+            <h3 className="text-lg font-semibold mb-4">
+              {galleryImages.find(img => img.id === editingImage.id) ? 'Edit Gallery Image' : 'Add Gallery Image'}
+            </h3>
+            
+            <div className="space-y-4">
+              {/* Preview */}
+              {editingImage.url && (
+                <div className="aspect-square bg-gray-200 rounded-lg overflow-hidden mb-4">
+                  <img 
+                    src={editingImage.url} 
+                    alt="Preview" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              )}
+
+              {/* Select Image from Pictures Folder */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Select Image</label>
+                <button
+                  type="button"
+                  onClick={() => setShowImagePicker(true)}
+                  className="w-full p-3 border border-gray-300 rounded-md text-left hover:bg-gray-50 transition-colors"
+                >
+                  {editingImage.url ? 
+                    `📁 ${editingImage.filename || 'Selected Image'}` : 
+                    '📁 Choose from Pictures Folder'
+                  }
+                </button>
+                <p className="text-xs text-gray-500 mt-1">
+                  Select an image from the Pictures folder. Upload images in the Media Manager tab first.
+                </p>
+              </div>
+
+              {/* Image ID */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Image ID</label>
+                <input
+                  type="text"
+                  value={editingImage.id}
+                  onChange={(e) => setEditingImage(prev => ({ ...prev, id: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="gallery-img1"
+                />
+              </div>
+
+              {/* Alt Text */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Alt Text</label>
+                <input
+                  type="text"
+                  value={editingImage.alt_text || ''}
+                  onChange={(e) => setEditingImage(prev => ({ ...prev, alt_text: e.target.value }))}
+                  className="w-full p-2 border border-gray-300 rounded-md"
+                  placeholder="Description for accessibility"
+                />
+              </div>
+
+              {/* Description */}
+              <div>
+                <label className="block text-sm font-medium text-gray-600 mb-2">Description</label>
+                <textarea
+                  value={editingImage.description || ''}
+                  onChange={(e) => setEditingImage(prev => ({ ...prev, description: e.target.value }))}
+                  rows={2}
+                  className="w-full p-2 border border-gray-300 rounded-md resize-vertical"
+                  placeholder="Image description..."
+                />
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex justify-end gap-3 mt-6">
+              <button
+                onClick={() => {
+                  setShowAddForm(false);
+                  setEditingImage(null);
+                }}
+                className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSaveImage}
+                disabled={isLoading || !editingImage.url}
+                className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
+              >
+                {isLoading ? 'Saving...' : 'Save Image'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <ImagePicker
+          onImageSelect={handleImageSelect}
+          currentImage={editingImage?.url}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
+
+      {/* Preview Link */}
+      <div className="bg-green-50 border border-green-200 p-4 rounded-lg">
+        <h4 className="text-sm font-medium text-green-800 mb-2">👀 Preview Changes</h4>
+        <a
+          href="/gallery"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
+        >
+          View Gallery Page
+        </a>
+      </div>
+    </div>
+  );
+};
+
+const CMSDashboard: React.FC = () => {
+  const { t } = useLanguage();
+  const [activeTab, setActiveTab] = useState('media');
+  const { isLoggedIn, logout } = useCMS();
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
+          <h2 className="text-xl font-bold text-red-800 mb-2">{t.cms.dashboard.accessDenied.title}</h2>
+          <p className="text-red-700">{t.cms.dashboard.accessDenied.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  const tabs = [
+    {
+      id: 'media',
+      label: t.cms.tabs.media,
+      content: <MediaManagerTab />
+    },
+    {
+      id: 'history',
+      label: t.cms.tabs.history,
+      content: <HistoryPageTab />
+    },
+    {
+      id: 'school-team',
+      label: t.cms.tabs.schoolTeam,
+      content: <SchoolTeamTab />
+    },
+    {
+      id: 'public-council',
+      label: t.cms.tabs.publicCouncil,
+      content: <PublicCouncilTab />
+    },
+    {
+      id: 'gallery',
+      label: t.cms.tabs.gallery,
+      content: <GalleryTab />
+    }
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto p-6">
+      {/* Header */}
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-3xl font-bold text-gray-800">{t.cms.dashboard.title}</h1>
+        <button
+          onClick={logout}
+          className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition-colors"
+        >
+          {t.cms.dashboard.logout}
+        </button>
+      </div>
+
+      {/* Tab Navigation */}
+      <div className="border-b border-gray-200 mb-6">
+        <nav className="-mb-px flex space-x-8">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === tab.id
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </nav>
+      </div>
+
+      {/* Tab Content */}
+      <div className="bg-gray-50 min-h-screen p-6 rounded-lg">
+        {tabs.find(tab => tab.id === activeTab)?.content}
+      </div>
+    </div>
+  );
+};
+
+export default CMSDashboard;

@@ -19,7 +19,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
   tag: Tag = 'p',
   placeholder 
 }) => {
-  const { isEditing, getContent, updateContent } = useCMS();
+  const { isEditing, getContent, updateContent, contentLoaded } = useCMS();
   
   // Force read-only mode - disable inline editing
   const forceReadOnly = true;
@@ -30,7 +30,26 @@ export const EditableText: React.FC<EditableTextProps> = ({
   
   // Create language-specific ID
   const languageSpecificId = `${id}_${locale}`;
-  const content = getContent(languageSpecificId, defaultContent);
+  const [displayContent, setDisplayContent] = useState<string>('');
+  
+  // Get content and update display when language changes OR when content is loaded
+  useEffect(() => {
+    if (!contentLoaded) {
+      // If content isn't loaded yet, show default content temporarily
+      console.log(`⏳ Content not loaded yet for ${languageSpecificId}, showing default`);
+      setDisplayContent(defaultContent);
+      return;
+    }
+    
+    const content = getContent(languageSpecificId, defaultContent);
+    console.log(`📄 Loading content for ${languageSpecificId}:`, {
+      content,
+      defaultContent,
+      isDefault: content === defaultContent,
+      contentLoaded
+    });
+    setDisplayContent(content);
+  }, [languageSpecificId, defaultContent, contentLoaded]); // Added contentLoaded dependency
   
   // Helper function to map URL path to page ID
   const getPageIdFromPath = (path: string): string => {
@@ -52,9 +71,9 @@ export const EditableText: React.FC<EditableTextProps> = ({
     id,
     locale,
     languageSpecificId,
-    content,
+    displayContent,
     defaultContent,
-    hasContent: content !== defaultContent
+    hasContent: displayContent !== defaultContent
   });
 
   const texts = {
@@ -84,34 +103,32 @@ export const EditableText: React.FC<EditableTextProps> = ({
     }
   }, [isEditable]);
 
-  // Update content when language changes (only if not currently editing)
+  // Update DOM content when displayContent changes
   useEffect(() => {
     if (!isEditable && textRef.current) {
-      const newContent = getContent(languageSpecificId, defaultContent);
-      console.log('Updating text content due to language/content change:', {
+      console.log('Updating DOM text content:', {
         languageSpecificId,
-        newContent,
+        displayContent,
         defaultContent,
         isEditable
       });
-      textRef.current.textContent = newContent;
+      textRef.current.textContent = displayContent;
     }
-  }, [locale, languageSpecificId, defaultContent, isEditable, getContent]);
+  }, [displayContent, isEditable, languageSpecificId, defaultContent]);
 
   // Update content when global edit mode changes
   useEffect(() => {
     if (!isEditing && !isEditable && textRef.current) {
-      const newContent = getContent(languageSpecificId, defaultContent);
       console.log('Updating content due to edit mode change:', {
         isEditing,
         isEditable,
         languageSpecificId,
-        newContent,
+        displayContent,
         currentText: textRef.current.textContent
       });
-      textRef.current.textContent = newContent;
+      textRef.current.textContent = displayContent;
     }
-  }, [isEditing, isEditable, languageSpecificId, defaultContent, getContent]);
+  }, [isEditing, isEditable, languageSpecificId, displayContent]);
 
   const handleClick = (e: React.MouseEvent) => {
     if (isEditing && !isEditable && !forceReadOnly) {
@@ -137,7 +154,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         console.error('Failed to save content:', error);
         // Revert to previous content on error
         if (textRef.current) {
-          textRef.current.textContent = content;
+          textRef.current.textContent = displayContent;
         }
       }
       setIsEditable(false);
@@ -153,24 +170,24 @@ export const EditableText: React.FC<EditableTextProps> = ({
     if (e.key === 'Escape') {
       setIsEditable(false);
       if (textRef.current) {
-        textRef.current.textContent = content;
+        textRef.current.textContent = displayContent;
       }
     }
   };
 
   // Determine what content to display
-  const displayContent = () => {
-    // Check if we have meaningful CMS content (not empty or just the default)
-    if (content && content.trim() !== '' && content !== defaultContent) {
-      return content;
+  const getDisplayContent = () => {
+    // Always prioritize displayContent if it exists and isn't empty
+    if (displayContent && displayContent.trim() !== '') {
+      return displayContent;
     }
     
-    // If we're in editing mode and have no meaningful content, show placeholder
-    if (isEditing && (!content || content.trim() === '' || content === defaultContent)) {
+    // If we're in editing mode and no content, show placeholder
+    if (isEditing && (!displayContent || displayContent.trim() === '')) {
       return finalPlaceholder;
     }
     
-    // Fall back to default content (your translations)
+    // Fall back to default content only if no CMS content exists
     return defaultContent;
   };
 
@@ -188,7 +205,7 @@ export const EditableText: React.FC<EditableTextProps> = ({
         '--tooltip-text': `"${t.clickToEdit}"`
       } as React.CSSProperties : undefined}
     >
-      {displayContent()}
+      {getDisplayContent()}
     </Tag>
   );
 };

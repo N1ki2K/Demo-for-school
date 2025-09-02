@@ -1,8 +1,9 @@
 // components/cms/EditableImage.tsx
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
 import { useLocation } from 'react-router-dom';
+import { apiService } from '../../src/services/api';
 
 interface EditableImageProps {
   id: string;
@@ -17,7 +18,7 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   alt, 
   className = '' 
 }) => {
-  const { isEditing, getContent, updateContent } = useCMS();
+  const { isEditing } = useCMS();
   
   // Force read-only mode - disable inline editing
   const forceReadOnly = true;
@@ -25,10 +26,32 @@ export const EditableImage: React.FC<EditableImageProps> = ({
   const location = useLocation();
   const [showUrlInput, setShowUrlInput] = useState(false);
   const [tempUrl, setTempUrl] = useState('');
+  const [currentSrc, setCurrentSrc] = useState(defaultSrc);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Create language-specific ID for images as well
-  const languageSpecificId = `${id}_${locale}`;
-  const src = getContent(languageSpecificId, defaultSrc);
+  // Load image from database mapping
+  useEffect(() => {
+    const loadImage = async () => {
+      try {
+        setIsLoading(true);
+        const imageData = await apiService.getImage(id);
+        if (imageData && imageData.url) {
+          console.log(`🖼️ Loaded image for ${id}:`, imageData.url);
+          setCurrentSrc(imageData.url);
+        } else {
+          console.log(`📋 No image mapping found for ${id}, using default`);
+          setCurrentSrc(defaultSrc);
+        }
+      } catch (error) {
+        console.log(`⚠️ Failed to load image for ${id}, using default:`, error);
+        setCurrentSrc(defaultSrc);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    
+    loadImage();
+  }, [id, defaultSrc]);
   
   // Helper function to map URL path to page ID
   const getPageIdFromPath = (path: string): string => {
@@ -66,25 +89,54 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 
   const handleClick = () => {
     if (isEditing && !forceReadOnly) {
-      setTempUrl(src);
+      setTempUrl(currentSrc);
       setShowUrlInput(true);
     }
   };
 
-  const handleUrlSubmit = (e: React.FormEvent) => {
+  const handleUrlSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    updateContent(languageSpecificId, tempUrl, 'image', `${id} (${locale})`, currentPageId);
-    setShowUrlInput(false);
+    try {
+      setIsLoading(true);
+      
+      // Extract filename from URL or use a default
+      const urlParts = tempUrl.split('/');
+      const filename = urlParts[urlParts.length - 1] || 'image.jpg';
+      
+      await apiService.setImageMapping(id, {
+        filename: filename,
+        url: tempUrl,
+        alt_text: alt,
+        page_id: currentPageId,
+        description: `Image for ${id}`
+      });
+      
+      console.log(`✅ Image mapping saved for ${id}: ${tempUrl}`);
+      setCurrentSrc(tempUrl);
+      setShowUrlInput(false);
+      alert('Image updated successfully!');
+    } catch (error) {
+      console.error('Failed to update image:', error);
+      alert('Failed to update image. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <div className={`relative ${isEditing && !forceReadOnly ? 'cms-editable-image' : ''}`}>
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-        onClick={handleClick}
-      />
+      {isLoading ? (
+        <div className={`${className} bg-gray-200 animate-pulse flex items-center justify-center`}>
+          <span className="text-gray-500 text-sm">Loading...</span>
+        </div>
+      ) : (
+        <img
+          src={currentSrc}
+          alt={alt}
+          className={className}
+          onClick={handleClick}
+        />
+      )}
       {isEditing && !forceReadOnly && (
         <div className="absolute top-2 right-2">
           <button

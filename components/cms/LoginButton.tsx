@@ -1,5 +1,6 @@
 // components/cms/LoginButton.tsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
 
@@ -29,7 +30,8 @@ export const LoginButton: React.FC = () => {
       loginToCms: 'Влез в CMS',
       enterEditMode: 'Влез в режим на редактиране',
       exitEditMode: 'Излез от режим на редактиране',
-      logoutFromCms: 'Излез от CMS'
+      logoutFromCms: 'Излез от CMS',
+      dashboard: 'Табло'
     },
     en: {
       login: 'Login',
@@ -48,7 +50,8 @@ export const LoginButton: React.FC = () => {
       loginToCms: 'Login to CMS',
       enterEditMode: 'Enter Edit Mode',
       exitEditMode: 'Exit Edit Mode',
-      logoutFromCms: 'Logout from CMS'
+      logoutFromCms: 'Logout from CMS',
+      dashboard: 'Dashboard'
     }
   };
 
@@ -161,24 +164,16 @@ export const LoginButton: React.FC = () => {
 
   return (
     <div className="flex items-center space-x-2">
-      <button
-        onClick={toggleEditMode}
-        className={`flex items-center px-3 py-1 text-sm font-bold rounded-full transition-colors duration-300 ${
-          isEditing 
-            ? 'bg-red-600 text-white hover:bg-red-700' 
-            : 'bg-green-600 text-white hover:bg-green-700'
-        }`}
-        aria-label={isEditing ? t.exitEditMode : t.enterEditMode}
+      <Link
+        to="/cms-dashboard"
+        className="flex items-center px-3 py-1 text-sm font-bold text-white bg-purple-600 rounded-full hover:bg-purple-700 transition-colors duration-300"
+        title={t.dashboard}
       >
         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isEditing ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-          )}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
         </svg>
-        {isEditing ? t.exitEdit : t.edit}
-      </button>
+        {t.dashboard}
+      </Link>
       <button
         onClick={handleLogout}
         className="flex items-center px-3 py-1 text-sm font-bold text-white bg-gray-600 rounded-full hover:bg-gray-700 transition-colors duration-300"
