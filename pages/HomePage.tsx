@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { EditableText} from '../components/cms/EditableText';
 import { EditableImage  } from '../components/cms/EditableImage';
 import { EditableList } from '../components/cms/EditableList';
+import { apiService } from '../src/services/api';
 
 const HeroSection: React.FC = () => {
   const { t } = useLanguage();
@@ -88,34 +89,63 @@ const NewsCard: React.FC<{
 };
 
 const HomePage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
+  const [newsItems, setNewsItems] = useState<any[]>([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
 
-  const newsItems = [
-    { 
-      id: 'news-1',
-      title: t.homePage.news.item1.title,
-      date: t.homePage.news.item1.date,
-      excerpt: t.homePage.news.item1.excerpt,
-      link: "/documents/announcement",
-      imageUrl: "https://picsum.photos/400/300?random=2"
-    },
-    { 
-      id: 'news-2',
-      title: t.homePage.news.item2.title,
-      date: t.homePage.news.item2.date,
-      excerpt: t.homePage.news.item2.excerpt,
-      link: "/documents/olympiads",
-      imageUrl: "https://picsum.photos/400/300?random=3"
-    },
-    { 
-      id: 'news-3',
-      title: t.homePage.news.item3.title,
-      date: t.homePage.news.item3.date,
-      excerpt: t.homePage.news.item3.excerpt,
-      link: "/projects/education-for-tomorrow",
-      imageUrl: "https://picsum.photos/400/300?random=4"
-    }
-  ];
+  useEffect(() => {
+    const loadNews = async () => {
+      try {
+        setIsLoadingNews(true);
+        const allNews = await apiService.getNews(language, true);
+        const featuredNews = allNews.slice(0, 3); // Get the 3 most recent published articles
+        
+        const formattedNews = featuredNews.map((article: any) => ({
+          id: `news-${article.id}`,
+          title: article.title, // Already formatted by backend based on language
+          date: new Date(article.publishedDate).toLocaleDateString(language === 'bg' ? 'bg-BG' : 'en-US'),
+          excerpt: article.excerpt, // Already formatted by backend based on language
+          link: `/news/${article.id}`,
+          imageUrl: article.featuredImage || "https://picsum.photos/400/300?random=2"
+        }));
+
+        setNewsItems(formattedNews);
+      } catch (error) {
+        console.error('Error loading featured news:', error);
+        // Fallback to static news items if API fails
+        setNewsItems([
+          { 
+            id: 'news-1',
+            title: t.homePage.news.item1.title,
+            date: t.homePage.news.item1.date,
+            excerpt: t.homePage.news.item1.excerpt,
+            link: "/documents/announcement",
+            imageUrl: "https://picsum.photos/400/300?random=2"
+          },
+          { 
+            id: 'news-2',
+            title: t.homePage.news.item2.title,
+            date: t.homePage.news.item2.date,
+            excerpt: t.homePage.news.item2.excerpt,
+            link: "/documents/olympiads",
+            imageUrl: "https://picsum.photos/400/300?random=3"
+          },
+          { 
+            id: 'news-3',
+            title: t.homePage.news.item3.title,
+            date: t.homePage.news.item3.date,
+            excerpt: t.homePage.news.item3.excerpt,
+            link: "/projects/education-for-tomorrow",
+            imageUrl: "https://picsum.photos/400/300?random=4"
+          }
+        ]);
+      } finally {
+        setIsLoadingNews(false);
+      }
+    };
+
+    loadNews();
+  }, [language, t]);
 
   const defaultFeatures = [
     t.homePage.features.feature1.title,
@@ -165,9 +195,15 @@ const HomePage: React.FC = () => {
             tag="h2"
             className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
-          </div>
+          {isLoadingNews ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
+            </div>
+          )}
         </div>
       </section>
 

@@ -41,11 +41,19 @@ const Footer: React.FC = () => {
                   />
                   :
                 </span>{' '}
-                <EditableText
-                  id="footer-address"
-                  defaultContent={t.footer.contacts.address}
-                  tag="span"
-                />
+                <div className="inline">
+                  <EditableText
+                    id="address-line1"
+                    defaultContent={t.contactsPage.address.line1}
+                    tag="span"
+                  />
+                  <br />
+                  <EditableText
+                    id="address-line2"
+                    defaultContent={t.contactsPage.address.line2}
+                    tag="span"
+                  />
+                </div>
               </li>
               <li>
                 <span className="font-semibold">
@@ -57,8 +65,8 @@ const Footer: React.FC = () => {
                   :
                 </span>{' '}
                 <EditableText
-                  id="footer-phone"
-                  defaultContent={t.footer.contacts.phone}
+                  id="director-phone"
+                  defaultContent="+359 42 123 456"
                   tag="span"
                 />
               </li>
@@ -72,8 +80,8 @@ const Footer: React.FC = () => {
                   :
                 </span>{' '}
                 <EditableText
-                  id="footer-email"
-                  defaultContent={t.footer.contacts.email}
+                  id="contact-email"
+                  defaultContent={t.contactsPage.email.address}
                   tag="span"
                 />
               </li>

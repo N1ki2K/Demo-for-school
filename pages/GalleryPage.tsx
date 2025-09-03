@@ -3,22 +3,56 @@ import PageWrapper from '../components/PageWrapper';
 import { useLanguage } from '../context/LanguageContext';
 import { EditableText } from '../components/cms/EditableText';
 import {EditableImage } from '../components/cms/EditableImage';
+import { apiService } from '../src/services/api';
 
 const GalleryPage: React.FC = () => {
   const { t } = useLanguage();
   const g = t.galleryPage;
+  const [images, setImages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const images = [
-    { id: 'img1', src: 'https://picsum.photos/600/400?random=40', alt: g.alts.img1 },
-    { id: 'img2', src: 'https://picsum.photos/600/400?random=41', alt: g.alts.img2 },
-    { id: 'img3', src: 'https://picsum.photos/600/400?random=42', alt: g.alts.img3 },
-    { id: 'img4', src: 'https://picsum.photos/600/400?random=43', alt: g.alts.img4 },
-    { id: 'img5', src: 'https://picsum.photos/600/400?random=44', alt: g.alts.img5 },
-    { id: 'img6', src: 'https://picsum.photos/600/400?random=45', alt: g.alts.img6 },
-    { id: 'img7', src: 'https://picsum.photos/600/400?random=46', alt: g.alts.img7 },
-    { id: 'img8', src: 'https://picsum.photos/600/400?random=47', alt: g.alts.img8 },
-    { id: 'img9', src: 'https://picsum.photos/600/400?random=48', alt: g.alts.img9 },
-  ];
+  // Load gallery images from database
+  useEffect(() => {
+    const loadGalleryImages = async () => {
+      try {
+        setIsLoading(true);
+        const galleryImages = await apiService.getImagesByPage('gallery');
+        console.log('📸 Loading gallery images:', galleryImages);
+        
+        // Sort by position (extracted from ID) or created_at
+        const sortedImages = galleryImages.sort((a, b) => {
+          const posA = parseInt(a.id.replace('gallery-img', '')) || 0;
+          const posB = parseInt(b.id.replace('gallery-img', '')) || 0;
+          return posA - posB;
+        }).map(img => ({
+          id: img.id,
+          src: img.url,
+          alt: img.alt_text || g.alts[img.id] || 'Gallery image'
+        }));
+        
+        setImages(sortedImages);
+      } catch (error) {
+        console.error('❌ Failed to load gallery images:', error);
+        // Fallback to hardcoded images if database fails
+        const fallbackImages = [
+          { id: 'img1', src: 'https://picsum.photos/600/400?random=40', alt: g.alts.img1 },
+          { id: 'img2', src: 'https://picsum.photos/600/400?random=41', alt: g.alts.img2 },
+          { id: 'img3', src: 'https://picsum.photos/600/400?random=42', alt: g.alts.img3 },
+          { id: 'img4', src: 'https://picsum.photos/600/400?random=43', alt: g.alts.img4 },
+          { id: 'img5', src: 'https://picsum.photos/600/400?random=44', alt: g.alts.img5 },
+          { id: 'img6', src: 'https://picsum.photos/600/400?random=45', alt: g.alts.img6 },
+          { id: 'img7', src: 'https://picsum.photos/600/400?random=46', alt: g.alts.img7 },
+          { id: 'img8', src: 'https://picsum.photos/600/400?random=47', alt: g.alts.img8 },
+          { id: 'img9', src: 'https://picsum.photos/600/400?random=48', alt: g.alts.img9 },
+        ];
+        setImages(fallbackImages);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    loadGalleryImages();
+  }, [g.alts]);
   
   const [selectedImageIndex, setSelectedImageIndex] = useState<number | null>(null);
 
@@ -68,18 +102,36 @@ const GalleryPage: React.FC = () => {
         tag="p"
         className="mb-12"
       />
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {images.map((image, index) => (
-          <div key={image.id} className="overflow-hidden rounded-lg shadow-md group cursor-pointer" onClick={() => openLightbox(index)}>
-            <EditableImage
-              id={`gallery-${image.id}`}
-              defaultSrc={image.src}
-              alt={image.alt}
-              className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
-            />
-          </div>
-        ))}
-      </div>
+      
+      {isLoading ? (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-500 mt-2">Loading gallery images...</p>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {images.map((image, index) => (
+            <div key={image.id} className="overflow-hidden rounded-lg shadow-md group cursor-pointer" onClick={() => openLightbox(index)}>
+              <EditableImage
+                id={`gallery-${image.id}`}
+                defaultSrc={image.src}
+                alt={image.alt}
+                className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-500 ease-in-out"
+              />
+            </div>
+          ))}
+          
+          {images.length === 0 && (
+            <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+              <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">No gallery images</h3>
+              <p className="mt-1 text-sm text-gray-500">Images will appear here once added through the CMS.</p>
+            </div>
+          )}
+        </div>
+      )}
 
       {selectedImageIndex !== null && (
         <div 

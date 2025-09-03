@@ -14,7 +14,11 @@
       "Bash(rm:*)",
       "Bash(set PORT=3002)",
       "Bash(cmd //c taskkill:*)",
-      "Bash(cmd //c:*)"
+      "Bash(cmd //c:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Read(/home/shrek/Documents/**)",
+      "Bash(grep:*)"
     ],
     "deny": [],
     "ask": []

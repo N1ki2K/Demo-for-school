@@ -134,6 +134,56 @@ class ApiService {
     });
   }
 
+  // Pictures folder management
+  async getPicturesImages() {
+    return this.request<{ images: any[]; total: number }>('/upload/pictures');
+  }
+
+  async deletePictureImage(filename: string) {
+    return this.request(`/upload/pictures/${filename}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async uploadImageToPictures(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
+    const formData = new FormData();
+    formData.append('image', file);
+
+    const url = `${API_BASE_URL}/upload/image`;
+    const headers: HeadersInit = {};
+
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response not OK:', response.status, response.statusText);
+        console.error('Error data:', errorData);
+        throw new ApiError(response.status, errorData.error || `Upload failed: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, 'Network error during upload');
+    }
+  }
+
+  // Legacy method - kept for backward compatibility but simplified
+  async uploadImage(file: File, folder: string = ''): Promise<{ url: string; filename: string }> {
+    return this.uploadImageToPictures(file);
+  }
+
   async bulkUpdateContentSections(sections: any[]) {
     return this.request('/content/bulk-update', {
       method: 'POST',
@@ -197,6 +247,156 @@ class ApiService {
       method: 'POST',
       body: JSON.stringify({ staffMembers }),
     });
+  }
+
+  // School Staff methods (separate table)
+  async getSchoolStaff() {
+    return this.request<any[]>('/schoolstaff');
+  }
+
+  async getSchoolStaffMember(id: string) {
+    return this.request<any>(`/schoolstaff/${id}`);
+  }
+
+  async createSchoolStaffMember(member: any) {
+    return this.request('/schoolstaff', {
+      method: 'POST',
+      body: JSON.stringify(member),
+    });
+  }
+
+  async updateSchoolStaffMember(id: string, member: any) {
+    return this.request(`/schoolstaff/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(member),
+    });
+  }
+
+  async deleteSchoolStaffMember(id: string) {
+    return this.request(`/schoolstaff/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async bulkUpdateSchoolStaff(staffList: any[]) {
+    return this.request('/schoolstaff/bulk/positions', {
+      method: 'PUT',
+      body: JSON.stringify({ staffList }),
+    });
+  }
+
+  // Staff profile image methods
+  async getStaffImage(staffId: string) {
+    return this.request<any>(`/schoolstaff/${staffId}/image`);
+  }
+
+  async setStaffImage(staffId: string, data: {
+    image_filename: string;
+    image_url: string;
+    alt_text?: string;
+  }) {
+    return this.request(`/schoolstaff/${staffId}/image`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteStaffImage(staffId: string) {
+    return this.request(`/schoolstaff/${staffId}/image`, {
+      method: 'DELETE',
+    });
+  }
+
+  // Image mapping methods
+  async getImage(id: string) {
+    return this.request<any>(`/images/${id}`);
+  }
+
+  async getAllImages() {
+    return this.request<any[]>('/images');
+  }
+
+  async setImageMapping(id: string, data: {
+    filename: string;
+    original_name?: string;
+    url: string;
+    alt_text?: string;
+    page_id?: string;
+    description?: string;
+  }) {
+    return this.request(`/images/${id}`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateImageMapping(id: string, data: {
+    filename?: string;
+    original_name?: string;
+    url?: string;
+    alt_text?: string;
+    page_id?: string;
+    description?: string;
+  }) {
+    return this.request(`/images/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteImageMapping(id: string) {
+    return this.request(`/images/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getImagesByPage(pageId: string) {
+    return this.request<any[]>(`/images/page/${pageId}`);
+  }
+
+  // Documents folder management
+  async getDocuments() {
+    return this.request<{ documents: any[]; total: number }>('/upload/documents');
+  }
+
+  async deleteDocument(filename: string) {
+    return this.request(`/upload/documents/${filename}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async uploadDocument(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
+    const formData = new FormData();
+    formData.append('document', file);
+
+    const url = `${API_BASE_URL}/upload/document`;
+    const headers: HeadersInit = {};
+
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response not OK:', response.status, response.statusText);
+        console.error('Error data:', errorData);
+        throw new ApiError(response.status, errorData.error || `Document upload failed: ${response.status} ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, 'Network error during document upload');
+    }
   }
 
   // Upload methods
@@ -296,6 +496,43 @@ class ApiService {
     return this.request('/pages/reorder', {
       method: 'POST',
       body: JSON.stringify({ pages }),
+    });
+  }
+
+  // News methods
+  async getNews(language: string = 'bg', publishedOnly: boolean = true) {
+    return this.request<any[]>(`/news?lang=${language}&published=${publishedOnly}`);
+  }
+
+  async getFeaturedNews(language: string = 'bg', limit: number = 3) {
+    return this.request<any[]>(`/news/featured/latest?lang=${language}&limit=${limit}`);
+  }
+
+  async getNewsArticle(id: string, language: string = 'bg') {
+    return this.request<any>(`/news/${id}?lang=${language}`);
+  }
+
+  async getAllNewsForAdmin() {
+    return this.request<any[]>('/news/admin/all');
+  }
+
+  async createNewsArticle(article: any) {
+    return this.request('/news/admin', {
+      method: 'POST',
+      body: JSON.stringify(article),
+    });
+  }
+
+  async updateNewsArticle(id: string, article: any) {
+    return this.request(`/news/admin/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(article),
+    });
+  }
+
+  async deleteNewsArticle(id: string) {
+    return this.request(`/news/admin/${id}`, {
+      method: 'DELETE',
     });
   }
 

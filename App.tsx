@@ -34,6 +34,8 @@ import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
 import DynamicPage from './pages/DynamicPage';
+import CMSDashboard from './components/cms/CMSDashboard';
+import NewsArticlePage from './pages/NewsArticlePage';
 // import Home from './pages/Home';
 // import CreatePost from './pages/CreatePost';
 
@@ -80,6 +82,13 @@ const App: React.FC = () => {
               <Route path="/contacts" element={<ContactsPage />} />
               <Route path="/info-access" element={<InfoAccessPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
+              
+              {/* CMS Dashboard */}
+              <Route path="/cms-dashboard" element={<CMSDashboard />} />
+              
+              {/* News Article */}
+              <Route path="/news/:id" element={<NewsArticlePage />} />
+              
               {/* DB */}
               {/* <Route path="/create" element={<CreatePost />} /> */}
 

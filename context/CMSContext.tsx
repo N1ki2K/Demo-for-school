@@ -30,6 +30,7 @@ interface CMSContextType {
   isLoggedIn: boolean;
   isLoading: boolean;
   error: string | null;
+  contentLoaded: boolean;
   setIsEditing: (editing: boolean) => void;
   login: (username: string, password: string) => Promise<boolean>;
   logout: () => Promise<void>;
@@ -42,6 +43,13 @@ interface CMSContextType {
   loadContent: () => Promise<void>;
   loadStaff: () => Promise<void>;
   clearError: () => void;
+  // School Staff methods
+  getSchoolStaff: () => StaffMember[];
+  loadSchoolStaff: () => Promise<void>;
+  updateSchoolStaff: (staff: StaffMember[]) => Promise<void>;
+  createSchoolStaffMember: (member: StaffMember) => Promise<void>;
+  updateSchoolStaffMember: (id: string, member: StaffMember) => Promise<void>;
+  deleteSchoolStaffMember: (id: string) => Promise<void>;
 }
 
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
@@ -53,6 +61,8 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const [error, setError] = useState<string | null>(null);
   const [editableSections, setEditableSections] = useState<Record<string, EditableSection>>({});
   const [staffData, setStaffData] = useState<StaffMember[]>([]);
+  const [schoolStaffData, setSchoolStaffData] = useState<StaffMember[]>([]);
+  const [contentLoaded, setContentLoaded] = useState(false);
 
   // Load content on initial mount
   useEffect(() => {
@@ -64,6 +74,7 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     // Always load content, regardless of login status
     // Only editing requires authentication, but content should always be displayed
     loadContent();
+    loadSchoolStaff(); // Always load school staff for display
     if (isLoggedIn) {
       loadStaff();
     }
@@ -107,25 +118,34 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
   const loadContent = async () => {
     try {
       setIsLoading(true);
-      console.log('Starting to load content from API...');
+      console.log('🔄 Starting to load content from API...');
       const sections = await apiService.getContentSections();
-      console.log('Raw API response - sections:', sections);
-      console.log('Number of sections loaded:', sections.length);
+      console.log('📦 Raw API response - sections:', sections);
+      console.log('📊 Number of sections loaded:', sections.length);
       
       const sectionsMap: Record<string, EditableSection> = {};
       sections.forEach((section: any) => {
-        console.log('Processing section:', section.id, section);
+        console.log('⚙️ Processing section:', section.id, 'Content:', section.content);
         sectionsMap[section.id] = {
           ...section,
           content: typeof section.content === 'string' ? section.content : JSON.stringify(section.content),
         };
       });
-      console.log('Final sections map:', sectionsMap);
-      console.log('Section IDs in map:', Object.keys(sectionsMap));
+      console.log('✅ Final sections map:', sectionsMap);
+      console.log('🗝️ Section IDs in map:', Object.keys(sectionsMap));
+      
+      // Check specifically for history content
+      const historyKeys = Object.keys(sectionsMap).filter(key => key.includes('history'));
+      console.log('📚 History sections found:', historyKeys);
+      historyKeys.forEach(key => {
+        console.log(`📝 ${key}:`, sectionsMap[key].content);
+      });
+      
       setEditableSections(sectionsMap);
-      console.log('Content sections set in state');
+      setContentLoaded(true);
+      console.log('💾 Content sections set in state');
     } catch (error) {
-      console.error('Error loading content:', error);
+      console.error('❌ Error loading content:', error);
       // Don't show error to users when not logged in - just silently use defaults
       if (isLoggedIn) {
         if (error instanceof ApiError) {
@@ -197,10 +217,21 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
 
   const getContent = (sectionId: string, defaultContent: any) => {
     const section = editableSections[sectionId];
-    // Return CMS content only if it exists and is not empty
-    const content = (section?.content && section.content.trim() !== '') ? section.content : defaultContent;
-    console.log('Getting content for:', sectionId, 'Content:', content, 'Has section:', !!section, 'Section content:', section?.content);
-    return content;
+    
+    console.log(`🔍 Getting content for: ${sectionId}`);
+    console.log(`📋 Available sections:`, Object.keys(editableSections));
+    console.log(`🎯 Found section:`, section);
+    console.log(`💭 Default content:`, defaultContent);
+    
+    // If we have a section with content, use it (even if it matches default)
+    if (section?.content !== undefined && section.content !== null) {
+      console.log(`✅ Returning CMS content for ${sectionId}:`, section.content);
+      return section.content;
+    }
+    
+    // Otherwise, use default content
+    console.log(`⚠️ Using default content for ${sectionId}:`, defaultContent);
+    return defaultContent;
   };
 
   const updateStaff = async (staff: StaffMember[]) => {
@@ -248,11 +279,127 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     setError(null);
   };
 
+  // School Staff methods
+  const loadSchoolStaff = async () => {
+    try {
+      console.log('🔄 Loading school staff from API...');
+      const staff = await apiService.getSchoolStaff();
+      console.log('📋 Retrieved school staff:', staff);
+      setSchoolStaffData(staff);
+    } catch (error) {
+      console.error('❌ Error loading school staff:', error);
+      // Don't show error to users when not logged in - just silently use defaults
+      if (isLoggedIn) {
+        if (error instanceof ApiError) {
+          setError(`Failed to load school staff: ${error.message}`);
+        } else {
+          setError('Failed to load school staff');
+        }
+      }
+    }
+  };
+
+  const getSchoolStaff = (): StaffMember[] => {
+    return schoolStaffData;
+  };
+
+  const createSchoolStaffMember = async (member: StaffMember) => {
+    try {
+      setIsLoading(true);
+      console.log('✅ Creating school staff member:', member);
+      const createdMember = await apiService.createSchoolStaffMember(member);
+      console.log('📝 Created school staff member:', createdMember);
+      
+      // Add to local state
+      setSchoolStaffData(prev => [...prev, createdMember].sort((a, b) => (a.position || 0) - (b.position || 0)));
+    } catch (error) {
+      console.error('❌ Error creating school staff member:', error);
+      if (error instanceof ApiError) {
+        setError(`Failed to create school staff member: ${error.message}`);
+      } else {
+        setError('Failed to create school staff member');
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateSchoolStaffMember = async (id: string, member: StaffMember) => {
+    try {
+      setIsLoading(true);
+      console.log('📝 Updating school staff member:', id, member);
+      const updatedMember = await apiService.updateSchoolStaffMember(id, member);
+      console.log('✅ Updated school staff member:', updatedMember);
+      
+      // Update local state
+      setSchoolStaffData(prev => 
+        prev.map(m => m.id === id ? updatedMember : m)
+           .sort((a, b) => (a.position || 0) - (b.position || 0))
+      );
+    } catch (error) {
+      console.error('❌ Error updating school staff member:', error);
+      if (error instanceof ApiError) {
+        setError(`Failed to update school staff member: ${error.message}`);
+      } else {
+        setError('Failed to update school staff member');
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const deleteSchoolStaffMember = async (id: string) => {
+    try {
+      setIsLoading(true);
+      console.log('🗑️ Deleting school staff member:', id);
+      await apiService.deleteSchoolStaffMember(id);
+      console.log('✅ Deleted school staff member');
+      
+      // Remove from local state
+      setSchoolStaffData(prev => prev.filter(m => m.id !== id));
+    } catch (error) {
+      console.error('❌ Error deleting school staff member:', error);
+      if (error instanceof ApiError) {
+        setError(`Failed to delete school staff member: ${error.message}`);
+      } else {
+        setError('Failed to delete school staff member');
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateSchoolStaff = async (staff: StaffMember[]) => {
+    try {
+      setIsLoading(true);
+      console.log('🔄 Bulk updating school staff:', staff);
+      await apiService.bulkUpdateSchoolStaff(staff);
+      console.log('✅ Bulk updated school staff');
+      
+      // Update local state
+      setSchoolStaffData(staff.sort((a, b) => (a.position || 0) - (b.position || 0)));
+    } catch (error) {
+      console.error('❌ Error bulk updating school staff:', error);
+      if (error instanceof ApiError) {
+        setError(`Failed to update school staff: ${error.message}`);
+      } else {
+        setError('Failed to update school staff');
+      }
+      throw error;
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const value = {
     isEditing,
     isLoggedIn,
     isLoading,
     error,
+    contentLoaded,
     setIsEditing,
     login,
     logout,
@@ -265,6 +412,13 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
     loadContent,
     loadStaff,
     clearError,
+    // School Staff methods
+    getSchoolStaff,
+    loadSchoolStaff,
+    updateSchoolStaff,
+    createSchoolStaffMember,
+    updateSchoolStaffMember,
+    deleteSchoolStaffMember,
   };
 
   return <CMSContext.Provider value={value}>{children}</CMSContext.Provider>;

@@ -1,10 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import PageWrapper from '../../components/PageWrapper';
 import { useLanguage } from '../../context/LanguageContext';
 import { EditableText } from '../../components/cms/EditableText';
 import { EditableImage } from '../../components/cms/EditableImage';
 import { StaffMember } from '../../components/cms/StaffManagement';
 import { useCMS } from '../../context/CMSContext';
+import { apiService } from '../../src/services/api';
 
 interface TeamMember {
   name: string;
@@ -87,14 +88,92 @@ const TeamCard: React.FC<TeamMember & { email?: string; phone?: string; bio?: st
 
 const TeamPage: React.FC = () => {
   const { t } = useLanguage();
-  const { getStaff, loadStaff } = useCMS();
+  const { getSchoolStaff, loadSchoolStaff } = useCMS();
+  const [staffImages, setStaffImages] = useState<{[key: string]: any}>({});
+  const [isLoadingImages, setIsLoadingImages] = useState(true);
 
-  // Load staff data when component mounts
+  const [hasLoadedStaff, setHasLoadedStaff] = useState(false);
+
+  // Load school staff data when component mounts (only once)
   useEffect(() => {
-    loadStaff();
-  }, [loadStaff]);
+    const initializeStaff = async () => {
+      if (!hasLoadedStaff) {
+        await loadSchoolStaff();
+        setHasLoadedStaff(true);
+      }
+    };
+    
+    initializeStaff();
+  }, []); // Only run once
 
-  const customStaff = getStaff();
+  const customStaff = getSchoolStaff();
+
+  // Load staff profile images from database (only run after staff is loaded)
+  useEffect(() => {
+    console.log('🔍 Image loading effect triggered:', { hasLoadedStaff, staffLength: customStaff.length });
+    
+    if (!hasLoadedStaff || customStaff.length === 0) {
+      console.log('⏳ Skipping image load - staff not ready yet');
+      setIsLoadingImages(false);
+      return;
+    }
+
+    let isCancelled = false;
+
+    const loadStaffImages = async () => {
+      try {
+        console.log('🚀 Starting to load images for staff:', customStaff.map(s => s.name));
+        setIsLoadingImages(true);
+        const imagePromises = customStaff.map(async (member) => {
+          try {
+            console.log(`🖼️ Loading image for ${member.name} (${member.id})`);
+            const imageData = await apiService.getStaffImage(member.id);
+            console.log(`✅ Image found for ${member.name}:`, imageData);
+            return { staffId: member.id, imageData };
+          } catch (error) {
+            console.log(`❌ No image found for ${member.name} (${member.id}):`, error);
+            return { staffId: member.id, imageData: null };
+          }
+        });
+
+        const results = await Promise.all(imagePromises);
+        
+        if (!isCancelled) {
+          const imageMap: {[key: string]: any} = {};
+          
+          results.forEach(({ staffId, imageData }) => {
+            imageMap[staffId] = imageData;
+            if (imageData) {
+              console.log(`📋 Mapped image for ${staffId}:`, imageData.image_url);
+            }
+          });
+          
+          setStaffImages(imageMap);
+          console.log('📸 Final staff images map:', imageMap);
+        }
+      } catch (error) {
+        if (!isCancelled) {
+          console.error('❌ Failed to load staff images:', error);
+        }
+      } finally {
+        if (!isCancelled) {
+          setIsLoadingImages(false);
+        }
+      }
+    };
+
+    loadStaffImages();
+
+    // Cleanup function to cancel ongoing requests
+    return () => {
+      isCancelled = true;
+    };
+  }, [hasLoadedStaff, customStaff.length]); // Run when staff loading is complete or count changes
+
+  // Debug logging
+  console.log('🏫 School Team Page - customStaff:', customStaff);
+  console.log('🖼️ Staff images loaded:', staffImages);
+  console.log('📊 Loading state:', { isLoadingImages, hasLoadedStaff });
 
   const defaultStaff: StaffMember[] = [
     {
@@ -113,9 +192,30 @@ const TeamPage: React.FC = () => {
     }))
   ];
 
-  const allStaff = customStaff.length > 0 ? customStaff : defaultStaff;
-  const directors = allStaff.filter(member => member.isDirector);
-  const teachers = allStaff.filter(member => !member.isDirector);
+  // Map database fields to component props and sort by position
+  const mappedCustomStaff = customStaff
+    .filter(member => member.is_active !== false) // Only show active members
+    .map(member => {
+      // Get profile image from database or fallback
+      const profileImage = staffImages[member.id];
+      const imageUrl = profileImage 
+        ? profileImage.image_url // Use the full URL directly from the database
+        : 'https://picsum.photos/400/400?random=50';
+      
+      const result = {
+        ...member,
+        imageUrl,
+        isDirector: Boolean(member.is_director)
+      };
+      
+      console.log(`🔍 Staff member ${member.name} (${member.id}) - Image URL: ${imageUrl}`);
+      return result;
+    })
+    .sort((a, b) => (a.position || 0) - (b.position || 0));
+
+  const allStaff = mappedCustomStaff.length > 0 ? mappedCustomStaff : defaultStaff;
+  const directors = allStaff.filter(member => member.isDirector || member.is_director);
+  const teachers = allStaff.filter(member => !member.isDirector && !member.is_director);
 
   return (
     <PageWrapper title={t.teamPage.title}>
@@ -129,6 +229,14 @@ const TeamPage: React.FC = () => {
           className="text-lg text-gray-700 leading-relaxed text-center max-w-4xl mx-auto"
         />
       </div>
+
+      {/* Loading state for images */}
+      {isLoadingImages && customStaff.length > 0 && (
+        <div className="text-center py-8">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="text-gray-500 mt-2">Loading team member photos...</p>
+        </div>
+      )}
 
       {/* Team Photo Section */}
       <div className="mb-16">
@@ -175,7 +283,12 @@ const TeamPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center">
             {directors.map((director) => (
               <div key={director.id} className="w-full max-w-sm">
-                <TeamCard {...director} />
+                <TeamCard 
+                  {...director} 
+                  email={director.email}
+                  phone={director.phone}
+                  bio={director.bio}
+                />
               </div>
             ))}
           </div>
@@ -202,7 +315,13 @@ const TeamPage: React.FC = () => {
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {teachers.map((teacher) => (
-              <TeamCard key={teacher.id} {...teacher} />
+              <TeamCard 
+                key={teacher.id} 
+                {...teacher}
+                email={teacher.email}
+                phone={teacher.phone}
+                bio={teacher.bio}
+              />
             ))}
           </div>
         </div>

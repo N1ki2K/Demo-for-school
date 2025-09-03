@@ -101,6 +101,64 @@ const createTables = (): Promise<void> => {
         value TEXT NOT NULL,
         type TEXT DEFAULT 'string',
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // School staff table (separate from staff_members)
+      `CREATE TABLE IF NOT EXISTS schoolstaff (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        role TEXT NOT NULL,
+        email TEXT,
+        phone TEXT,
+        bio TEXT,
+        image_url TEXT,
+        is_director BOOLEAN DEFAULT 0,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Images mapping table
+      `CREATE TABLE IF NOT EXISTS images (
+        id TEXT PRIMARY KEY,
+        filename TEXT NOT NULL,
+        original_name TEXT,
+        url TEXT NOT NULL,
+        alt_text TEXT,
+        page_id TEXT,
+        description TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Staff profile images table
+      `CREATE TABLE IF NOT EXISTS staff_images (
+        staff_id TEXT PRIMARY KEY,
+        image_filename TEXT NOT NULL,
+        image_url TEXT NOT NULL,
+        alt_text TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (staff_id) REFERENCES schoolstaff (id) ON DELETE CASCADE
+      )`,
+
+      // News articles table
+      `CREATE TABLE IF NOT EXISTS news (
+        id TEXT PRIMARY KEY,
+        title_bg TEXT NOT NULL,
+        title_en TEXT NOT NULL,
+        excerpt_bg TEXT NOT NULL,
+        excerpt_en TEXT NOT NULL,
+        content_bg TEXT,
+        content_en TEXT,
+        featured_image_url TEXT,
+        featured_image_alt TEXT,
+        is_published BOOLEAN DEFAULT 1,
+        is_featured BOOLEAN DEFAULT 0,
+        published_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
     ];
 

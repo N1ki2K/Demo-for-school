@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import { CMSToolbar } from './cms/CMSToolbar';
 
 const Layout: React.FC = () => {
   const [showButton, setShowButton] = useState(false);
@@ -41,7 +40,6 @@ const Layout: React.FC = () => {
         <Outlet />
       </main>
       <Footer />
-      <CMSToolbar />
        {showButton && (
         <button
           onClick={scrollToTop}

@@ -2717,53 +2717,109 @@ const CMSDashboard: React.FC = () => {
     );
   }
 
-  const tabs = [
+  // Organize tabs into categories
+  const tabCategories = [
     {
-      id: 'media',
-      label: t.cms.tabs.media,
-      content: <MediaManagerTab />
+      id: 'uploads',
+      label: 'Uploads',
+      icon: '📁',
+      tabs: [
+        {
+          id: 'media',
+          label: t.cms.tabs.media,
+          icon: '🖼️',
+          content: <MediaManagerTab />
+        },
+        {
+          id: 'documents',
+          label: t.cms.tabs.documents,
+          icon: '📄',
+          content: <DocumentManagerTab />
+        }
+      ]
     },
     {
-      id: 'documents',
-      label: t.cms.tabs.documents,
-      content: <DocumentManagerTab />
+      id: 'content',
+      label: 'Content',
+      icon: '📝',
+      tabs: [
+        {
+          id: 'news',
+          label: t.cms.tabs.news,
+          icon: '📰',
+          content: <NewsManagerTab />
+        },
+        {
+          id: 'contacts',
+          label: t.cms.tabs.contacts,
+          icon: '📞',
+          content: <ContactManagerTab />
+        },
+        {
+          id: 'info-access',
+          label: t.cms.tabs.infoAccess,
+          icon: '🔓',
+          content: <InfoAccessManagerTab />
+        },
+        {
+          id: 'history',
+          label: t.cms.tabs.history,
+          icon: '📚',
+          content: <HistoryPageTab />
+        },
+        {
+          id: 'gallery',
+          label: t.cms.tabs.gallery,
+          icon: '🎨',
+          content: <GalleryTab />
+        }
+      ]
     },
     {
-      id: 'news',
-      label: t.cms.tabs.news,
-      content: <NewsManagerTab />
-    },
-    {
-      id: 'contacts',
-      label: t.cms.tabs.contacts,
-      content: <ContactManagerTab />
-    },
-    {
-      id: 'info-access',
-      label: t.cms.tabs.infoAccess,
-      content: <InfoAccessManagerTab />
-    },
-    {
-      id: 'history',
-      label: t.cms.tabs.history,
-      content: <HistoryPageTab />
-    },
-    {
-      id: 'school-team',
-      label: t.cms.tabs.schoolTeam,
-      content: <SchoolTeamTab />
-    },
-    {
-      id: 'public-council',
-      label: t.cms.tabs.publicCouncil,
-      content: <PublicCouncilTab />
-    },
-    {
-      id: 'gallery',
-      label: t.cms.tabs.gallery,
-      content: <GalleryTab />
+      id: 'people',
+      label: 'People',
+      icon: '👥',
+      tabs: [
+        {
+          id: 'school-team',
+          label: t.cms.tabs.schoolTeam,
+          icon: '👨‍🏫',
+          content: <SchoolTeamTab />
+        },
+        {
+          id: 'public-council',
+          label: t.cms.tabs.publicCouncil,
+          icon: '🏛️',
+          content: <PublicCouncilTab />
+        }
+      ]
     }
   ];
+
+  // Flatten all tabs for easy lookup
+  const allTabs = tabCategories.flatMap(category => category.tabs);
+  
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  
+  const toggleDropdown = (categoryId: string) => {
+    setOpenDropdowns(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
+
+  // Auto-open dropdown containing active tab
+  useEffect(() => {
+    const activeCategory = tabCategories.find(category => 
+      category.tabs.some(tab => tab.id === activeTab)
+    );
+    if (activeCategory && !openDropdowns[activeCategory.id]) {
+      setOpenDropdowns(prev => ({
+        ...prev,
+        [activeCategory.id]: true
+      }));
+    }
+  }, [activeTab]);
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -2778,28 +2834,68 @@ const CMSDashboard: React.FC = () => {
         </button>
       </div>
 
-      {/* Tab Navigation */}
-      <div className="border-b border-gray-200 mb-6">
-        <nav className="-mb-px flex space-x-8">
-          {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
-                activeTab === tab.id
-                  ? 'border-blue-500 text-blue-600'
-                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </nav>
+      {/* Navigation */}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-6">
+        <div className="p-4">
+          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
+            <span>📋</span>
+            <span>Content Management</span>
+          </h2>
+          
+          <div className="space-y-2">
+            {tabCategories.map((category) => (
+              <div key={category.id} className="border border-gray-100 rounded-lg">
+                {/* Category Header */}
+                <button
+                  onClick={() => toggleDropdown(category.id)}
+                  className="w-full flex items-center justify-between p-3 text-left hover:bg-gray-50 rounded-lg transition-colors"
+                >
+                  <span className="font-medium text-gray-700 flex items-center gap-2">
+                    <span className="text-lg">{category.icon}</span>
+                    {category.label}
+                  </span>
+                  <svg 
+                    className={`w-5 h-5 text-gray-400 transition-transform ${
+                      openDropdowns[category.id] ? 'rotate-180' : ''
+                    }`}
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                
+                {/* Category Tabs */}
+                {openDropdowns[category.id] && (
+                  <div className="px-3 pb-3">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+                      {category.tabs.map((tab) => (
+                        <button
+                          key={tab.id}
+                          onClick={() => setActiveTab(tab.id)}
+                          className={`flex items-center gap-2 p-3 rounded-md text-left transition-colors ${
+                            activeTab === tab.id
+                              ? 'bg-blue-50 text-blue-700 border-2 border-blue-200'
+                              : 'bg-gray-50 text-gray-700 border-2 border-transparent hover:bg-gray-100'
+                          }`}
+                        >
+                          <span className="text-lg">{tab.icon}</span>
+                          <span className="font-medium">{tab.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Tab Content */}
-      <div className="bg-gray-50 min-h-screen p-6 rounded-lg">
-        {tabs.find(tab => tab.id === activeTab)?.content}
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-screen">
+        {allTabs.find(tab => tab.id === activeTab)?.content}
       </div>
     </div>
   );
