@@ -84,6 +84,7 @@ export const en = {
     news: {
       title: 'Latest News',
       readMore: 'Read more',
+      featured: 'Featured',
       item1: {
         title: 'Opening of the New School Year',
         date: 'September 15, 2024',
@@ -718,6 +719,15 @@ historyPage: {
     title: "Useful Links",
     intro: "Here we have collected links to important institutions and useful resources related to the education and development of children.",
     cta: "Visit site",
+    defaultCta: "Visit Site",
+    loading: "Loading useful links...",
+    loadingTitle: "Loading...",
+    error: "Error Loading Content",
+    errorTitle: "Error",
+    tryAgain: "Try Again",
+    refresh: "Refresh",
+    noLinks: "No useful links available at the moment.",
+    failedToLoad: "Failed to load useful links content",
     links: {
       l1: { title: "Ministry of Education and Science", description: "Official website of the MES with current information about the education system." },
       l2: { title: "Regional Department of Education - Stara Zagora", description: "Information and news from the RDE, Stara Zagora." },
@@ -814,6 +824,436 @@ historyPage: {
     title: "Transport",
     lines: ["Bus lines: 2, 5, 12"]
   }
-}
+},
+
+  cms: {
+    dashboard: {
+      title: 'CMS Dashboard',
+      logout: 'Logout',
+      accessDenied: {
+        title: 'Access Denied',
+        message: 'You must be logged in as an administrator to access the CMS dashboard.'
+      }
+    },
+    tabs: {
+      media: 'Media Manager',
+      documents: 'Documents',
+      news: 'News',
+      contacts: 'Contact Info',
+      infoAccess: 'Access to Information',
+      history: 'School History',
+      schoolTeam: 'School Team',
+      publicCouncil: 'Public Council',
+      gallery: 'Gallery'
+    },
+    mediaManager: {
+      title: 'Media Manager',
+      uploadTitle: 'Upload New Images',
+      uploadInstructions: {
+        title: 'Upload Instructions:',
+        steps: [
+          'Upload images in JPG, PNG, or WebP format.',
+          'Maximum file size: 5MB per image.',
+          'Images will be optimized automatically.',
+          'Use descriptive filenames for better organization.',
+          'Add alt text for accessibility and SEO.'
+        ]
+      },
+      uploadGuidelines: {
+        title: 'Photo Guidelines:',
+        points: [
+          'Use high-quality images (minimum 1200x800px)',
+          'Ensure faces are clearly visible in team photos',
+          'Avoid copyrighted images',
+          'Include students only with parental consent'
+        ]
+      },
+      dragDrop: 'Drag and drop images here or click to select',
+      selectFiles: 'Select Files',
+      uploading: 'Uploading...',
+      uploadSuccess: 'Image uploaded successfully!',
+      uploadError: 'Error uploading image: {error}',
+      currentImages: 'Current Images',
+      loading: 'Loading images...',
+      noImages: 'No images uploaded yet.',
+      deleteConfirm: 'Are you sure you want to delete this image?',
+      deleteSuccess: 'Image deleted successfully.',
+      deleteError: 'Error deleting image: {error}',
+      altText: 'Alt text',
+      filename: 'Filename',
+      uploadDate: 'Upload date',
+      size: 'Size',
+      actions: 'Actions',
+      description: 'Upload and manage all images in the Pictures folder. These images can then be used throughout the website.',
+      uploadText: 'Click to upload images or drag and drop',
+      uploadSupports: 'Supports: JPG, PNG, GIF, WebP, SVG (Max: 5MB each)',
+      sizeGuidelines: 'Image Size Guidelines:',
+      profilePictures: 'Profile Pictures: 300×300 pixels (square) - for team member photos',
+      galleryImages: 'Gallery Images: 600×400 pixels (landscape) - for photo gallery',
+      bannerImages: 'Banner Images: 1200×400 pixels (wide) - for page headers',
+      general: 'General: Keep files under 500KB for best performance',
+      picturesFolder: 'Pictures Folder ({count} images)',
+      refresh: 'Refresh',
+      uploadStart: 'Upload some images to get started.',
+      copyUrl: 'Copy URL',
+      deleteImage: 'Delete image',
+      uploadFailed: 'Upload failed: {error}',
+      deleteFailed: 'Failed to delete image: {error}'
+    },
+    documentManager: {
+      title: 'Document Manager',
+      description: 'Upload and manage all documents in the Documents folder. These documents can then be used throughout the website.',
+      uploadTitle: 'Upload New Documents',
+      uploadText: 'Click to upload documents or drag and drop',
+      uploadSupports: 'Supports: PDF, DOC, DOCX, XLS, XLSX, PPT, PPTX, TXT, RTF (Max: 10MB each)',
+      sizeGuidelines: 'Document Guidelines:',
+      documentGuidelines: [
+        'PDF documents: For official documents, forms and reports',
+        'Word documents: For editable texts and templates',
+        'Excel documents: For spreadsheets, schedules and data',
+        'PowerPoint documents: For presentations and educational materials',
+        'General: Keep files under 10MB for best performance'
+      ],
+      documentsFolder: 'Documents Folder ({count} documents)',
+      refresh: 'Refresh',
+      loading: 'Loading Documents folder...',
+      noDocuments: 'No documents in Documents folder',
+      uploadStart: 'Upload some documents to get started.',
+      copyUrl: 'Copy URL',
+      deleteDocument: 'Delete document',
+      downloadDocument: 'Download document',
+      openDocument: 'Open document',
+      uploadSuccess: 'Successfully uploaded {count} documents to Documents folder!',
+      uploadFailed: 'Upload failed: {error}',
+      uploading: 'Uploading...',
+      deleteFailed: 'Failed to delete document: {error}',
+      deleteSuccess: 'Document deleted successfully!',
+      deleteConfirm: 'Are you sure you want to delete "{filename}" from Documents folder? This action cannot be undone.',
+      documentTypes: {
+        pdf: 'PDF Document',
+        word: 'Word Document',
+        excel: 'Excel Document',
+        powerpoint: 'PowerPoint Presentation',
+        text: 'Text Document',
+        other: 'Other Document'
+      }
+    },
+    newsManager: {
+      title: 'News Manager',
+      description: 'Create, edit, and manage news articles that appear on the home page.',
+      addNews: 'Add News Article',
+      editNews: 'Edit News Article',
+      deleteNews: 'Delete News Article',
+      newsList: 'News List',
+      noNews: 'No news articles created',
+      createFirst: 'Create your first news article to get started.',
+      publishedNews: 'Published News',
+      draftNews: 'Drafts',
+      allNews: 'All News',
+      form: {
+        titleBg: 'Title (Bulgarian)',
+        titleEn: 'Title (English)',
+        excerptBg: 'Excerpt (Bulgarian)',
+        excerptEn: 'Excerpt (English)',
+        contentBg: 'Content (Bulgarian)',
+        contentEn: 'Content (English)',
+        featuredImage: 'Featured Image',
+        featuredImageAlt: 'Image Alt Text',
+        isPublished: 'Published',
+        isFeatured: 'Featured',
+        publishedDate: 'Published Date',
+        selectImage: 'Select Image',
+        removeImage: 'Remove Image',
+        preview: 'Preview',
+        requiredFields: 'Title and excerpt are required in both languages.'
+      },
+      actions: {
+        save: 'Save',
+        cancel: 'Cancel',
+        edit: 'Edit',
+        delete: 'Delete',
+        publish: 'Publish',
+        unpublish: 'Unpublish',
+        feature: 'Feature',
+        unfeature: 'Unfeature'
+      },
+      status: {
+        published: 'Published',
+        draft: 'Draft',
+        featured: 'Featured'
+      },
+      messages: {
+        createSuccess: 'News article created successfully!',
+        updateSuccess: 'News article updated successfully!',
+        deleteSuccess: 'News article deleted successfully!',
+        createError: 'Error creating news article: {error}',
+        updateError: 'Error updating news article: {error}',
+        deleteError: 'Error deleting news article: {error}',
+        loadError: 'Error loading news articles: {error}',
+        deleteConfirm: 'Are you sure you want to delete this news article? This action cannot be undone.'
+      }
+    },
+    schoolTeam: {
+      title: 'School Team Management',
+      addMember: 'Add Team Member',
+      editMember: 'Edit Team Member',
+      memberForm: {
+        name: 'Full Name',
+        namePlaceholder: 'Enter full name',
+        role: 'Position/Role',
+        rolePlaceholder: 'e.g., Primary Teacher, Principal',
+        email: 'Email',
+        emailPlaceholder: 'Enter email address',
+        phone: 'Phone',
+        phonePlaceholder: 'Enter phone number',
+        bio: 'Biography',
+        bioPlaceholder: 'Brief biography or description',
+        isDirector: 'Is Principal/Director',
+        isActive: 'Is Active (visible on site)',
+        position: 'Display Order',
+        positionHelp: 'Lower numbers appear first',
+        profileImage: 'Profile Image',
+        selectImage: 'Select Image',
+        changeImage: 'Change Image',
+        removeImage: 'Remove Image',
+        noImageSelected: 'No image selected'
+      },
+      validation: {
+        nameRequired: 'Name is required',
+        roleRequired: 'Role is required',
+        emailInvalid: 'Please enter a valid email address',
+        phoneInvalid: 'Please enter a valid phone number'
+      },
+      membersList: {
+        noMembers: 'No team members added yet.',
+        active: 'Active',
+        inactive: 'Inactive',
+        director: 'Director',
+        reorderInstructions: 'Drag members to reorder them'
+      },
+      actions: {
+        edit: 'Edit',
+        delete: 'Delete',
+        activate: 'Activate',
+        deactivate: 'Deactivate'
+      },
+      confirmations: {
+        delete: 'Are you sure you want to delete this team member?',
+        deactivate: 'Are you sure you want to deactivate this member? They will not appear on the website.',
+        activate: 'Activate this team member? They will appear on the website.'
+      },
+      messages: {
+        createSuccess: 'Team member added successfully!',
+        updateSuccess: 'Team member updated successfully!',
+        deleteSuccess: 'Team member deleted successfully!',
+        reorderSuccess: 'Team member order updated successfully!',
+        createError: 'Error adding team member: {error}',
+        updateError: 'Error updating team member: {error}',
+        deleteError: 'Error deleting team member: {error}',
+        loadError: 'Error loading team members: {error}'
+      }
+    },
+    imagePicker: {
+      title: 'Select Image',
+      close: 'Close',
+      select: 'Select',
+      upload: 'Upload New',
+      noImages: 'No images available. Upload some images first.',
+      loading: 'Loading images...',
+      search: 'Search images...',
+      filter: {
+        all: 'All Images',
+        recent: 'Recently Uploaded',
+        oldest: 'Oldest First'
+      }
+    },
+    common: {
+      save: 'Save',
+      cancel: 'Cancel',
+      delete: 'Delete',
+      edit: 'Edit',
+      add: 'Add',
+      upload: 'Upload',
+      loading: 'Loading...',
+      saving: 'Saving...',
+      success: 'Success!',
+      error: 'Error',
+      confirm: 'Confirm',
+      yes: 'Yes',
+      no: 'No',
+      close: 'Close',
+      back: 'Back',
+      next: 'Next',
+      previous: 'Previous',
+      search: 'Search',
+      filter: 'Filter',
+      sort: 'Sort',
+      goHome: 'Go to Home',
+      backToHome: 'Back to Home',
+      notFound: 'Not Found',
+      actions: 'Actions',
+      noData: 'No data available',
+      required: 'Required field',
+      optional: 'Optional'
+    },
+    contactManager: {
+      title: 'Contact Information Manager',
+      description: 'Manage contact details, working hours, and location information displayed on the contacts page.',
+      sections: {
+        address: 'Address Information',
+        phones: 'Phone Numbers',
+        email: 'Email Address',
+        workTime: 'Working Hours',
+        transport: 'Transportation'
+      },
+      fields: {
+        addressLine1: 'Address Line 1',
+        addressLine2: 'Address Line 2',
+        directorPhone: 'Principal Phone',
+        officePhone: 'Office Phone',
+        contactEmail: 'Contact Email',
+        weekdaysHours: 'Monday-Friday Hours',
+        weekendHours: 'Weekend Hours',
+        workTimeNote: 'Working Hours Note',
+        transportLines: 'Transport Lines'
+      },
+      placeholders: {
+        addressLine1: 'e.g., Stara Zagora, Kazanski District',
+        addressLine2: 'e.g., 15 Dobrudzha St.',
+        directorPhone: 'e.g., +359 42 123 456',
+        officePhone: 'e.g., +359 42 123 457',
+        contactEmail: 'e.g., info@school.bg',
+        weekdaysHours: 'e.g., 07:30 - 17:30',
+        weekendHours: 'e.g., Closed',
+        workTimeNote: 'e.g., For visits outside working hours, please contact us in advance',
+        transportLines: 'e.g., Bus lines: 2, 5, 12'
+      },
+      messages: {
+        updateSuccess: 'Contact information updated successfully!',
+        updateError: 'Failed to update contact information: {error}',
+        loadError: 'Failed to load contact information'
+      }
+    },
+    infoAccessManager: {
+      title: 'Access to Information Manager',
+      description: 'Manage the Access to Information page content including rules, procedures, and annual reports.',
+      sections: {
+        intro: 'Introduction',
+        rules: 'Rules & Principles',
+        howTo: 'How to Request Information',
+        report: 'Annual Report'
+      },
+      fields: {
+        intro: 'Introduction Text',
+        rulesTitle: 'Rules Section Title',
+        rulesContent: 'Rules Content',
+        principlesTitle: 'Principles Title',
+        principles: 'Principles List',
+        howToTitle: 'How to Request Title',
+        howToIntro: 'How to Request Introduction',
+        methods: 'Request Methods',
+        howToNote: 'Additional Note',
+        reportTitle: 'Annual Report Title',
+        reportIntro: 'Report Introduction',
+        stats: 'Statistics',
+        reportNote: 'Report Note'
+      },
+      placeholders: {
+        intro: 'Enter introduction text about access to public information...',
+        rulesTitle: 'e.g., Rules for Access to Public Information',
+        rulesContent: 'Enter main rules content...',
+        principlesTitle: 'e.g., Basic Principles:',
+        principleItem: 'e.g., Transparency and openness',
+        howToTitle: 'e.g., How to Request Information',
+        howToIntro: 'Enter instructions for requesting information...',
+        methodItem: 'e.g., Submit written request to the school office',
+        howToNote: 'Enter additional notes...',
+        reportTitle: 'e.g., Annual Report 2024',
+        reportIntro: 'Enter report introduction...',
+        statItem: 'e.g., Total requests received: 15',
+        reportNote: 'Enter report conclusion...'
+      },
+      messages: {
+        updateSuccess: 'Access to Information content updated successfully!',
+        updateError: 'Failed to update content: {error}',
+        loadError: 'Failed to load Access to Information content'
+      }
+    },
+    usefulLinksManager: {
+      title: 'Useful Links Management',
+      description: 'Manage useful links and page content. Editing in {lang} mode.',
+      links: 'Useful Links',
+      contentSections: 'Content Sections',
+      pageIntroduction: 'Page Introduction',
+      footerNote: 'Footer Note',
+      key: 'Key',
+      position: 'Position',
+      language: 'Language',
+      loading: 'Loading useful links content...',
+      error: 'Error',
+      errorLoad: 'Failed to load useful links content',
+      tryAgain: 'Try Again',
+      refresh: 'Refresh',
+      noContent: 'No useful links content found.',
+      form: {
+        titleLabel: 'Title ({lang})',
+        titlePlaceholder: 'Enter title...',
+        contentLabel: 'Content ({lang})',
+        contentPlaceholder: 'Enter content...',
+        descriptionLabel: 'Description ({lang})',
+        descriptionPlaceholder: 'Enter description...',
+        urlLabel: 'URL',
+        urlPlaceholder: 'https://example.com',
+        ctaLabel: 'Call to Action ({lang})',
+        ctaPlaceholder: 'Enter call-to-action text...',
+        saving: 'Saving...',
+        save: 'Save',
+        cancel: 'Cancel',
+        edit: 'Edit'
+      },
+      preview: {
+        title: '{lang} Title:',
+        content: '{lang} Content:',
+        description: '{lang} Description:',
+        url: 'URL:',
+        cta: '{lang} CTA:',
+        noContent: 'No content'
+      }
+    }
+  },
+  common: {
+    save: 'Save',
+    cancel: 'Cancel',
+    delete: 'Delete',
+    edit: 'Edit',
+    add: 'Add',
+    upload: 'Upload',
+    loading: 'Loading...',
+    error: 'Error',
+    tryAgain: 'Try Again',
+    refresh: 'Refresh',
+    saving: 'Saving...',
+    success: 'Success!',
+    confirm: 'Confirm',
+    yes: 'Yes',
+    no: 'No',
+    close: 'Close',
+    back: 'Back',
+    next: 'Next',
+    previous: 'Previous',
+    search: 'Search',
+    filter: 'Filter',
+    sort: 'Sort',
+    goHome: 'Go to Home',
+    backToHome: 'Back to Home',
+    notFound: 'Not Found',
+    actions: 'Actions',
+    noData: 'No data available',
+    required: 'Required field',
+    optional: 'Optional'
+  },
+  news: {
+    featured: 'Featured'
+  }
 
 };

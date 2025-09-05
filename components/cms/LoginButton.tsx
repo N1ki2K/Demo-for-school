@@ -1,10 +1,11 @@
 // components/cms/LoginButton.tsx
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
 
 export const LoginButton: React.FC = () => {
-  const { isLoggedIn, isEditing, login, logout, setIsEditing } = useCMS();
+  const { isLoggedIn, isEditing, isLoading, error, login, logout, setIsEditing, clearError } = useCMS();
   const { locale } = useLanguage();
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [username, setUsername] = useState('');
@@ -23,13 +24,14 @@ export const LoginButton: React.FC = () => {
       loginButton: 'Влез',
       cancel: 'Отказ',
       demoCredentials: 'Демо данни:',
-      invalidCredentials: 'Невалидни данни. Опитайте admin/admin123',
+      invalidCredentials: 'Невалидни потребителски данни',
       enterUsername: 'Въведете потребителско име',
       enterPassword: 'Въведете парола',
       loginToCms: 'Влез в CMS',
       enterEditMode: 'Влез в режим на редактиране',
       exitEditMode: 'Излез от режим на редактиране',
-      logoutFromCms: 'Излез от CMS'
+      logoutFromCms: 'Излез от CMS',
+      dashboard: 'Табло'
     },
     en: {
       login: 'Login',
@@ -42,33 +44,37 @@ export const LoginButton: React.FC = () => {
       loginButton: 'Login',
       cancel: 'Cancel',
       demoCredentials: 'Demo Credentials:',
-      invalidCredentials: 'Invalid credentials. Try admin/admin123',
+      invalidCredentials: 'Invalid credentials',
       enterUsername: 'Enter username',
       enterPassword: 'Enter password',
       loginToCms: 'Login to CMS',
       enterEditMode: 'Enter Edit Mode',
       exitEditMode: 'Exit Edit Mode',
-      logoutFromCms: 'Logout from CMS'
+      logoutFromCms: 'Logout from CMS',
+      dashboard: 'Dashboard'
     }
   };
 
   const t = texts[locale];
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    const success = login(username, password);
+    setLoginError('');
+    clearError();
+    
+    const success = await login(username, password);
     if (success) {
       setShowLoginModal(false);
       setUsername('');
       setPassword('');
       setLoginError('');
     } else {
-      setLoginError(t.invalidCredentials);
+      setLoginError(error || t.invalidCredentials);
     }
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
   };
 
   const toggleEditMode = () => {
@@ -80,7 +86,7 @@ export const LoginButton: React.FC = () => {
       <>
         <button
           onClick={() => setShowLoginModal(true)}
-          className="flex items-center px-3 py-1 text-sm font-bold text-white bg-blue-600 rounded-full hover:bg-blue-700 transition-colors duration-300"
+          className="flex items-center px-3 py-1 text-sm font-bold text-white bg-brand-blue rounded-full hover:bg-brand-blue-light transition-colors duration-300"
           aria-label={t.loginToCms}
         >
           <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,8 +96,8 @@ export const LoginButton: React.FC = () => {
         </button>
 
         {showLoginModal && (
-          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[200]">
-            <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
+          <div className="login-modal-overlay fixed inset-0 bg-black bg-opacity-20 flex items-start justify-center" style={{zIndex: 10000, paddingTop: '80px'}}>
+            <div className="login-modal-content bg-white p-6 rounded-lg w-full max-w-md mx-4 border-0 shadow-none" style={{zIndex: 10001}}>
               <h2 className="text-xl font-bold mb-4 text-gray-900">{t.cmsLogin}</h2>
               <form onSubmit={handleLogin}>
                 <div className="mb-4">
@@ -100,7 +106,7 @@ export const LoginButton: React.FC = () => {
                     type="text"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue text-gray-900 bg-white"
                     required
                     autoFocus
                     placeholder={t.enterUsername}
@@ -112,7 +118,7 @@ export const LoginButton: React.FC = () => {
                     type="password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-900 bg-white"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-brand-blue focus:border-brand-blue text-gray-900 bg-white"
                     required
                     placeholder={t.enterPassword}
                   />
@@ -125,9 +131,10 @@ export const LoginButton: React.FC = () => {
                 <div className="flex gap-3 mb-4">
                   <button
                     type="submit"
-                    className="flex-1 bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 transition-colors"
+                    disabled={isLoading}
+                    className="flex-1 bg-brand-blue text-white py-2 px-4 rounded hover:bg-brand-blue-light transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {t.loginButton}
+                    {isLoading ? 'Loading...' : t.loginButton}
                   </button>
                   <button
                     type="button"
@@ -137,17 +144,12 @@ export const LoginButton: React.FC = () => {
                       setUsername('');
                       setPassword('');
                     }}
-                    className="flex-1 bg-gray-400 text-white py-2 px-4 rounded hover:bg-gray-500 transition-colors"
+                    className="flex-1 bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600 transition-colors"
                   >
                     {t.cancel}
                   </button>
                 </div>
               </form>
-              <div className="p-3 bg-gray-100 rounded text-sm text-gray-800">
-                <div className="font-semibold mb-1">{t.demoCredentials}</div>
-                <div>{t.username.replace(':', '')} <span className="font-mono">admin</span></div>
-                <div>{t.password.replace(':', '')} <span className="font-mono">admin123</span></div>
-              </div>
             </div>
           </div>
         )}
@@ -157,24 +159,16 @@ export const LoginButton: React.FC = () => {
 
   return (
     <div className="flex items-center space-x-2">
-      <button
-        onClick={toggleEditMode}
-        className={`flex items-center px-3 py-1 text-sm font-bold rounded-full transition-colors duration-300 ${
-          isEditing 
-            ? 'bg-red-600 text-white hover:bg-red-700' 
-            : 'bg-green-600 text-white hover:bg-green-700'
-        }`}
-        aria-label={isEditing ? t.exitEditMode : t.enterEditMode}
+      <Link
+        to="/cms-dashboard"
+        className="flex items-center px-3 py-1 text-sm font-bold text-white bg-brand-gold rounded-full hover:bg-brand-gold-light transition-colors duration-300"
+        title={t.dashboard}
       >
         <svg className="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          {isEditing ? (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12"></path>
-          ) : (
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
-          )}
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 17V7m0 10a2 2 0 01-2 2H5a2 2 0 01-2-2V7a2 2 0 012-2h2a2 2 0 012 2m0 10a2 2 0 002 2h2a2 2 0 002-2M9 7a2 2 0 012-2h2a2 2 0 012 2m0 10V7m0 10a2 2 0 002 2h2a2 2 0 002-2V7a2 2 0 00-2-2h-2a2 2 0 00-2 2"></path>
         </svg>
-        {isEditing ? t.exitEdit : t.edit}
-      </button>
+        {t.dashboard}
+      </Link>
       <button
         onClick={handleLogout}
         className="flex items-center px-3 py-1 text-sm font-bold text-white bg-gray-600 rounded-full hover:bg-gray-700 transition-colors duration-300"

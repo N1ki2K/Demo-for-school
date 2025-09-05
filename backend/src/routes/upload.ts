@@ -1,0 +1,575 @@
+import { Router, Response } from 'express';
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import { v4 as uuidv4 } from 'uuid';
+import { db } from '../database/init';
+import { authenticateToken } from '../middleware/auth';
+import { MediaFile, AuthRequest } from '../types';
+
+const router = Router();
+
+// Configure multer for file uploads
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const uploadDir = path.join(__dirname, '../../uploads');
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    cb(null, file.fieldname + '-' + uniqueSuffix + extension);
+  }
+});
+
+// Configure multer specifically for images to Pictures folder
+const imageStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    // From backend/dist/routes, go up to project root: ../../../
+    const picturesDir = path.join(__dirname, '../../../Pictures');
+    console.log('Pictures directory path:', picturesDir);
+    console.log('Directory exists:', fs.existsSync(picturesDir));
+    
+    if (!fs.existsSync(picturesDir)) {
+      console.log('Creating Pictures directory...');
+      fs.mkdirSync(picturesDir, { recursive: true });
+    }
+    cb(null, picturesDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    cb(null, `${sanitizedName.split('.')[0]}-${uniqueSuffix}${extension}`);
+  }
+});
+
+const fileFilter = (req: any, file: any, cb: any) => {
+  const allowedTypes = /jpeg|jpg|png|gif|pdf|doc|docx|xls|xlsx|ppt|pptx/;
+  const extname = allowedTypes.test(path.extname(file.originalname).toLowerCase());
+  const mimetype = allowedTypes.test(file.mimetype);
+
+  if (mimetype && extname) {
+    return cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only images and documents are allowed.'));
+  }
+};
+
+const imageFilter = (req: any, file: any, cb: any) => {
+  // More permissive extension matching - just check if it ends with valid image extensions
+  const allowedExtensions = /\.(jpe?g|png|gif|webp|svg)$/i;
+  const allowedMimeTypes = [
+    'image/jpeg', 
+    'image/jpg', 
+    'image/png', 
+    'image/gif', 
+    'image/webp', 
+    'image/svg+xml',
+    'image/pjpeg', // Progressive JPEG
+    'application/octet-stream' // Generic binary (browser fallback)
+  ];
+  
+  const extname = allowedExtensions.test(file.originalname);
+  const hasImageMime = file.mimetype.startsWith('image/');
+  const isGenericBinary = file.mimetype === 'application/octet-stream';
+  const mimetypeValid = hasImageMime || (isGenericBinary && extname);
+
+  console.log('=== FILE VALIDATION DEBUG ===');
+  console.log('Original filename:', file.originalname);
+  console.log('File MIME type:', file.mimetype);
+  console.log('Extension test result:', extname);
+  console.log('Has image MIME:', hasImageMime);
+  console.log('Is generic binary:', isGenericBinary);
+  console.log('Final MIME valid:', mimetypeValid);
+  console.log('==============================');
+
+  // Accept if: valid image extension AND (image MIME type OR generic binary with image extension)
+  if (extname && mimetypeValid) {
+    console.log('✅ File accepted');
+    return cb(null, true);
+  } else {
+    console.log('❌ File rejected');
+    cb(new Error(`Invalid file type. File: ${file.originalname}, MIME: ${file.mimetype}. Extension valid: ${extname}, MIME valid: ${mimetypeValid}`));
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit
+  },
+  fileFilter: fileFilter
+});
+
+const uploadImage = multer({
+  storage: imageStorage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit for images
+  },
+  fileFilter: imageFilter
+});
+
+// Get all images from Pictures folder
+router.get('/pictures', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const picturesDir = path.join(__dirname, '../../../Pictures');
+    
+    if (!fs.existsSync(picturesDir)) {
+      fs.mkdirSync(picturesDir, { recursive: true });
+    }
+    
+    const files = fs.readdirSync(picturesDir)
+      .filter(file => {
+        const filePath = path.join(picturesDir, file);
+        const isFile = fs.statSync(filePath).isFile();
+        const isImage = /\.(jpe?g|png|gif|webp|svg)$/i.test(file);
+        return isFile && isImage;
+      })
+      .map(file => {
+        const filePath = path.join(picturesDir, file);
+        const stats = fs.statSync(filePath);
+        return {
+          filename: file,
+          url: `/Pictures/${file}`,
+          size: stats.size,
+          created: stats.birthtime,
+          modified: stats.mtime
+        };
+      })
+      .sort((a, b) => b.modified.getTime() - a.modified.getTime()); // Sort by newest first
+
+    res.json({
+      images: files,
+      total: files.length
+    });
+  } catch (error) {
+    console.error('Error listing Pictures folder:', error);
+    res.status(500).json({ error: 'Failed to list images from Pictures folder' });
+  }
+});
+
+// Delete image from Pictures folder
+router.delete('/pictures/:filename', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const { filename } = req.params;
+    const picturesDir = path.join(__dirname, '../../../Pictures');
+    const filePath = path.join(picturesDir, filename);
+    
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Image not found' });
+    }
+    
+    fs.unlinkSync(filePath);
+    console.log(`Deleted image: ${filename}`);
+    
+    res.json({ message: 'Image deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting image:', error);
+    res.status(500).json({ error: 'Failed to delete image' });
+  }
+});
+
+// Upload image to Pictures folder (Media Manager)
+router.post('/image', authenticateToken, (req: AuthRequest, res: Response) => {
+  uploadImage.single('image')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(500).json({ error: `Upload error: ${err.message}` });
+    }
+
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No image uploaded' });
+      }
+
+      console.log('File uploaded successfully to Pictures folder:', req.file);
+      
+      const filename = req.file.filename;
+      const imageUrl = `/Pictures/${filename}`;
+
+      res.status(201).json({
+        url: imageUrl,
+        filename: filename,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        message: 'Image uploaded successfully to Pictures folder'
+      });
+    } catch (error) {
+      console.error('Image upload processing error:', error);
+      res.status(500).json({ error: 'Image upload processing failed' });
+    }
+  });
+});
+
+// Upload single file
+router.post('/single', authenticateToken, upload.single('file'), (req: AuthRequest, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ error: 'No file uploaded' });
+    }
+
+    const fileId = uuidv4();
+    const fileUrl = `/uploads/${req.file.filename}`;
+    const altText = req.body.altText || '';
+
+    // Save file info to database
+    db.run(
+      `INSERT INTO media_files (id, original_name, filename, mime_type, size, url, alt_text) 
+       VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      [fileId, req.file.originalname, req.file.filename, req.file.mimetype, req.file.size, fileUrl, altText],
+      function(err) {
+        if (err) {
+          console.error('Database error:', err);
+          // Clean up uploaded file if database insert fails
+          fs.unlink(req.file!.path, (unlinkErr) => {
+            if (unlinkErr) console.error('Failed to delete file:', unlinkErr);
+          });
+          return res.status(500).json({ error: 'Failed to save file information' });
+        }
+
+        res.status(201).json({
+          id: fileId,
+          originalName: req.file!.originalname,
+          filename: req.file!.filename,
+          mimeType: req.file!.mimetype,
+          size: req.file!.size,
+          url: fileUrl,
+          altText: altText,
+          message: 'File uploaded successfully'
+        });
+      }
+    );
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: 'File upload failed' });
+  }
+});
+
+// Upload multiple files
+router.post('/multiple', authenticateToken, upload.array('files', 10), (req: AuthRequest, res: Response) => {
+  try {
+    const files = req.files as Express.Multer.File[];
+    
+    if (!files || files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded' });
+    }
+
+    const uploadPromises = files.map((file) => {
+      return new Promise((resolve, reject) => {
+        const fileId = uuidv4();
+        const fileUrl = `/uploads/${file.filename}`;
+        
+        db.run(
+          `INSERT INTO media_files (id, original_name, filename, mime_type, size, url) 
+           VALUES (?, ?, ?, ?, ?, ?)`,
+          [fileId, file.originalname, file.filename, file.mimetype, file.size, fileUrl],
+          function(err) {
+            if (err) {
+              // Clean up uploaded file if database insert fails
+              fs.unlink(file.path, (unlinkErr) => {
+                if (unlinkErr) console.error('Failed to delete file:', unlinkErr);
+              });
+              reject(err);
+            } else {
+              resolve({
+                id: fileId,
+                originalName: file.originalname,
+                filename: file.filename,
+                mimeType: file.mimetype,
+                size: file.size,
+                url: fileUrl
+              });
+            }
+          }
+        );
+      });
+    });
+
+    Promise.all(uploadPromises)
+      .then((results) => {
+        res.status(201).json({
+          files: results,
+          message: `${results.length} files uploaded successfully`
+        });
+      })
+      .catch((error) => {
+        console.error('Multiple upload error:', error);
+        res.status(500).json({ error: 'Some files failed to upload' });
+      });
+  } catch (error) {
+    console.error('Upload error:', error);
+    res.status(500).json({ error: 'File upload failed' });
+  }
+});
+
+// Get all media files
+router.get('/files', authenticateToken, (req: AuthRequest, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 20;
+  const offset = (page - 1) * limit;
+
+  db.all(
+    'SELECT * FROM media_files ORDER BY created_at DESC LIMIT ? OFFSET ?',
+    [limit, offset],
+    (err, files: MediaFile[]) => {
+      if (err) {
+        console.error('Database error:', err);
+        return res.status(500).json({ error: 'Failed to fetch media files' });
+      }
+
+      // Get total count
+      db.get('SELECT COUNT(*) as total FROM media_files', (countErr, result: any) => {
+        if (countErr) {
+          console.error('Count error:', countErr);
+          return res.status(500).json({ error: 'Failed to get file count' });
+        }
+
+        res.json({
+          files,
+          pagination: {
+            page,
+            limit,
+            total: result.total,
+            pages: Math.ceil(result.total / limit)
+          }
+        });
+      });
+    }
+  );
+});
+
+// Delete media file
+router.delete('/files/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+
+  // First get the file info
+  db.get('SELECT * FROM media_files WHERE id = ?', [id], (err, file: MediaFile) => {
+    if (err) {
+      console.error('Database error:', err);
+      return res.status(500).json({ error: 'Failed to fetch file' });
+    }
+
+    if (!file) {
+      return res.status(404).json({ error: 'File not found' });
+    }
+
+    // Delete from database
+    db.run('DELETE FROM media_files WHERE id = ?', [id], function(deleteErr) {
+      if (deleteErr) {
+        console.error('Delete error:', deleteErr);
+        return res.status(500).json({ error: 'Failed to delete file from database' });
+      }
+
+      // Delete physical file
+      const filePath = path.join(__dirname, '../../uploads', file.filename);
+      fs.unlink(filePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error('Failed to delete physical file:', unlinkErr);
+          // Don't return error here as the database record is already deleted
+        }
+      });
+
+      res.json({ message: 'File deleted successfully' });
+    });
+  });
+});
+
+// Update file metadata
+router.put('/files/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+  const { id } = req.params;
+  const { altText } = req.body;
+
+  db.run(
+    'UPDATE media_files SET alt_text = ? WHERE id = ?',
+    [altText, id],
+    function(err) {
+      if (err) {
+        console.error('Update error:', err);
+        return res.status(500).json({ error: 'Failed to update file metadata' });
+      }
+
+      if (this.changes === 0) {
+        return res.status(404).json({ error: 'File not found' });
+      }
+
+      res.json({ message: 'File metadata updated successfully' });
+    }
+  );
+});
+
+// Configure multer specifically for documents to Documents folder
+const documentStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const documentsDir = path.join(__dirname, '../../../Documents');
+    console.log('Documents directory path:', documentsDir);
+    console.log('Directory exists:', fs.existsSync(documentsDir));
+    
+    if (!fs.existsSync(documentsDir)) {
+      console.log('Creating Documents directory...');
+      fs.mkdirSync(documentsDir, { recursive: true });
+    }
+    cb(null, documentsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    cb(null, `${sanitizedName.split('.')[0]}-${uniqueSuffix}${extension}`);
+  }
+});
+
+const documentFilter = (req: any, file: any, cb: any) => {
+  const allowedExtensions = /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|rtf)$/i;
+  const allowedMimeTypes = [
+    'application/pdf',
+    'application/msword', // .doc
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+    'application/vnd.ms-excel', // .xls
+    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+    'application/vnd.ms-powerpoint', // .ppt
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation', // .pptx
+    'text/plain', // .txt
+    'application/rtf', // .rtf
+    'application/octet-stream' // Generic binary (browser fallback)
+  ];
+  
+  const extname = allowedExtensions.test(file.originalname);
+  const hasDocumentMime = allowedMimeTypes.includes(file.mimetype);
+  const isGenericBinary = file.mimetype === 'application/octet-stream';
+  const mimetypeValid = hasDocumentMime || (isGenericBinary && extname);
+
+  console.log('=== DOCUMENT VALIDATION DEBUG ===');
+  console.log('Original filename:', file.originalname);
+  console.log('File MIME type:', file.mimetype);
+  console.log('Extension test result:', extname);
+  console.log('Has document MIME:', hasDocumentMime);
+  console.log('Is generic binary:', isGenericBinary);
+  console.log('Final MIME valid:', mimetypeValid);
+  console.log('================================');
+
+  if (extname && mimetypeValid) {
+    console.log('✅ Document accepted');
+    return cb(null, true);
+  } else {
+    console.log('❌ Document rejected');
+    cb(new Error(`Invalid document type. File: ${file.originalname}, MIME: ${file.mimetype}. Extension valid: ${extname}, MIME valid: ${mimetypeValid}`));
+  }
+};
+
+const uploadDocument = multer({
+  storage: documentStorage,
+  limits: {
+    fileSize: 10 * 1024 * 1024, // 10MB limit for documents
+  },
+  fileFilter: documentFilter
+});
+
+// Get all documents from Documents folder
+router.get('/documents', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const documentsDir = path.join(__dirname, '../../../Documents');
+    
+    if (!fs.existsSync(documentsDir)) {
+      fs.mkdirSync(documentsDir, { recursive: true });
+    }
+    
+    const files = fs.readdirSync(documentsDir)
+      .filter(file => {
+        const filePath = path.join(documentsDir, file);
+        const isFile = fs.statSync(filePath).isFile();
+        const isDocument = /\.(pdf|doc|docx|xls|xlsx|ppt|pptx|txt|rtf)$/i.test(file);
+        return isFile && isDocument;
+      })
+      .map(file => {
+        const filePath = path.join(documentsDir, file);
+        const stats = fs.statSync(filePath);
+        const extension = path.extname(file).toLowerCase();
+        
+        // Determine document type
+        let documentType = 'other';
+        if (['.pdf'].includes(extension)) documentType = 'pdf';
+        else if (['.doc', '.docx'].includes(extension)) documentType = 'word';
+        else if (['.xls', '.xlsx'].includes(extension)) documentType = 'excel';
+        else if (['.ppt', '.pptx'].includes(extension)) documentType = 'powerpoint';
+        else if (['.txt', '.rtf'].includes(extension)) documentType = 'text';
+        
+        return {
+          filename: file,
+          url: `/Documents/${file}`,
+          size: stats.size,
+          created: stats.birthtime,
+          modified: stats.mtime,
+          type: documentType,
+          extension: extension
+        };
+      })
+      .sort((a, b) => b.modified.getTime() - a.modified.getTime()); // Sort by newest first
+
+    res.json({
+      documents: files,
+      total: files.length
+    });
+  } catch (error) {
+    console.error('Error listing Documents folder:', error);
+    res.status(500).json({ error: 'Failed to list documents from Documents folder' });
+  }
+});
+
+// Delete document from Documents folder
+router.delete('/documents/:filename', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const { filename } = req.params;
+    const documentsDir = path.join(__dirname, '../../../Documents');
+    const filePath = path.join(documentsDir, filename);
+    
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Document not found' });
+    }
+    
+    fs.unlinkSync(filePath);
+    console.log(`Deleted document: ${filename}`);
+    
+    res.json({ message: 'Document deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting document:', error);
+    res.status(500).json({ error: 'Failed to delete document' });
+  }
+});
+
+// Upload document to Documents folder
+router.post('/document', authenticateToken, (req: AuthRequest, res: Response) => {
+  uploadDocument.single('document')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(500).json({ error: `Upload error: ${err.message}` });
+    }
+
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No document uploaded' });
+      }
+
+      console.log('Document uploaded successfully to Documents folder:', req.file);
+      
+      const filename = req.file.filename;
+      const documentUrl = `/Documents/${filename}`;
+
+      res.status(201).json({
+        url: documentUrl,
+        filename: filename,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        message: 'Document uploaded successfully to Documents folder'
+      });
+    } catch (error) {
+      console.error('Document upload processing error:', error);
+      res.status(500).json({ error: 'Document upload processing failed' });
+    }
+  });
+});
+
+export default router;

@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, useLayoutEffect, useMemo } from 'react';
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { getNavLinks } from '../constants';
 import { NavItem } from '../types';
 import { useLanguage } from '../context/LanguageContext';
+import { useNavigation } from '../hooks/useNavigation';
 import LanguageSwitcher from './LanguageSwitcher';
 import Search from './Search';
 import { LoginButton } from './cms/LoginButton';
@@ -14,7 +14,7 @@ const Dropdown: React.FC<{ items: NavItem[]; parentPath: string; closeMenu: () =
         {items.map((item) => (
           <NavLink
             key={item.path}
-            to={`${parentPath}${item.path}`}
+            to={item.path}
             onClick={closeMenu}
             className={({ isActive }) =>
               `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
@@ -60,7 +60,7 @@ const MoreDropdownItem: React.FC<{ item: NavItem; closeMenu: () => void }> = ({ 
                     {item.children.map(child => (
                         <NavLink
                             key={child.path}
-                            to={`${item.path}${child.path}`}
+                            to={child.path}
                             onClick={closeMenu}
                             className={({ isActive }) =>
                                 `block px-4 py-2 text-sm text-gray-700 hover:bg-brand-gold-light hover:text-brand-blue-dark transition-colors duration-200 ${isActive ? 'bg-brand-gold-light font-semibold' : ''}`
@@ -100,14 +100,15 @@ function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
 
 
 const Header: React.FC = () => {
-  const { t } = useLanguage();
-  const navLinks = useMemo(() => getNavLinks(t), [t]);
+  const { t, getTranslation } = useLanguage();
+  const { navItems: navLinks } = useNavigation();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   
   const [visibleLinks, setVisibleLinks] = useState<NavItem[]>(navLinks);
   const [hiddenLinks, setHiddenLinks] = useState<NavItem[]>([]);
   const [isMoreMenuOpen, setMoreMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Refs for measurement
   const headerRef = useRef<HTMLElement>(null);
@@ -213,6 +214,19 @@ const Header: React.FC = () => {
     };
   }, []);
 
+  // Scroll effect for sticky header
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY;
+      setIsScrolled(scrollPosition > 50);
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
   const renderDesktopNavItem = (link: NavItem) => (
     <li key={link.label} className="relative group flex-shrink-0">
       {link.children ? (
@@ -258,7 +272,7 @@ const Header: React.FC = () => {
                   {link.children.map((child) => (
                     <NavLink
                       key={child.path}
-                      to={link.path + child.path}
+                      to={child.path}
                       onClick={closeAllMenus}
                       className={({ isActive }) => `block py-2 text-white hover:text-brand-gold-light transition-colors duration-200 ${isActive ? 'text-brand-gold-light font-semibold' : ''}`}
                     >
@@ -284,12 +298,14 @@ const Header: React.FC = () => {
   );
 
   return (
-    <header ref={headerRef} className="bg-brand-blue text-white shadow-md sticky top-0 z-50">
+    <header ref={headerRef} className={`bg-brand-blue text-white fixed top-0 left-0 right-0 z-40 transition-all duration-300 backdrop-blur-sm ${
+      isScrolled ? 'shadow-lg bg-opacity-95' : 'shadow-md'
+    }`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div ref={headerContainerRef} className="flex items-center justify-between h-20">
           <Link ref={logoRef} to="/" onClick={closeAllMenus} className="flex items-center space-x-3 rtl:space-x-reverse flex-shrink-0">
               <svg className="w-12 h-12 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0v-5"></path></svg>
-              <span className="self-center text-xl font-semibold whitespace-nowrap hidden sm:block">{t.header.title}</span>
+              <span className="self-center text-xl font-semibold whitespace-nowrap hidden sm:block">{getTranslation('header.title', 'ОУ "Кольо Ганчев"')}</span>
           </Link>
           
           <div className="flex items-center lg:hidden">
@@ -297,9 +313,9 @@ const Header: React.FC = () => {
             <button
               onClick={toggleMobileMenu}
               className="inline-flex items-center justify-center p-2 rounded-md text-white hover:bg-brand-blue-light focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
-              aria-label={t.header.toggleMenu}
+              aria-label={getTranslation('header.toggleMenu', 'Отвори меню')}
             >
-              <span className="sr-only">{t.header.toggleMenu}</span>
+              <span className="sr-only">{getTranslation('header.toggleMenu', 'Отвори меню')}</span>
               {isMobileMenuOpen ? (
                 <svg className="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
               ) : (
@@ -318,7 +334,7 @@ const Header: React.FC = () => {
                     onClick={() => setMoreMenuOpen(prev => !prev)}
                     className="flex items-center text-white p-0 bg-transparent hover:text-brand-gold-light transition-colors duration-300"
                   >
-                    {t.nav.more}
+                    {getTranslation('nav.more', 'Още')}
                     <svg className={`w-4 h-4 ml-1 transition-transform duration-200 ${isMoreMenuOpen ? 'transform rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path></svg>
                   </button>
                   {isMoreMenuOpen && <MoreDropdown items={hiddenLinks} closeMenu={closeAllMenus} />}

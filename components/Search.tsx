@@ -8,7 +8,7 @@ const Search: React.FC = () => {
     const [query, setQuery] = useState('');
     const navigate = useNavigate();
     const inputRef = useRef<HTMLInputElement>(null);
-    const { t } = useLanguage();
+    const { t, getTranslation } = useLanguage();
 
     const openSearch = () => {
         setIsOpen(true);
@@ -48,7 +48,7 @@ const Search: React.FC = () => {
             <button
                 onClick={openSearch}
                 className="p-2 text-white hover:text-brand-gold-light transition-colors"
-                aria-label={t.search.label}
+                aria-label={getTranslation('search.label', 'Търсене')}
             >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -63,7 +63,7 @@ const Search: React.FC = () => {
                     <button 
                         onClick={closeSearch} 
                         className="absolute top-6 right-8 text-white text-5xl font-bold hover:text-brand-gold-light"
-                        aria-label={t.search.close}
+                        aria-label={getTranslation('search.close', 'Затвори')}
                     >
                         &times;
                     </button>
@@ -78,10 +78,10 @@ const Search: React.FC = () => {
                                 type="search"
                                 value={query}
                                 onChange={(e) => setQuery(e.target.value)}
-                                placeholder={t.search.placeholder}
+                                placeholder={getTranslation('search.placeholder', 'Търсете...')}
                                 className="w-full p-4 pr-12 text-lg text-white bg-transparent border-b-2 border-brand-gold focus:outline-none focus:border-white placeholder-gray-400"
                             />
-                            <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-gold hover:text-white" aria-label={t.search.submit}>
+                            <button type="submit" className="absolute inset-y-0 right-0 flex items-center pr-3 text-brand-gold hover:text-white" aria-label={getTranslation('search.button', 'Търси')}>
                                 <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                                 </svg>

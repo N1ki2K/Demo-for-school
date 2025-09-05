@@ -3,6 +3,8 @@ import { HashRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { CMSProvider } from './context/CMSContext';
 import Layout from './components/Layout';
+import ErrorBoundary from './components/ErrorBoundary';
+import AppHealthWrapper from './components/AppHealthWrapper';
 
 // Import Page Components
 import HomePage from './pages/HomePage';
@@ -33,12 +35,21 @@ import ContactsPage from './pages/ContactsPage';
 import InfoAccessPage from './pages/InfoAccessPage';
 import NotFoundPage from './pages/NotFoundPage';
 import SearchResultsPage from './pages/SearchResultsPage';
+import DynamicPage from './pages/DynamicPage';
+import CMSDashboard from './components/cms/CMSDashboard';
+import NewsArticlePage from './pages/NewsArticlePage';
+import EventsPage from './pages/EventsPage';
+// import Home from './pages/Home';
+// import CreatePost from './pages/CreatePost';
+
 
 const App: React.FC = () => {
   return (
-    <LanguageProvider>
-      <CMSProvider>
-        <HashRouter>
+    <ErrorBoundary>
+      <LanguageProvider>
+        <AppHealthWrapper>
+          <CMSProvider>
+            <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
@@ -76,13 +87,32 @@ const App: React.FC = () => {
               <Route path="/contacts" element={<ContactsPage />} />
               <Route path="/info-access" element={<InfoAccessPage />} />
               <Route path="/search" element={<SearchResultsPage />} />
+              
+              {/* CMS Dashboard */}
+              <Route path="/cms-dashboard" element={<CMSDashboard />} />
+              
+              {/* News Article */}
+              <Route path="/news/:id" element={<NewsArticlePage />} />
+              
+              {/* Events Page */}
+              <Route path="/events" element={<EventsPage />} />
+              
+              {/* DB */}
+              {/* <Route path="/create" element={<CreatePost />} /> */}
 
+              {/* Dynamic pages - for CMS-created pages */}
+              <Route path="/dynamic/:pageId" element={<DynamicPage />} />
+              
+              {/* 404 Page - catch-all for all unmatched routes */}
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
-        </HashRouter>
-      </CMSProvider>
-    </LanguageProvider>
+            </HashRouter>
+          </CMSProvider>
+        </AppHealthWrapper>
+      </LanguageProvider>
+    </ErrorBoundary>
+    
   );
 };
 

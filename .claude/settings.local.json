@@ -1,0 +1,28 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node:*)",
+      "Bash(npm:*)",
+      "Bash(cp:*)",
+      "Bash(npx ts-node:*)",
+      "Bash(npx tsc:*)",
+      "Bash(taskkill:*)",
+      "Bash(powershell:*)",
+      "Bash(sqlite3:*)",
+      "Bash(curl:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(set PORT=3002)",
+      "Bash(cmd //c taskkill:*)",
+      "Bash(cmd //c:*)",
+      "Bash(mkdir:*)",
+      "Bash(cat:*)",
+      "Read(/home/shrek/Documents/**)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(pkill:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

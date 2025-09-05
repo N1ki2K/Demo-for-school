@@ -4,9 +4,10 @@ import { useLanguage } from '../context/LanguageContext';
 import { EditableText } from '../components/cms/EditableText';
 import { EditableList } from '../components/cms/EditableList';
 import GoogleMap from '../components/GoogleMap';
+import UpcomingEventsWidget from '../components/UpcomingEventsWidget';
 
 const ContactsPage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   const c = t.contactsPage;
 
   // School coordinates - approximate location for Stara Zagora
@@ -20,7 +21,7 @@ const ContactsPage: React.FC = () => {
         <div style="padding: 8px; max-width: 250px;">
           <h3 style="margin: 0 0 8px 0; color: #0A2E55; font-weight: bold;">${c.title}</h3>
           <p style="margin: 4px 0; font-size: 14px;"><strong>${c.address.title}:</strong> ${c.address.line1}, ${c.address.line2}</p>
-          <p style="margin: 4px 0; font-size: 14px;"><strong>${c.phones.title}:</strong> ${c.phones.director} ${t.footer.contacts.phone}</p>
+          <p style="margin: 4px 0; font-size: 14px;"><strong>${c.phones.title}:</strong> ${c.phones.director} ${getTranslation('footer.contacts.phone', 'тел.')}</p>
           <p style="margin: 4px 0; font-size: 14px;"><strong>${c.email.title}:</strong> ${c.email.address}</p>
         </div>
       `
@@ -82,6 +83,19 @@ const ContactsPage: React.FC = () => {
               />
             </div>
           </div>
+
+          {/* Transportation */}
+          <div className="bg-blue-50 p-4 rounded-lg">
+            <h4 className="font-semibold text-brand-blue-dark mb-2 flex items-center">
+              <svg className="w-5 h-5 mr-2 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2v0a2 2 0 01-2-2v0a2 2 0 01-2-2H8z"></path></svg>
+              {c.transport.title}
+            </h4>
+            <EditableList
+              id="transport-lines"
+              defaultItems={c.transport.lines}
+              className="text-sm text-gray-700 space-y-1"
+            />
+          </div>
         </div>
 
         <div className="space-y-6">
@@ -103,18 +117,11 @@ const ContactsPage: React.FC = () => {
             </p>
           </div>
 
-          {/* Transportation */}
-          <div className="bg-blue-50 p-4 rounded-lg">
-            <h4 className="font-semibold text-brand-blue-dark mb-2 flex items-center">
-              <svg className="w-5 h-5 mr-2 text-brand-gold" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2v0a2 2 0 01-2-2v0a2 2 0 01-2-2H8z"></path></svg>
-              {c.transport.title}
-            </h4>
-            <EditableList
-              id="transport-lines"
-              defaultItems={c.transport.lines}
-              className="text-sm text-gray-700 space-y-1"
-            />
-          </div>
+          {/* Upcoming Events */}
+          <UpcomingEventsWidget 
+            limit={4} 
+            className="shadow-md" 
+          />
         </div>
       </div>
     </PageWrapper>

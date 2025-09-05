@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useLanguage } from '../context/LanguageContext';
 import { EditableText} from '../components/cms/EditableText';
 import { EditableImage  } from '../components/cms/EditableImage';
 import { EditableList } from '../components/cms/EditableList';
+import { apiService } from '../src/services/api';
 
 const HeroSection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   return (
     <div className="relative bg-brand-blue text-white overflow-hidden">
       <div className="absolute inset-0">
         <EditableImage 
           id="hero-background"
           defaultSrc="https://picsum.photos/1600/900?random=1"
-          alt={t.homePage.hero.alt}
+          alt={getTranslation('homePage.hero.alt', 'School building')}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-brand-blue bg-opacity-70"></div>
@@ -21,13 +22,13 @@ const HeroSection: React.FC = () => {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32 text-center">
         <EditableText
           id="hero-title"
-          defaultContent={t.homePage.hero.title}
+          defaultContent={getTranslation('homePage.hero.title', 'Добре дошли в ОУ "Кольо Ганчев"')}
           tag="h1"
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white animate-fade-in-up leading-tight"
         />
         <EditableText
           id="hero-subtitle"
-          defaultContent={t.homePage.hero.subtitle}
+          defaultContent={getTranslation('homePage.hero.subtitle', 'Съвременно образование с традиции')}
           tag="p"
           className="mt-4 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-brand-gold-light animate-fade-in-up px-4"
         />
@@ -35,7 +36,7 @@ const HeroSection: React.FC = () => {
           <Link to="/documents/admissions" className="inline-block bg-brand-gold text-brand-blue-dark font-bold py-3 px-6 sm:px-8 rounded-full hover:bg-brand-gold-light transition-transform duration-300 transform hover:scale-105 text-sm sm:text-base">
             <EditableText
               id="hero-cta"
-              defaultContent={t.homePage.hero.cta}
+              defaultContent={getTranslation('homePage.hero.cta', 'Научи повече')}
               tag="span"
             />
           </Link>
@@ -53,7 +54,7 @@ const NewsCard: React.FC<{
   link: string; 
   imageUrl: string;
 }> = ({ id, title, date, excerpt, link, imageUrl }) => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
         <EditableImage 
@@ -81,41 +82,70 @@ const NewsCard: React.FC<{
               tag="p"
               className="text-gray-600 mb-4"
             />
-            <Link to={link} className="text-brand-blue-light font-semibold hover:text-brand-gold transition-colors">{t.homePage.news.readMore} &rarr;</Link>
+            <Link to={link} className="text-brand-blue-light font-semibold hover:text-brand-gold transition-colors">{getTranslation('homePage.news.readMore', 'Прочети повече')} &rarr;</Link>
         </div>
     </div>
   );
 };
 
 const HomePage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation, language } = useLanguage();
+  const [newsItems, setNewsItems] = useState<any[]>([]);
+  const [isLoadingNews, setIsLoadingNews] = useState(true);
 
-  const newsItems = [
-    { 
-      id: 'news-1',
-      title: t.homePage.news.item1.title,
-      date: t.homePage.news.item1.date,
-      excerpt: t.homePage.news.item1.excerpt,
-      link: "/documents/announcement",
-      imageUrl: "https://picsum.photos/400/300?random=2"
-    },
-    { 
-      id: 'news-2',
-      title: t.homePage.news.item2.title,
-      date: t.homePage.news.item2.date,
-      excerpt: t.homePage.news.item2.excerpt,
-      link: "/documents/olympiads",
-      imageUrl: "https://picsum.photos/400/300?random=3"
-    },
-    { 
-      id: 'news-3',
-      title: t.homePage.news.item3.title,
-      date: t.homePage.news.item3.date,
-      excerpt: t.homePage.news.item3.excerpt,
-      link: "/projects/education-for-tomorrow",
-      imageUrl: "https://picsum.photos/400/300?random=4"
-    }
-  ];
+  useEffect(() => {
+    const loadNews = async () => {
+      try {
+        setIsLoadingNews(true);
+        const allNews = await apiService.getNews(language, true);
+        const featuredNews = allNews.slice(0, 3); // Get the 3 most recent published articles
+        
+        const formattedNews = featuredNews.map((article: any) => ({
+          id: `news-${article.id}`,
+          title: article.title, // Already formatted by backend based on language
+          date: new Date(article.publishedDate).toLocaleDateString(language === 'bg' ? 'bg-BG' : 'en-US'),
+          excerpt: article.excerpt, // Already formatted by backend based on language
+          link: `/news/${article.id}`,
+          imageUrl: article.featuredImage || "https://picsum.photos/400/300?random=2"
+        }));
+
+        setNewsItems(formattedNews);
+      } catch (error) {
+        console.error('Error loading featured news:', error);
+        // Fallback to static news items if API fails
+        setNewsItems([
+          { 
+            id: 'news-1',
+            title: t.homePage.news.item1.title,
+            date: t.homePage.news.item1.date,
+            excerpt: t.homePage.news.item1.excerpt,
+            link: "/documents/announcement",
+            imageUrl: "https://picsum.photos/400/300?random=2"
+          },
+          { 
+            id: 'news-2',
+            title: t.homePage.news.item2.title,
+            date: t.homePage.news.item2.date,
+            excerpt: t.homePage.news.item2.excerpt,
+            link: "/documents/olympiads",
+            imageUrl: "https://picsum.photos/400/300?random=3"
+          },
+          { 
+            id: 'news-3',
+            title: t.homePage.news.item3.title,
+            date: t.homePage.news.item3.date,
+            excerpt: t.homePage.news.item3.excerpt,
+            link: "/projects/education-for-tomorrow",
+            imageUrl: "https://picsum.photos/400/300?random=4"
+          }
+        ]);
+      } finally {
+        setIsLoadingNews(false);
+      }
+    };
+
+    loadNews();
+  }, [language, t]);
 
   const defaultFeatures = [
     t.homePage.features.feature1.title,
@@ -161,13 +191,19 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <EditableText
             id="news-title"
-            defaultContent={t.homePage.news.title}
+            defaultContent={getTranslation('homePage.news.title', 'Новини')}
             tag="h2"
             className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
           />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-            {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
-          </div>
+          {isLoadingNews ? (
+            <div className="flex justify-center items-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+              {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
+            </div>
+          )}
         </div>
       </section>
 
@@ -176,13 +212,13 @@ const HomePage: React.FC = () => {
             <div className="text-center">
                 <EditableText
                   id="features-title"
-                  defaultContent={t.homePage.features.title}
+                  defaultContent={getTranslation('homePage.features.title', 'Наши предимства')}
                   tag="h2"
                   className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue"
                 />
                 <EditableText
                   id="features-subtitle"
-                  defaultContent={t.homePage.features.subtitle}
+                  defaultContent={getTranslation('homePage.features.subtitle', 'Какво ни прави специални')}
                   tag="p"
                   className="mt-4 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4"
                 />

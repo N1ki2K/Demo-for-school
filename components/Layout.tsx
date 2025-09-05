@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import Header from './Header';
 import Footer from './Footer';
-import { CMSToolbar } from './cms/CMSToolbar';
 
 const Layout: React.FC = () => {
   const [showButton, setShowButton] = useState(false);
@@ -37,11 +36,10 @@ const Layout: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
-      <main className="flex-grow">
+      <main className="flex-grow pt-20">
         <Outlet />
       </main>
       <Footer />
-      <CMSToolbar />
        {showButton && (
         <button
           onClick={scrollToTop}

@@ -4,7 +4,7 @@ import { useLanguage } from '../context/LanguageContext';
 import { EditableText } from './cms/EditableText';
 
 const Footer: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
 
   return (
     <footer className="bg-brand-blue-dark text-white">
@@ -13,13 +13,13 @@ const Footer: React.FC = () => {
           <div>
             <EditableText
               id="footer-school-name"
-              defaultContent={t.footer.schoolName}
+              defaultContent={getTranslation('footer.schoolName', 'Kolyo Ganchev Elementary School')}
               tag="h3"
               className="text-lg font-semibold text-brand-gold mb-4"
             />
             <EditableText
               id="footer-motto"
-              defaultContent={t.footer.motto}
+              defaultContent={getTranslation('footer.motto', 'Education with care for the future.')}
               tag="p"
               className="text-gray-300"
             />
@@ -27,7 +27,7 @@ const Footer: React.FC = () => {
           <div>
             <EditableText
               id="footer-contacts-title"
-              defaultContent={t.footer.contacts.title}
+              defaultContent={getTranslation('footer.contacts.title', 'Contacts')}
               tag="h3"
               className="text-lg font-semibold text-brand-gold mb-4"
             />
@@ -36,29 +36,37 @@ const Footer: React.FC = () => {
                 <span className="font-semibold">
                   <EditableText
                     id="footer-address-label"
-                    defaultContent={t.footer.contacts.addressLabel}
+                    defaultContent={getTranslation('footer.contacts.addressLabel', 'Address')}
                     tag="span"
                   />
                   :
                 </span>{' '}
-                <EditableText
-                  id="footer-address"
-                  defaultContent={t.footer.contacts.address}
-                  tag="span"
-                />
+                <div className="inline">
+                  <EditableText
+                    id="address-line1"
+                    defaultContent={getTranslation('contactsPage.address.line1', '26 Armeyska St')}
+                    tag="span"
+                  />
+                  <br />
+                  <EditableText
+                    id="address-line2"
+                    defaultContent={getTranslation('contactsPage.address.line2', '6003 Kazanski, Stara Zagora')}
+                    tag="span"
+                  />
+                </div>
               </li>
               <li>
                 <span className="font-semibold">
                   <EditableText
                     id="footer-phone-label"
-                    defaultContent={t.footer.contacts.phoneLabel}
+                    defaultContent={getTranslation('footer.contacts.phoneLabel', 'Phone')}
                     tag="span"
                   />
                   :
                 </span>{' '}
                 <EditableText
-                  id="footer-phone"
-                  defaultContent={t.footer.contacts.phone}
+                  id="director-phone"
+                  defaultContent="+359 42 123 456"
                   tag="span"
                 />
               </li>
@@ -66,14 +74,14 @@ const Footer: React.FC = () => {
                 <span className="font-semibold">
                   <EditableText
                     id="footer-email-label"
-                    defaultContent={t.footer.contacts.emailLabel}
+                    defaultContent={getTranslation('footer.contacts.emailLabel', 'Email')}
                     tag="span"
                   />
                   :
                 </span>{' '}
                 <EditableText
-                  id="footer-email"
-                  defaultContent={t.footer.contacts.email}
+                  id="contact-email"
+                  defaultContent={getTranslation('contactsPage.email.address', 'contact@kganchev-school.bg')}
                   tag="span"
                 />
               </li>
@@ -82,7 +90,7 @@ const Footer: React.FC = () => {
           <div>
             <EditableText
               id="footer-quicklinks-title"
-              defaultContent={t.footer.quickLinks.title}
+              defaultContent={getTranslation('footer.quickLinks.title', 'Quick Links')}
               tag="h3"
               className="text-lg font-semibold text-brand-gold mb-4"
             />
@@ -91,7 +99,7 @@ const Footer: React.FC = () => {
                 <Link to="/contacts" className="text-gray-300 hover:text-brand-gold-light transition-colors">
                   <EditableText
                     id="footer-link-contacts"
-                    defaultContent={t.footer.quickLinks.contacts}
+                    defaultContent={getTranslation('footer.quickLinks.contacts', 'Contacts')}
                     tag="span"
                   />
                 </Link>
@@ -100,7 +108,7 @@ const Footer: React.FC = () => {
                 <Link to="/documents/admissions" className="text-gray-300 hover:text-brand-gold-light transition-colors">
                   <EditableText
                     id="footer-link-admissions"
-                    defaultContent={t.footer.quickLinks.admissions}
+                    defaultContent={getTranslation('footer.quickLinks.admissions', 'Admissions')}
                     tag="span"
                   />
                 </Link>
@@ -109,7 +117,7 @@ const Footer: React.FC = () => {
                 <Link to="/useful-links" className="text-gray-300 hover:text-brand-gold-light transition-colors">
                   <EditableText
                     id="footer-link-useful"
-                    defaultContent={t.footer.quickLinks.usefulLinks}
+                    defaultContent={getTranslation('footer.quickLinks.usefulLinks', 'Useful Links')}
                     tag="span"
                   />
                 </Link>
@@ -118,7 +126,7 @@ const Footer: React.FC = () => {
                 <Link to="/gallery" className="text-gray-300 hover:text-brand-gold-light transition-colors">
                   <EditableText
                     id="footer-link-gallery"
-                    defaultContent={t.footer.quickLinks.gallery}
+                    defaultContent={getTranslation('footer.quickLinks.gallery', 'Gallery')}
                     tag="span"
                   />
                 </Link>
@@ -131,13 +139,13 @@ const Footer: React.FC = () => {
             &copy; {new Date().getFullYear()}{' '}
             <EditableText
               id="footer-copyright"
-              defaultContent={t.footer.copyright}
+              defaultContent={getTranslation('footer.copyright', 'All rights reserved.')}
               tag="span"
             />
           </p>
           <EditableText
             id="footer-design"
-            defaultContent={t.footer.design}
+            defaultContent={getTranslation('footer.design', 'Design and development by a talented team.')}
             tag="p"
             className="text-xs sm:text-sm mt-1"
           />

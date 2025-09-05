@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { useCMS } from '../../context/CMSContext';
 import { useLanguage } from '../../context/LanguageContext';
+import { useLocation } from 'react-router-dom';
 
 interface EditableListProps {
   id: string;
@@ -17,10 +18,32 @@ export const EditableList: React.FC<EditableListProps> = ({
   ordered = false 
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
+  
+  // Force read-only mode - disable inline editing
+  const forceReadOnly = true;
   const { locale } = useLanguage();
+  const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);
-  const items = getContent(id, defaultItems);
+  
+  // Create language-specific ID for lists
+  const languageSpecificId = `${id}_${locale}`;
+  const items = getContent(languageSpecificId, defaultItems);
   const [tempItems, setTempItems] = useState<string[]>([]);
+  
+  // Helper function to map URL path to page ID
+  const getPageIdFromPath = (path: string): string => {
+    if (path === '/') return 'home';
+    if (path === '/contacts') return 'contacts';
+    if (path === '/gallery') return 'gallery';
+    if (path === '/info-access') return 'info-access';
+    if (path === '/useful-links') return 'useful-links';
+    if (path.startsWith('/school/')) return `school-${path.split('/').pop()}`;
+    if (path.startsWith('/documents/')) return `documents-${path.split('/').pop()}`;
+    if (path.startsWith('/projects/')) return `projects-${path.split('/').pop()}`;
+    return 'unknown';
+  };
+  
+  const currentPageId = getPageIdFromPath(location.pathname);
 
   const texts = {
     bg: {
@@ -44,14 +67,14 @@ export const EditableList: React.FC<EditableListProps> = ({
   const t = texts[locale];
 
   const handleEdit = () => {
-    if (isEditing) {
+    if (isEditing && !forceReadOnly) {
       setTempItems([...items]);
       setIsEditable(true);
     }
   };
 
   const handleSave = () => {
-    updateContent(id, tempItems);
+    updateContent(languageSpecificId, tempItems, 'list', `${id} (${locale})`, currentPageId);
     setIsEditable(false);
   };
 
@@ -129,7 +152,7 @@ export const EditableList: React.FC<EditableListProps> = ({
           <li key={index}>{item}</li>
         ))}
       </ListTag>
-      {isEditing && (
+      {isEditing && !forceReadOnly && (
         <button
           onClick={handleEdit}
           className="absolute -top-2 -right-2 bg-blue-600 text-white px-2 py-1 rounded text-xs hover:bg-blue-700"
