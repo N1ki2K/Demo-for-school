@@ -18,7 +18,7 @@ interface NewsArticle {
 const NewsArticlePage: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { t, language } = useLanguage();
+  const { t, getTranslation, language } = useLanguage();
   const [article, setArticle] = useState<NewsArticle | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,13 +59,13 @@ const NewsArticlePage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{t.common.error}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{getTranslation('common.error', 'Грешка')}</h1>
           <p className="text-gray-600 mb-6">{error}</p>
           <button
             onClick={() => navigate('/')}
             className="bg-brand-blue text-white px-6 py-2 rounded-lg hover:bg-brand-blue-dark transition-colors"
           >
-            {t.common.goHome}
+            {getTranslation('common.goHome', 'Начало')}
           </button>
         </div>
       </div>
@@ -76,13 +76,13 @@ const NewsArticlePage: React.FC = () => {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">{t.common.notFound}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">{getTranslation('common.notFound', 'Не е намерено')}</h1>
           <p className="text-gray-600 mb-6">The requested article was not found.</p>
           <button
             onClick={() => navigate('/')}
             className="bg-brand-blue text-white px-6 py-2 rounded-lg hover:bg-brand-blue-dark transition-colors"
           >
-            {t.common.goHome}
+            {getTranslation('common.goHome', 'Начало')}
           </button>
         </div>
       </div>
@@ -100,7 +100,7 @@ const NewsArticlePage: React.FC = () => {
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          {t.common.back}
+          {getTranslation('common.back', 'Назад')}
         </button>
 
         {/* Article content */}
@@ -134,7 +134,7 @@ const NewsArticlePage: React.FC = () => {
                   <>
                     <span className="mx-2">•</span>
                     <span className="bg-brand-gold text-brand-blue-dark px-2 py-1 rounded text-xs font-semibold">
-                      {t.news.featured}
+                      {getTranslation('news.featured', 'Препоръчано')}
                     </span>
                   </>
                 )}
@@ -169,7 +169,7 @@ const NewsArticlePage: React.FC = () => {
             onClick={() => navigate('/')}
             className="bg-brand-blue text-white px-8 py-3 rounded-lg hover:bg-brand-blue-dark transition-colors font-semibold"
           >
-            {t.common.backToHome}
+            {getTranslation('common.backToHome', 'Към началото')}
           </button>
         </div>
       </div>

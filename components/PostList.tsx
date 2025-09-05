@@ -15,7 +15,7 @@ const PostList: React.FC = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost/my-cms-api/api/posts/read.php');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/posts`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);

@@ -159,6 +159,80 @@ const createTables = (): Promise<void> => {
         published_date DATETIME DEFAULT CURRENT_TIMESTAMP,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Translatable text content table
+      `CREATE TABLE IF NOT EXISTS translations (
+        id TEXT PRIMARY KEY,
+        key_path TEXT NOT NULL UNIQUE,
+        text_bg TEXT,
+        text_en TEXT,
+        description TEXT,
+        category TEXT DEFAULT 'general',
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Events table for calendar functionality
+      `CREATE TABLE IF NOT EXISTS events (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title_bg TEXT NOT NULL,
+        title_en TEXT NOT NULL,
+        description_bg TEXT,
+        description_en TEXT,
+        start_date DATETIME NOT NULL,
+        end_date DATETIME,
+        location TEXT,
+        is_public BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Patron content table
+      `CREATE TABLE IF NOT EXISTS patron_content (
+        id TEXT PRIMARY KEY,
+        section_key TEXT NOT NULL,
+        title_bg TEXT,
+        title_en TEXT,
+        content_bg TEXT,
+        content_en TEXT,
+        image_url TEXT,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Useful links table
+      `CREATE TABLE IF NOT EXISTS useful_links (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        link_key TEXT NOT NULL UNIQUE,
+        title_bg TEXT NOT NULL,
+        title_en TEXT NOT NULL,
+        description_bg TEXT,
+        description_en TEXT,
+        url TEXT NOT NULL,
+        cta_bg TEXT,
+        cta_en TEXT,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Useful links content sections table
+      `CREATE TABLE IF NOT EXISTS useful_links_content (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        section_key TEXT NOT NULL UNIQUE,
+        title_bg TEXT,
+        title_en TEXT,
+        content_bg TEXT,
+        content_en TEXT,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
     ];
 
@@ -183,26 +257,21 @@ const createTables = (): Promise<void> => {
 
 const seedInitialData = async (): Promise<void> => {
   return new Promise((resolve, reject) => {
-    // Create default admin user
-    const defaultPassword = 'admin123';
-    const hashedPassword = bcrypt.hashSync(defaultPassword, 10);
-    
-    db.run(
-      'INSERT OR IGNORE INTO users (username, email, password_hash, role) VALUES (?, ?, ?, ?)',
-      ['admin', 'admin@school.com', hashedPassword, 'admin'],
-      function(err) {
-        if (err) {
-          console.error('Error seeding admin user:', err);
-          reject(err);
-        } else {
-          console.log('✅ Database initialized with default admin user');
-          console.log('📝 Default login: admin / admin123');
-          
-          // Seed default pages
-          seedPages().then(resolve).catch(reject);
-        }
+    // Check if admin user already exists
+    db.get('SELECT id FROM users WHERE username = ?', ['admin'], (err, row) => {
+      if (err) {
+        console.error('Error checking for admin user:', err);
+        reject(err);
+      } else if (!row) {
+        console.log('⚠️  No admin user found. Please create one using the backend admin setup.');
+        console.log('   Set environment variables: ADMIN_USERNAME and ADMIN_PASSWORD');
+      } else {
+        console.log('✅ Database initialized');
       }
-    );
+      
+      // Seed default pages
+      seedPages().then(resolve).catch(reject);
+    });
   });
 };
 

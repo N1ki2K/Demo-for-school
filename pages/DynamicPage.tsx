@@ -64,7 +64,12 @@ const DynamicPage: React.FC = () => {
         }
       } catch (err) {
         console.error('Error loading page content:', err);
-        setError('Failed to load page content');
+        // Show the actual error message from the backend
+        if (err instanceof Error) {
+          setError(err.message);
+        } else {
+          setError('Failed to load page content');
+        }
       } finally {
         setLoading(false);
       }

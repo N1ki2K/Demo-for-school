@@ -4,6 +4,10 @@ import { useLanguage } from '../../context/LanguageContext';
 import { apiService } from '../../src/services/api';
 import ContactManagerTab from './ContactManagerTab';
 import InfoAccessManagerTab from './InfoAccessManagerTab';
+import CalendarManagerTab from './CalendarManagerTab';
+import PatronManagerTab from './PatronManagerTab';
+import UsefulLinksManagerTab from './UsefulLinksManagerTab';
+import TranslationsManagerTab from './TranslationsManagerTab';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -2772,6 +2776,30 @@ const CMSDashboard: React.FC = () => {
           label: t.cms.tabs.gallery,
           icon: '🎨',
           content: <GalleryTab />
+        },
+        {
+          id: 'calendar',
+          label: 'Calendar',
+          icon: '📅',
+          content: <CalendarManagerTab />
+        },
+        {
+          id: 'patron',
+          label: 'Patron Page',
+          icon: '👑',
+          content: <PatronManagerTab />
+        },
+        {
+          id: 'useful-links',
+          label: 'Useful Links',
+          icon: '🔗',
+          content: <UsefulLinksManagerTab />
+        },
+        {
+          id: 'translations',
+          label: 'Translations',
+          icon: '🌐',
+          content: <TranslationsManagerTab />
         }
       ]
     },

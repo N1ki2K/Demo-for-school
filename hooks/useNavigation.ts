@@ -16,83 +16,63 @@ interface PageData {
 }
 
 // Fallback navigation for when API fails or is loading
-const getFallbackNavigation = (t: any): NavItem[] => [
-  { label: t.nav.home, path: '/' },
+const getFallbackNavigation = (getTranslation: (key: string, fallback?: string) => string): NavItem[] => [
+  { label: getTranslation('nav.home', 'Home'), path: '/' },
   {
-    label: t.nav.school.title,
+    label: getTranslation('nav.school.title', 'School'),
     path: '/school',
     children: [
-      { label: t.nav.school.history, path: '/history' },
-      { label: t.nav.school.patron, path: '/patron' },
-      { label: t.nav.school.team, path: '/team' },
-      { label: t.nav.school.council, path: '/council' },
+      { label: getTranslation('nav.school.history', 'History'), path: '/school/history' },
+      { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
+      { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
+      { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
     ],
   },
   {
-    label: t.nav.documents.title,
+    label: getTranslation('nav.documents.title', 'Documents'),
     path: '/documents',
-    children: [
-      { label: t.nav.documents.calendar, path: '/calendar' },
-      { label: t.nav.documents.schedules, path: '/schedules' },
-      { label: t.nav.documents.budget, path: '/budget' },
-      { label: t.nav.documents.rules, path: '/rules' },
-      { label: t.nav.documents.ethics, path: '/ethics' },
-      { label: t.nav.documents.adminServices, path: '/admin-services' },
-      { label: t.nav.documents.admissions, path: '/admissions' },
-      { label: t.nav.documents.roadSafety, path: '/road-safety' },
-      { label: t.nav.documents.ores, path: '/ores' },
-      { label: t.nav.documents.continuingEducation, path: '/continuing-education' },
-      { label: t.nav.documents.faq, path: '/faq' },
-      { label: t.nav.documents.announcement, path: '/announcement' },
-      { label: t.nav.documents.students, path: '/students' },
-      { label: t.nav.documents.olympiads, path: '/olympiads' },
-    ],
+    children: [], // Empty dropdown as requested
   },
-  { label: t.nav.usefulLinks, path: '/useful-links' },
-  { label: t.nav.gallery, path: '/gallery' },
+  { label: getTranslation('nav.gallery', 'Gallery'), path: '/gallery' },
+  { label: getTranslation('nav.usefulLinks', 'Useful Links'), path: '/useful-links' },
   {
-    label: t.nav.projects.title,
+    label: getTranslation('nav.projects.title', 'Projects'),
     path: '/projects',
-    children: [
-      { label: t.nav.projects.yourHour, path: '/your-hour' },
-      { label: t.nav.projects.supportForSuccess, path: '/support-for-success' },
-      { label: t.nav.projects.educationForTomorrow, path: '/education-for-tomorrow' },
-    ],
+    children: [], // Empty dropdown as requested
   },
-  { label: t.nav.contacts, path: '/contacts' },
-  { label: t.nav.infoAccess, path: '/info-access' },
+  { label: getTranslation('nav.contacts', 'Contacts'), path: '/contacts' },
+  { label: getTranslation('nav.infoAccess', 'Info Access'), path: '/info-access' },
 ];
 
 export const useNavigation = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const transformPageToNavItem = (page: PageData): NavItem => {
-    // Map database page names to translated labels
-    const getTranslatedLabel = (pageId: string, pageName: string): string => {
-      const labelMap: Record<string, string> = {
-        'home': t.nav.home,
-        'school': t.nav.school.title,
-        'school-history': t.nav.school.history,
-        'school-patron': t.nav.school.patron,
-        'school-team': t.nav.school.team,
-        'school-council': t.nav.school.council,
-        'documents': t.nav.documents.title,
-        'documents-calendar': t.nav.documents.calendar,
-        'documents-schedules': t.nav.documents.schedules,
-        'projects': t.nav.projects.title,
-        'projects-your-hour': t.nav.projects.yourHour,
-        'useful-links': t.nav.usefulLinks,
-        'gallery': t.nav.gallery,
-        'contacts': t.nav.contacts,
-        'info-access': t.nav.infoAccess
-      };
-      
-      return labelMap[pageId] || pageName;
+  const getTranslatedLabel = (pageId: string, pageName: string): string => {
+    const labelMap: Record<string, string> = {
+      'home': getTranslation('nav.home', 'Home'),
+      'school': getTranslation('nav.school.title', 'School'),
+      'school-history': getTranslation('nav.school.history', 'History'),
+      'school-patron': getTranslation('nav.school.patron', 'Patron'),
+      'school-team': getTranslation('nav.school.team', 'Team'),
+      'school-council': getTranslation('nav.school.council', 'Council'),
+      'documents': getTranslation('nav.documents.title', 'Documents'),
+      'documents-calendar': getTranslation('nav.documents.calendar', 'Calendar'),
+      'documents-schedules': getTranslation('nav.documents.schedules', 'Schedules'),
+      'projects': getTranslation('nav.projects.title', 'Projects'),
+      'projects-your-hour': getTranslation('nav.projects.yourHour', 'Your Hour'),
+      'useful-links': getTranslation('nav.usefulLinks', 'Useful Links'),
+      'gallery': getTranslation('nav.gallery', 'Gallery'),
+      'contacts': getTranslation('nav.contacts', 'Contacts'),
+      'info-access': getTranslation('nav.infoAccess', 'Info Access')
     };
+    
+    return labelMap[pageId] || pageName;
+  };
 
+  const transformPageToNavItem = (page: PageData): NavItem => {
     return {
       label: getTranslatedLabel(page.id, page.name),
       path: page.path,
@@ -106,13 +86,50 @@ export const useNavigation = () => {
       setError(null);
       
       const pages = await apiService.getPages();
-      const navItems = pages.map(transformPageToNavItem);
       
+      // Build navigation structure using the already-structured data from backend
+      const buildNavigation = (pages: PageData[]): NavItem[] => {
+        const navStructure: NavItem[] = [];
+        
+        // Define the desired order of top-level pages
+        const pageOrder = ['home', 'school', 'documents', 'gallery', 'useful-links', 'projects', 'contacts', 'info-access'];
+        
+        // Process each page in the desired order
+        pageOrder.forEach(pageId => {
+          const page = pages.find(p => p.id === pageId && p.show_in_menu && (!p.parent_id || p.parent_id === null));
+          if (page) {
+            let navItem: NavItem;
+            
+            if (pageId === 'documents' || pageId === 'projects') {
+              // Special handling for empty dropdowns
+              navItem = {
+                label: getTranslatedLabel(page.id, page.name),
+                path: page.path,
+                children: [], // Empty dropdown as requested
+              };
+            } else {
+              // Use the already-structured children from backend
+              navItem = transformPageToNavItem(page);
+              
+              // If this is school, make sure children are properly handled
+              if (pageId === 'school' && page.children && page.children.length > 0) {
+                navItem.children = page.children.map(transformPageToNavItem);
+              }
+            }
+            
+            navStructure.push(navItem);
+          }
+        });
+        
+        return navStructure;
+      };
+      
+      const navItems = buildNavigation(pages);
       setNavItems(navItems);
     } catch (err) {
       console.warn('Failed to load dynamic navigation, using fallback:', err);
       setError('Failed to load navigation');
-      setNavItems(getFallbackNavigation(t));
+      setNavItems(getFallbackNavigation(getTranslation));
     } finally {
       setIsLoading(false);
     }
@@ -122,8 +139,17 @@ export const useNavigation = () => {
     loadNavigation();
   }, [t]); // Reload when language changes
 
+  const finalNavItems = navItems.length > 0 ? navItems : getFallbackNavigation(getTranslation);
+  
+  // Debug logging
+  console.log('🧭 Navigation Debug:', {
+    navItemsFromDB: navItems.length,
+    finalNavItems: finalNavItems.length,
+    samplePaths: finalNavItems.slice(0, 3).map(item => ({ label: item.label, path: item.path }))
+  });
+
   return {
-    navItems: navItems.length > 0 ? navItems : getFallbackNavigation(t),
+    navItems: finalNavItems,
     isLoading,
     error,
     reloadNavigation: loadNavigation,

@@ -23,7 +23,7 @@ const Home: React.FC = () => {
     // This async function fetches the posts from your PHP API
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost/3ou-cms-api/api/posts/read.php');
+        const response = await fetch(`${import.meta.env.VITE_API_URL || '/api'}/posts`);
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);

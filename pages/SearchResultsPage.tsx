@@ -8,7 +8,7 @@ import { searchData } from '../search/searchData';
 const SearchResultsPage: React.FC = () => {
     const [searchParams] = useSearchParams();
     const query = searchParams.get('q');
-    const { locale, t } = useLanguage();
+    const { locale, t, getTranslation } = useLanguage();
 
     const results = useMemo(() => {
         if (!query) return [];
@@ -20,10 +20,10 @@ const SearchResultsPage: React.FC = () => {
     }, [query, locale]);
 
     return (
-        <PageWrapper title={`${t.search.results.title}: "${query}"`}>
+        <PageWrapper title={`${getTranslation('search.results.title', 'Резултати')}: "${query}"`}>
             {results.length > 0 ? (
                 <div>
-                    <p className="mb-8">{t.search.results.found.replace('{count}', results.length.toString())}</p>
+                    <p className="mb-8">{getTranslation('search.results.found', 'Намерени {count} резултата').replace('{count}', results.length.toString())}</p>
                     <div className="space-y-6">
                         {results.map(page => (
                             <div key={page.path} className="pb-4 border-b border-gray-200">
@@ -38,7 +38,7 @@ const SearchResultsPage: React.FC = () => {
                     </div>
                 </div>
             ) : (
-                <p>{t.search.results.notFound.replace('{query}', query || '')}</p>
+                <p>{getTranslation('search.results.notFound', 'Няма резултати за "{query}"').replace('{query}', query || '')}</p>
             )}
         </PageWrapper>
     );

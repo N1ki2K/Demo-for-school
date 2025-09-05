@@ -719,6 +719,15 @@ historyPage: {
     title: "Useful Links",
     intro: "Here we have collected links to important institutions and useful resources related to the education and development of children.",
     cta: "Visit site",
+    defaultCta: "Visit Site",
+    loading: "Loading useful links...",
+    loadingTitle: "Loading...",
+    error: "Error Loading Content",
+    errorTitle: "Error",
+    tryAgain: "Try Again",
+    refresh: "Refresh",
+    noLinks: "No useful links available at the moment.",
+    failedToLoad: "Failed to load useful links content",
     links: {
       l1: { title: "Ministry of Education and Science", description: "Official website of the MES with current information about the education system." },
       l2: { title: "Regional Department of Education - Stara Zagora", description: "Information and news from the RDE, Stara Zagora." },
@@ -888,11 +897,8 @@ historyPage: {
       uploadStart: 'Upload some images to get started.',
       copyUrl: 'Copy URL',
       deleteImage: 'Delete image',
-      uploadSuccess: 'Successfully uploaded {count} images to Pictures folder!',
       uploadFailed: 'Upload failed: {error}',
-      deleteFailed: 'Failed to delete image: {error}',
-      deleteSuccess: 'Image deleted successfully!',
-      deleteConfirm: 'Are you sure you want to delete "{filename}" from Pictures folder? This action cannot be undone.'
+      deleteFailed: 'Failed to delete image: {error}'
     },
     documentManager: {
       title: 'Document Manager',
@@ -1172,6 +1178,47 @@ historyPage: {
         updateError: 'Failed to update content: {error}',
         loadError: 'Failed to load Access to Information content'
       }
+    },
+    usefulLinksManager: {
+      title: 'Useful Links Management',
+      description: 'Manage useful links and page content. Editing in {lang} mode.',
+      links: 'Useful Links',
+      contentSections: 'Content Sections',
+      pageIntroduction: 'Page Introduction',
+      footerNote: 'Footer Note',
+      key: 'Key',
+      position: 'Position',
+      language: 'Language',
+      loading: 'Loading useful links content...',
+      error: 'Error',
+      errorLoad: 'Failed to load useful links content',
+      tryAgain: 'Try Again',
+      refresh: 'Refresh',
+      noContent: 'No useful links content found.',
+      form: {
+        titleLabel: 'Title ({lang})',
+        titlePlaceholder: 'Enter title...',
+        contentLabel: 'Content ({lang})',
+        contentPlaceholder: 'Enter content...',
+        descriptionLabel: 'Description ({lang})',
+        descriptionPlaceholder: 'Enter description...',
+        urlLabel: 'URL',
+        urlPlaceholder: 'https://example.com',
+        ctaLabel: 'Call to Action ({lang})',
+        ctaPlaceholder: 'Enter call-to-action text...',
+        saving: 'Saving...',
+        save: 'Save',
+        cancel: 'Cancel',
+        edit: 'Edit'
+      },
+      preview: {
+        title: '{lang} Title:',
+        content: '{lang} Content:',
+        description: '{lang} Description:',
+        url: 'URL:',
+        cta: '{lang} CTA:',
+        noContent: 'No content'
+      }
     }
   },
   common: {
@@ -1182,9 +1229,11 @@ historyPage: {
     add: 'Add',
     upload: 'Upload',
     loading: 'Loading...',
+    error: 'Error',
+    tryAgain: 'Try Again',
+    refresh: 'Refresh',
     saving: 'Saving...',
     success: 'Success!',
-    error: 'Error',
     confirm: 'Confirm',
     yes: 'Yes',
     no: 'No',

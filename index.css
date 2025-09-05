@@ -49,6 +49,9 @@ body {
 .login-modal-content {
   z-index: 10001 !important;
   position: relative !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
 }
 
 /* Custom animations */

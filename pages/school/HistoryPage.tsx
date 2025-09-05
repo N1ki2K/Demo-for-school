@@ -6,19 +6,19 @@ import { EditableImage } from '../../components/cms/EditableImage';
 import { EditableList } from '../../components/cms/EditableList';
 
 const HistoryPage: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   return (
-    <PageWrapper title={t.historyPage.title}>
+    <PageWrapper title={getTranslation('historyPage.title', 'История')}>
       <div className="space-y-6">
         <EditableText
           id="history-p1"
-          defaultContent={t.historyPage.p1}
+          defaultContent={getTranslation('historyPage.p1', 'Нашето училище има богата история...')}
           tag="p"
           className="text-lg leading-relaxed"
         />
         <EditableText
           id="history-p2"
-          defaultContent={t.historyPage.p2}
+          defaultContent={getTranslation('historyPage.p2', 'През годините училището се развива...')}
           tag="p"
           className="text-lg leading-relaxed"
         />
@@ -27,13 +27,13 @@ const HistoryPage: React.FC = () => {
             <EditableImage
               id="history-main-image"
               defaultSrc="https://picsum.photos/1200/400?random=10"
-              alt={t.historyPage.imageAlt}
+              alt={getTranslation('historyPage.imageAlt', 'Училищна сграда')}
               className="w-full h-auto max-h-96 object-cover rounded-lg shadow-md"
             />
             <figcaption className="text-center text-sm text-gray-500 mt-2">
                 <EditableText
                   id="history-image-caption"
-                  defaultContent={t.historyPage.imageCaption}
+                  defaultContent={getTranslation('historyPage.imageCaption', 'Сградата на училището')}
                   tag="span"
                 />
             </figcaption>
@@ -41,13 +41,13 @@ const HistoryPage: React.FC = () => {
         
         <EditableText
           id="history-p3"
-          defaultContent={t.historyPage.p3}
+          defaultContent={getTranslation('historyPage.p3', 'Нашите учители са отдадени...')}
           tag="p"
           className="text-lg leading-relaxed"
         />
         <EditableText
           id="history-p4"
-          defaultContent={t.historyPage.p4}
+          defaultContent={getTranslation('historyPage.p4', 'Училището продължава да се развива...')}
           tag="p"
           className="text-lg leading-relaxed"
         />
@@ -56,13 +56,13 @@ const HistoryPage: React.FC = () => {
         <div className="bg-blue-50 p-6 rounded-lg mt-8">
             <EditableText
               id="achievements-title"
-              defaultContent={t.historyPage.achievements.title}
+              defaultContent={getTranslation('historyPage.achievements.title', 'Наши постижения')}
               tag="h2"
               className="text-2xl font-bold text-blue-900 mb-4"
             />
             <EditableList
               id="achievements-list"
-              defaultItems={t.historyPage.achievements.list}
+              defaultItems={['Първо място в математическа олимпиада', 'Най-добра училищна библиотека', 'Награда за екологични инициативи']}
               className="space-y-2"
             />
         </div>
@@ -71,13 +71,13 @@ const HistoryPage: React.FC = () => {
         <div className="bg-gray-50 p-6 rounded-lg mt-8">
             <EditableText
               id="directors-title"
-              defaultContent={t.historyPage.directors.title}
+              defaultContent={getTranslation('historyPage.directors.title', 'Директори')}
               tag="h2"
               className="text-2xl font-bold text-gray-900 mb-4"
             />
             <EditableList
               id="directors-list"
-              defaultItems={t.historyPage.directors.list}
+              defaultItems={['Иван Петров (1985-2000)', 'Мария Георгиева (2000-2015)', 'Стоян Димитров (2015-настояще)']}
               className="space-y-2"
             />
         </div>

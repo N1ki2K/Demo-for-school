@@ -15,6 +15,11 @@ import uploadRoutes from './routes/upload';
 import pagesRoutes from './routes/pages';
 import imagesRoutes from './routes/images';
 import newsRoutes from './routes/news';
+import eventsRoutes from './routes/events';
+import patronRoutes from './routes/patron';
+import usefulLinksRoutes from './routes/useful-links';
+import translationsRoutes from './routes/translations';
+import healthRoutes from './routes/health';
 
 dotenv.config();
 
@@ -74,10 +79,11 @@ app.use('/api/upload', uploadRoutes);
 app.use('/api/pages', pagesRoutes);
 app.use('/api/images', imagesRoutes);
 app.use('/api/news', newsRoutes);
-
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'OK', timestamp: new Date().toISOString() });
-});
+app.use('/api/events', eventsRoutes);
+app.use('/api/patron', patronRoutes);
+app.use('/api/useful-links', usefulLinksRoutes);
+app.use('/api/translations', translationsRoutes);
+app.use('/api', healthRoutes);
 
 const startServer = async () => {
   try {

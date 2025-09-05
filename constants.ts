@@ -1,51 +1,51 @@
 
 import { NavItem } from './types';
 
-// The navLinks export is now a function that takes the translation object (t)
+// The navLinks export is now a function that takes the getTranslation function
 // and returns the navigation links in the currently selected language.
-export const getNavLinks = (t: any): NavItem[] => [
-  { label: t.nav.home, path: '/' },
+export const getNavLinks = (getTranslation: (key: string, fallback?: string) => string): NavItem[] => [
+  { label: getTranslation('nav.home', 'Начало'), path: '/' },
   {
-    label: t.nav.school.title,
+    label: getTranslation('nav.school.title', 'Училището'),
     path: '/school',
     children: [
-      { label: t.nav.school.history, path: '/history' },
-      { label: t.nav.school.patron, path: '/patron' },
-      { label: t.nav.school.team, path: '/team' },
-      { label: t.nav.school.council, path: '/council' },
+      { label: getTranslation('nav.school.history', 'История'), path: '/history' },
+      { label: getTranslation('nav.school.patron', 'Патрон'), path: '/patron' },
+      { label: getTranslation('nav.school.team', 'Екип'), path: '/team' },
+      { label: getTranslation('nav.school.council', 'Съвет'), path: '/council' },
     ],
   },
   {
-    label: t.nav.documents.title,
+    label: getTranslation('nav.documents.title', 'Документи'),
     path: '/documents',
     children: [
-      { label: t.nav.documents.calendar, path: '/calendar' },
-      { label: t.nav.documents.schedules, path: '/schedules' },
-      { label: t.nav.documents.budget, path: '/budget' },
-      { label: t.nav.documents.rules, path: '/rules' },
-      { label: t.nav.documents.ethics, path: '/ethics' },
-      { label: t.nav.documents.adminServices, path: '/admin-services' },
-      { label: t.nav.documents.admissions, path: '/admissions' },
-      { label: t.nav.documents.roadSafety, path: '/road-safety' },
-      { label: t.nav.documents.ores, path: '/ores' },
-      { label: t.nav.documents.continuingEducation, path: '/continuing-education' },
-      { label: t.nav.documents.faq, path: '/faq' },
-      { label: t.nav.documents.announcement, path: '/announcement' },
-      { label: t.nav.documents.students, path: '/students' },
-      { label: t.nav.documents.olympiads, path: '/olympiads' },
+      { label: getTranslation('nav.documents.calendar', 'Календар'), path: '/calendar' },
+      { label: getTranslation('nav.documents.schedules', 'Разписания'), path: '/schedules' },
+      { label: getTranslation('nav.documents.budget', 'Бюджет'), path: '/budget' },
+      { label: getTranslation('nav.documents.rules', 'Правилници'), path: '/rules' },
+      { label: getTranslation('nav.documents.ethics', 'Етика'), path: '/ethics' },
+      { label: getTranslation('nav.documents.adminServices', 'Административни услуги'), path: '/admin-services' },
+      { label: getTranslation('nav.documents.admissions', 'Прием'), path: '/admissions' },
+      { label: getTranslation('nav.documents.roadSafety', 'Пътна безопасност'), path: '/road-safety' },
+      { label: getTranslation('nav.documents.ores', 'ОРЕС'), path: '/ores' },
+      { label: getTranslation('nav.documents.continuingEducation', 'Продължаващо образование'), path: '/continuing-education' },
+      { label: getTranslation('nav.documents.faq', 'ЧЗВ'), path: '/faq' },
+      { label: getTranslation('nav.documents.announcement', 'Обявление'), path: '/announcement' },
+      { label: getTranslation('nav.documents.students', 'Ученици'), path: '/students' },
+      { label: getTranslation('nav.documents.olympiads', 'Олимпиади'), path: '/olympiads' },
     ],
   },
-  { label: t.nav.usefulLinks, path: '/useful-links' },
-  { label: t.nav.gallery, path: '/gallery' },
+  { label: getTranslation('nav.usefulLinks', 'Полезни връзки'), path: '/useful-links' },
+  { label: getTranslation('nav.gallery', 'Галерия'), path: '/gallery' },
   {
-    label: t.nav.projects.title,
+    label: getTranslation('nav.projects.title', 'Проекти'),
     path: '/projects',
     children: [
-      { label: t.nav.projects.yourHour, path: '/your-hour' },
-      { label: t.nav.projects.supportForSuccess, path: '/support-for-success' },
-      { label: t.nav.projects.educationForTomorrow, path: '/education-for-tomorrow' },
+      { label: getTranslation('nav.projects.yourHour', 'Твоят час'), path: '/your-hour' },
+      { label: getTranslation('nav.projects.supportForSuccess', 'Подкрепа за успех'), path: '/support-for-success' },
+      { label: getTranslation('nav.projects.educationForTomorrow', 'Образование за утре'), path: '/education-for-tomorrow' },
     ],
   },
-  { label: t.nav.contacts, path: '/contacts' },
-  { label: t.nav.infoAccess, path: '/info-access' },
+  { label: getTranslation('nav.contacts', 'Контакти'), path: '/contacts' },
+  { label: getTranslation('nav.infoAccess', 'Достъп до информация'), path: '/info-access' },
 ];

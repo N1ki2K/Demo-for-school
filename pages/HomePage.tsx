@@ -7,14 +7,14 @@ import { EditableList } from '../components/cms/EditableList';
 import { apiService } from '../src/services/api';
 
 const HeroSection: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   return (
     <div className="relative bg-brand-blue text-white overflow-hidden">
       <div className="absolute inset-0">
         <EditableImage 
           id="hero-background"
           defaultSrc="https://picsum.photos/1600/900?random=1"
-          alt={t.homePage.hero.alt}
+          alt={getTranslation('homePage.hero.alt', 'School building')}
           className="w-full h-full object-cover"
         />
         <div className="absolute inset-0 bg-brand-blue bg-opacity-70"></div>
@@ -22,13 +22,13 @@ const HeroSection: React.FC = () => {
       <div className="relative container mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 md:py-32 text-center">
         <EditableText
           id="hero-title"
-          defaultContent={t.homePage.hero.title}
+          defaultContent={getTranslation('homePage.hero.title', 'Добре дошли в ОУ "Кольо Ганчев"')}
           tag="h1"
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white animate-fade-in-up leading-tight"
         />
         <EditableText
           id="hero-subtitle"
-          defaultContent={t.homePage.hero.subtitle}
+          defaultContent={getTranslation('homePage.hero.subtitle', 'Съвременно образование с традиции')}
           tag="p"
           className="mt-4 sm:mt-6 max-w-2xl mx-auto text-base sm:text-lg md:text-xl text-brand-gold-light animate-fade-in-up px-4"
         />
@@ -36,7 +36,7 @@ const HeroSection: React.FC = () => {
           <Link to="/documents/admissions" className="inline-block bg-brand-gold text-brand-blue-dark font-bold py-3 px-6 sm:px-8 rounded-full hover:bg-brand-gold-light transition-transform duration-300 transform hover:scale-105 text-sm sm:text-base">
             <EditableText
               id="hero-cta"
-              defaultContent={t.homePage.hero.cta}
+              defaultContent={getTranslation('homePage.hero.cta', 'Научи повече')}
               tag="span"
             />
           </Link>
@@ -54,7 +54,7 @@ const NewsCard: React.FC<{
   link: string; 
   imageUrl: string;
 }> = ({ id, title, date, excerpt, link, imageUrl }) => {
-  const { t } = useLanguage();
+  const { t, getTranslation } = useLanguage();
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden transform hover:-translate-y-2 transition-transform duration-300">
         <EditableImage 
@@ -82,14 +82,14 @@ const NewsCard: React.FC<{
               tag="p"
               className="text-gray-600 mb-4"
             />
-            <Link to={link} className="text-brand-blue-light font-semibold hover:text-brand-gold transition-colors">{t.homePage.news.readMore} &rarr;</Link>
+            <Link to={link} className="text-brand-blue-light font-semibold hover:text-brand-gold transition-colors">{getTranslation('homePage.news.readMore', 'Прочети повече')} &rarr;</Link>
         </div>
     </div>
   );
 };
 
 const HomePage: React.FC = () => {
-  const { t, language } = useLanguage();
+  const { t, getTranslation, language } = useLanguage();
   const [newsItems, setNewsItems] = useState<any[]>([]);
   const [isLoadingNews, setIsLoadingNews] = useState(true);
 
@@ -191,7 +191,7 @@ const HomePage: React.FC = () => {
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <EditableText
             id="news-title"
-            defaultContent={t.homePage.news.title}
+            defaultContent={getTranslation('homePage.news.title', 'Новини')}
             tag="h2"
             className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
           />
@@ -212,13 +212,13 @@ const HomePage: React.FC = () => {
             <div className="text-center">
                 <EditableText
                   id="features-title"
-                  defaultContent={t.homePage.features.title}
+                  defaultContent={getTranslation('homePage.features.title', 'Наши предимства')}
                   tag="h2"
                   className="text-2xl sm:text-3xl md:text-4xl font-bold text-brand-blue"
                 />
                 <EditableText
                   id="features-subtitle"
-                  defaultContent={t.homePage.features.subtitle}
+                  defaultContent={getTranslation('homePage.features.subtitle', 'Какво ни прави специални')}
                   tag="p"
                   className="mt-4 text-base sm:text-lg text-gray-600 max-w-3xl mx-auto px-4"
                 />

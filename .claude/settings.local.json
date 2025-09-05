@@ -18,7 +18,9 @@
       "Bash(mkdir:*)",
       "Bash(cat:*)",
       "Read(/home/shrek/Documents/**)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(pkill:*)"
     ],
     "deny": [],
     "ask": []

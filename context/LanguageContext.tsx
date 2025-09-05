@@ -1,18 +1,20 @@
 
-import React, { createContext, useState, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo } from 'react';
 import useLocalStorageState from 'use-local-storage-state';
-import { bg } from '../locales/bg';
-import { en } from '../locales/en';
+import { useTranslationsSimple } from '../hooks/useTranslationsSimple';
 
 type Locale = 'bg' | 'en';
 
 interface LanguageContextType {
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  t: typeof bg;
+  t: any;
+  flatTranslations: { [key: string]: string };
+  loading: boolean;
+  error: string | null;
+  refreshTranslations: (lang?: string) => Promise<void>;
+  getTranslation: (keyPath: string, fallback?: string) => string;
 }
-
-const translations = { bg, en };
 
 export const LanguageContext = createContext<LanguageContextType | undefined>(undefined);
 
@@ -21,13 +23,25 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     defaultValue: 'bg',
   });
 
-  const t = useMemo(() => translations[locale], [locale]);
+  const { 
+    translations, 
+    flatTranslations, 
+    loading, 
+    error, 
+    t: getTranslation, 
+    refreshTranslations 
+  } = useTranslationsSimple(locale);
 
-  const value = {
+  const value = useMemo(() => ({
     locale,
     setLocale,
-    t,
-  };
+    t: translations,
+    flatTranslations,
+    loading,
+    error,
+    refreshTranslations,
+    getTranslation,
+  }), [locale, translations, flatTranslations, loading, error, getTranslation]);
 
   return (
     <LanguageContext.Provider value={value}>

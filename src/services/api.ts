@@ -46,7 +46,9 @@ class ApiService {
         }
         throw error;
       }
-      throw new ApiError(0, 'Network error');
+      // For network errors or backend unavailable, throw descriptive error
+      console.error('Network/Backend error:', error);
+      throw new ApiError(0, 'Unable to connect to server. Please check if the backend is running.');
     }
   }
 
@@ -536,6 +538,133 @@ class ApiService {
     });
   }
 
+  // Events methods
+  async getEvents(locale = 'en', start?: string, end?: string) {
+    let endpoint = `/events?locale=${locale}`;
+    if (start && end) {
+      endpoint += `&start=${start}&end=${end}`;
+    }
+    return this.request<{ events: any[] }>(endpoint);
+  }
+
+  async getEvent(id: number) {
+    return this.request<{ event: any }>(`/events/${id}`);
+  }
+
+  async createEvent(event: any) {
+    return this.request('/events', {
+      method: 'POST',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async updateEvent(id: number, event: any) {
+    return this.request(`/events/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(event),
+    });
+  }
+
+  async deleteEvent(id: number) {
+    return this.request(`/events/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async getUpcomingEvents(locale = 'en', limit = 10) {
+    return this.request<{ events: any[] }>(`/events/public/upcoming?locale=${locale}&limit=${limit}`);
+  }
+
+  // Patron content methods
+  async getPatronContent(language: string = 'bg') {
+    return this.request<{ success: boolean; content: any[] }>(`/patron?lang=${language}`);
+  }
+
+  async getPatronContentForAdmin() {
+    return this.request<{ success: boolean; content: any[] }>('/patron/admin');
+  }
+
+  async getPatronContentSection(id: string) {
+    return this.request<{ success: boolean; content: any }>(`/patron/${id}`);
+  }
+
+  async createPatronContent(content: any) {
+    return this.request('/patron', {
+      method: 'POST',
+      body: JSON.stringify(content),
+    });
+  }
+
+  async updatePatronContent(id: string, content: any) {
+    return this.request(`/patron/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(content),
+    });
+  }
+
+  async deletePatronContent(id: string) {
+    return this.request(`/patron/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async reorderPatronContent(content: any[]) {
+    return this.request('/patron/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ content }),
+    });
+  }
+
+  // Useful Links methods
+  async getUsefulLinksContent(language: string = 'bg') {
+    return this.request<{ success: boolean; links: any[]; content: any[] }>(`/useful-links?lang=${language}`);
+  }
+
+  async getUsefulLinksForAdmin() {
+    return this.request<{ success: boolean; links: any[]; content: any[] }>('/useful-links/admin');
+  }
+
+  async createUsefulLink(link: any) {
+    return this.request('/useful-links/link', {
+      method: 'POST',
+      body: JSON.stringify(link),
+    });
+  }
+
+  async updateUsefulLink(id: string, link: any) {
+    return this.request(`/useful-links/link/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(link),
+    });
+  }
+
+  async deleteUsefulLink(id: string) {
+    return this.request(`/useful-links/link/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async createUsefulLinksContent(content: any) {
+    return this.request('/useful-links/content', {
+      method: 'POST',
+      body: JSON.stringify(content),
+    });
+  }
+
+  async updateUsefulLinksContent(id: string, content: any) {
+    return this.request(`/useful-links/content/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(content),
+    });
+  }
+
+  async reorderUsefulLinks(links?: any[], content?: any[]) {
+    return this.request('/useful-links/reorder', {
+      method: 'PUT',
+      body: JSON.stringify({ links, content }),
+    });
+  }
+
   // Health check
   async healthCheck() {
     return this.request<{ status: string; timestamp: string }>('/health');
@@ -544,6 +673,17 @@ class ApiService {
   // Check if user is authenticated
   isAuthenticated(): boolean {
     return !!this.token;
+  }
+
+  // Check if error is a backend connection issue
+  static isBackendConnectionError(error: any): boolean {
+    return (error instanceof ApiError && error.status === 0) || 
+           (error instanceof Error && (
+             error.message.includes('Unable to connect to server') ||
+             error.message.includes('fetch') ||
+             error.message.includes('NetworkError') ||
+             error.message.includes('Failed to fetch')
+           ));
   }
 }
 

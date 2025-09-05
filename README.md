@@ -17,9 +17,7 @@ This project now includes a comprehensive Visual Content Management System (CMS)
 
 1. Look for the **Login** button in the top-right corner of the website (next to the language selector)
 2. Click it to open the login modal
-3. Use the demo credentials:
-   - **Username**: `admin`
-   - **Password**: `admin123`
+3. Use your configured admin credentials (set via environment variables)
 
 ### 2. Enter Edit Mode
 
