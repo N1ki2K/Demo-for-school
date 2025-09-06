@@ -440,7 +440,10 @@ const documentFilter = (req: any, file: any, cb: any) => {
   const extname = allowedExtensions.test(file.originalname);
   const hasDocumentMime = allowedMimeTypes.includes(file.mimetype);
   const isGenericBinary = file.mimetype === 'application/octet-stream';
-  const mimetypeValid = hasDocumentMime || (isGenericBinary && extname);
+  const isPdfFile = file.originalname.toLowerCase().endsWith('.pdf');
+  
+  // Special handling for PDF files - be more permissive
+  const mimetypeValid = hasDocumentMime || (isGenericBinary && extname) || (isPdfFile && file.mimetype.includes('pdf'));
 
   console.log('=== DOCUMENT VALIDATION DEBUG ===');
   console.log('Original filename:', file.originalname);
@@ -448,6 +451,7 @@ const documentFilter = (req: any, file: any, cb: any) => {
   console.log('Extension test result:', extname);
   console.log('Has document MIME:', hasDocumentMime);
   console.log('Is generic binary:', isGenericBinary);
+  console.log('Is PDF file:', isPdfFile);
   console.log('Final MIME valid:', mimetypeValid);
   console.log('================================');
 

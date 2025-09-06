@@ -19,6 +19,7 @@ import eventsRoutes from './routes/events';
 import patronRoutes from './routes/patron';
 import usefulLinksRoutes from './routes/useful-links';
 import translationsRoutes from './routes/translations';
+import navigationRoutes from './routes/navigation';
 import healthRoutes from './routes/health';
 
 dotenv.config();
@@ -27,7 +28,19 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet({
-  crossOriginResourcePolicy: { policy: "cross-origin" }
+  crossOriginResourcePolicy: { policy: "cross-origin" },
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'", "https:"],
+      scriptSrc: ["'self'"],
+      objectSrc: ["'self'"],
+      frameAncestors: ["'self'", "http://localhost:5173", "http://localhost:3000"],
+      frameSrc: ["'self'"],
+      imgSrc: ["'self'", "data:", "https:"],
+      connectSrc: ["'self'", "https:"],
+    },
+  },
 }));
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
@@ -83,6 +96,7 @@ app.use('/api/events', eventsRoutes);
 app.use('/api/patron', patronRoutes);
 app.use('/api/useful-links', usefulLinksRoutes);
 app.use('/api/translations', translationsRoutes);
+app.use('/api/navigation', navigationRoutes);
 app.use('/api', healthRoutes);
 
 const startServer = async () => {

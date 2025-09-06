@@ -233,6 +233,19 @@ const createTables = (): Promise<void> => {
         is_active BOOLEAN DEFAULT 1,
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // Navigation menu items table
+      `CREATE TABLE IF NOT EXISTS navigation_items (
+        id TEXT PRIMARY KEY,
+        title TEXT NOT NULL,
+        path TEXT NOT NULL,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        parent_id TEXT,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (parent_id) REFERENCES navigation_items(id) ON DELETE CASCADE
       )`
     ];
 
@@ -269,8 +282,8 @@ const seedInitialData = async (): Promise<void> => {
         console.log('✅ Database initialized');
       }
       
-      // Seed default pages
-      seedPages().then(resolve).catch(reject);
+      // Seed default pages and navigation
+      Promise.all([seedPages(), seedNavigationItems()]).then(() => resolve()).catch(reject);
     });
   });
 };
@@ -311,6 +324,44 @@ const seedPages = (): Promise<void> => {
             inserted++;
             if (inserted === total) {
               console.log('📄 Default pages seeded successfully');
+              resolve();
+            }
+          }
+        }
+      );
+    });
+  });
+};
+
+const seedNavigationItems = (): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const defaultNavItems = [
+      { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null },
+      { id: 'documents-calendar', title: 'Calendar', path: '/documents/calendar', position: 1, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-schedules', title: 'Schedules', path: '/documents/schedules', position: 2, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-budget', title: 'Budget Reports', path: '/documents/budget', position: 3, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-rules', title: 'Rules', path: '/documents/rules', position: 4, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-ethics', title: 'Ethics Code', path: '/documents/ethics', position: 5, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-admin-services', title: 'Admin Services', path: '/documents/admin-services', position: 6, is_active: 1, parent_id: 'documents' },
+      { id: 'documents-admissions', title: 'Admissions', path: '/documents/admissions', position: 7, is_active: 1, parent_id: 'documents' }
+    ];
+
+    let inserted = 0;
+    const total = defaultNavItems.length;
+
+    defaultNavItems.forEach((item) => {
+      const now = new Date().toISOString();
+      db.run(
+        'INSERT OR IGNORE INTO navigation_items (id, title, path, position, is_active, parent_id, created_at, updated_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+        [item.id, item.title, item.path, item.position, item.is_active, item.parent_id, now, now],
+        function(err) {
+          if (err) {
+            console.error(`Error seeding navigation item ${item.title}:`, err);
+            reject(err);
+          } else {
+            inserted++;
+            if (inserted === total) {
+              console.log('🧭 Default navigation items seeded successfully');
               resolve();
             }
           }

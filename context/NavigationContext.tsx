@@ -1,8 +1,12 @@
-// hooks/useNavigation.ts
-import { useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { apiService } from '../src/services/api';
-import { NavItem } from '../types';
-import { useLanguage } from '../context/LanguageContext';
+import { useLanguage } from './LanguageContext';
+
+interface NavItem {
+  label: string;
+  path: string;
+  children?: NavItem[];
+}
 
 interface PageData {
   id: string;
@@ -15,55 +19,68 @@ interface PageData {
   children?: PageData[];
 }
 
-// Fallback navigation for when API fails or is loading
-const getFallbackNavigation = (getTranslation: (key: string, fallback?: string) => string): NavItem[] => [
-  { label: getTranslation('nav.home', 'Home'), path: '/' },
-  {
-    label: getTranslation('nav.school.title', 'School'),
-    path: '/school',
-    children: [
-      { label: getTranslation('nav.school.history', 'History'), path: '/school/history' },
-      { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
-      { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
-      { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
-    ],
-  },
-  {
-    label: getTranslation('nav.documents.title', 'Documents'),
-    path: '/documents',
-    children: [
-      { label: getTranslation('nav.documents.calendar', 'Calendar'), path: '/documents/calendar' },
-      { label: getTranslation('nav.documents.schedules', 'Schedules'), path: '/documents/schedules' },
-      { label: getTranslation('nav.documents.budget', 'Budget Reports'), path: '/documents/budget' },
-      { label: getTranslation('nav.documents.rules', 'Rules'), path: '/documents/rules' },
-      { label: getTranslation('nav.documents.ethics', 'Ethics Code'), path: '/documents/ethics' },
-      { label: getTranslation('nav.documents.adminServices', 'Admin Services'), path: '/documents/admin-services' },
-      { label: getTranslation('nav.documents.admissions', 'Admissions'), path: '/documents/admissions' },
-      { label: getTranslation('nav.documents.roadSafety', 'Road Safety'), path: '/documents/road-safety' },
-      { label: getTranslation('nav.documents.ores', 'ORES'), path: '/documents/ores' },
-      { label: getTranslation('nav.documents.continuingEducation', 'Continuing Education'), path: '/documents/continuing-education' },
-      { label: getTranslation('nav.documents.faq', 'FAQ'), path: '/documents/faq' },
-      { label: getTranslation('nav.documents.announcement', 'Announcements'), path: '/documents/announcement' },
-      { label: getTranslation('nav.documents.students', 'Students'), path: '/documents/students' },
-      { label: getTranslation('nav.documents.olympiads', 'Olympiads'), path: '/documents/olympiads' },
-    ],
-  },
-  { label: getTranslation('nav.gallery', 'Gallery'), path: '/gallery' },
-  { label: getTranslation('nav.usefulLinks', 'Useful Links'), path: '/useful-links' },
-  {
-    label: getTranslation('nav.projects.title', 'Projects'),
-    path: '/projects',
-    children: [], // Empty dropdown as requested
-  },
-  { label: getTranslation('nav.contacts', 'Contacts'), path: '/contacts' },
-  { label: getTranslation('nav.infoAccess', 'Info Access'), path: '/info-access' },
-];
+interface NavigationContextType {
+  navItems: NavItem[];
+  isLoading: boolean;
+  error: string | null;
+  reloadNavigation: () => Promise<void>;
+}
 
-export const useNavigation = () => {
+const NavigationContext = createContext<NavigationContextType | undefined>(undefined);
+
+interface NavigationProviderProps {
+  children: ReactNode;
+}
+
+export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children }) => {
   const { t, getTranslation } = useLanguage();
   const [navItems, setNavItems] = useState<NavItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  // Fallback navigation for when API fails or is loading
+  const getFallbackNavigation = (getTranslation: (key: string, fallback?: string) => string): NavItem[] => [
+    { label: getTranslation('nav.home', 'Home'), path: '/' },
+    {
+      label: getTranslation('nav.school.title', 'School'),
+      path: '/school',
+      children: [
+        { label: getTranslation('nav.school.history', 'History'), path: '/school/history' },
+        { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
+        { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
+        { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
+      ],
+    },
+    {
+      label: getTranslation('nav.documents.title', 'Documents'),
+      path: '/documents',
+      children: [
+        { label: getTranslation('nav.documents.calendar', 'Calendar'), path: '/documents/calendar' },
+        { label: getTranslation('nav.documents.schedules', 'Schedules'), path: '/documents/schedules' },
+        { label: getTranslation('nav.documents.budget', 'Budget Reports'), path: '/documents/budget' },
+        { label: getTranslation('nav.documents.rules', 'Rules'), path: '/documents/rules' },
+        { label: getTranslation('nav.documents.ethics', 'Ethics Code'), path: '/documents/ethics' },
+        { label: getTranslation('nav.documents.adminServices', 'Admin Services'), path: '/documents/admin-services' },
+        { label: getTranslation('nav.documents.admissions', 'Admissions'), path: '/documents/admissions' },
+        { label: getTranslation('nav.documents.roadSafety', 'Road Safety'), path: '/documents/road-safety' },
+        { label: getTranslation('nav.documents.ores', 'ORES'), path: '/documents/ores' },
+        { label: getTranslation('nav.documents.continuingEducation', 'Continuing Education'), path: '/documents/continuing-education' },
+        { label: getTranslation('nav.documents.faq', 'FAQ'), path: '/documents/faq' },
+        { label: getTranslation('nav.documents.announcement', 'Announcements'), path: '/documents/announcement' },
+        { label: getTranslation('nav.documents.students', 'Students'), path: '/documents/students' },
+        { label: getTranslation('nav.documents.olympiads', 'Olympiads'), path: '/documents/olympiads' },
+      ],
+    },
+    { label: getTranslation('nav.gallery', 'Gallery'), path: '/gallery' },
+    { label: getTranslation('nav.usefulLinks', 'Useful Links'), path: '/useful-links' },
+    {
+      label: getTranslation('nav.projects.title', 'Projects'),
+      path: '/projects',
+      children: [], // Empty dropdown as requested
+    },
+    { label: getTranslation('nav.contacts', 'Contacts'), path: '/contacts' },
+    { label: getTranslation('nav.infoAccess', 'Info Access'), path: '/info-access' },
+  ];
 
   const getTranslatedLabel = (pageId: string, pageName: string): string => {
     const labelMap: Record<string, string> = {
@@ -174,6 +191,10 @@ export const useNavigation = () => {
     }
   };
 
+  const reloadNavigation = async () => {
+    await loadNavigation();
+  };
+
   useEffect(() => {
     loadNavigation();
   }, [t]); // Reload when language changes
@@ -187,10 +208,24 @@ export const useNavigation = () => {
     samplePaths: finalNavItems.slice(0, 3).map(item => ({ label: item.label, path: item.path }))
   });
 
-  return {
+  const contextValue: NavigationContextType = {
     navItems: finalNavItems,
     isLoading,
     error,
-    reloadNavigation: loadNavigation,
+    reloadNavigation,
   };
+
+  return (
+    <NavigationContext.Provider value={contextValue}>
+      {children}
+    </NavigationContext.Provider>
+  );
+};
+
+export const useNavigationContext = (): NavigationContextType => {
+  const context = useContext(NavigationContext);
+  if (context === undefined) {
+    throw new Error('useNavigationContext must be used within a NavigationProvider');
+  }
+  return context;
 };
