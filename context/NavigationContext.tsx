@@ -72,6 +72,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
       ],
     },
     { label: getTranslation('nav.gallery', 'Gallery'), path: '/gallery' },
+    { label: getTranslation('nav.news', 'News'), path: '/news' },
     { label: getTranslation('nav.usefulLinks', 'Useful Links'), path: '/useful-links' },
     {
       label: getTranslation('nav.projects.title', 'Projects'),

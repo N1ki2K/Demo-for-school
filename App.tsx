@@ -39,6 +39,7 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import DynamicPage from './pages/DynamicPage';
 import CMSDashboard from './components/cms/CMSDashboard';
 import NewsArticlePage from './pages/NewsArticlePage';
+import NewsPage from './pages/NewsPage';
 import EventsPage from './pages/EventsPage';
 import PDFViewerPage from './pages/documents/PDFViewerPage';
 import PDFDocumentPage from './pages/documents/PDFDocumentPage';
@@ -97,7 +98,8 @@ const App: React.FC = () => {
               {/* CMS Dashboard */}
               <Route path="/cms-dashboard" element={<CMSDashboard />} />
               
-              {/* News Article */}
+              {/* News */}
+              <Route path="/news" element={<NewsPage />} />
               <Route path="/news/:id" element={<NewsArticlePage />} />
               
               {/* Events Page */}

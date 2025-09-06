@@ -20,7 +20,9 @@
       "Read(/home/shrek/Documents/**)",
       "Bash(grep:*)",
       "Bash(find:*)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(sed:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
