@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { CMSProvider } from './context/CMSContext';
+import { NavigationProvider } from './context/NavigationContext';
 import Layout from './components/Layout';
 import ErrorBoundary from './components/ErrorBoundary';
 import AppHealthWrapper from './components/AppHealthWrapper';
@@ -39,6 +40,8 @@ import DynamicPage from './pages/DynamicPage';
 import CMSDashboard from './components/cms/CMSDashboard';
 import NewsArticlePage from './pages/NewsArticlePage';
 import EventsPage from './pages/EventsPage';
+import PDFViewerPage from './pages/documents/PDFViewerPage';
+import PDFDocumentPage from './pages/documents/PDFDocumentPage';
 // import Home from './pages/Home';
 // import CreatePost from './pages/CreatePost';
 
@@ -47,8 +50,9 @@ const App: React.FC = () => {
   return (
     <ErrorBoundary>
       <LanguageProvider>
-        <AppHealthWrapper>
-          <CMSProvider>
+        <NavigationProvider>
+          <AppHealthWrapper>
+            <CMSProvider>
             <HashRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
@@ -75,6 +79,8 @@ const App: React.FC = () => {
               <Route path="/documents/announcement" element={<AnnouncementPage />} />
               <Route path="/documents/students" element={<StudentsPage />} />
               <Route path="/documents/olympiads" element={<OlympiadsPage />} />
+              <Route path="/documents/pdf/:filename" element={<PDFViewerPage />} />
+              <Route path="/documents/embed/:filename" element={<PDFDocumentPage />} />
 
               {/* Работа по проекти */}
               <Route path="/projects/your-hour" element={<YourHourPage />} />
@@ -108,8 +114,9 @@ const App: React.FC = () => {
             </Route>
           </Routes>
             </HashRouter>
-          </CMSProvider>
-        </AppHealthWrapper>
+            </CMSProvider>
+          </AppHealthWrapper>
+        </NavigationProvider>
       </LanguageProvider>
     </ErrorBoundary>
     

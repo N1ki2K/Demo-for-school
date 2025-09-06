@@ -685,6 +685,53 @@ class ApiService {
              error.message.includes('Failed to fetch')
            ));
   }
+
+  // Navigation menu management
+  async getNavigationMenuItems() {
+    return this.request<{ items: any[]; total: number }>('/navigation/menu-items');
+  }
+
+  async getHeaderNavigation() {
+    return this.request<{ navigation: any[] }>('/navigation/header-menu');
+  }
+
+  async createNavigationMenuItem(data: {
+    title: string;
+    path: string;
+    position: number;
+    isActive: boolean;
+    parentId?: string | null;
+  }) {
+    return this.request('/navigation/menu-items', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateNavigationMenuItem(id: string, data: {
+    title: string;
+    path: string;
+    position: number;
+    isActive: boolean;
+    parentId?: string | null;
+  }) {
+    return this.request(`/navigation/menu-items/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async toggleNavigationMenuItem(id: string) {
+    return this.request(`/navigation/menu-items/${id}/toggle`, {
+      method: 'PATCH',
+    });
+  }
+
+  async deleteNavigationMenuItem(id: string) {
+    return this.request(`/navigation/menu-items/${id}`, {
+      method: 'DELETE',
+    });
+  }
 }
 
 export const apiService = new ApiService();

@@ -7,7 +7,23 @@ const fallbackTranslations = {
     nav: {
       home: 'Начало',
       school: { title: 'Училището', history: 'История', patron: 'Патрон', team: 'Екип', council: 'Съвет' },
-      documents: { title: 'Документи', calendar: 'Календар', schedules: 'Разписания' },
+      documents: { 
+        title: 'Документи', 
+        calendar: 'Календар', 
+        schedules: 'Разписания',
+        budget: 'Бюджетни отчети',
+        rules: 'Правилници',
+        ethics: 'Етичен кодекс',
+        adminServices: 'Административни услуги',
+        admissions: 'Прием на ученици',
+        roadSafety: 'Пътна безопасност',
+        ores: 'ОРЕС',
+        continuingEducation: 'Непрекъснато образование',
+        faq: 'Често задавани въпроси',
+        announcement: 'Обяви',
+        students: 'Ученици',
+        olympiads: 'Олимпиади'
+      },
       gallery: 'Галерия',
       usefulLinks: 'Полезни връзки',
       projects: { title: 'Проекти', yourHour: 'Твоят час' },
@@ -199,6 +215,7 @@ const fallbackTranslations = {
       tabs: {
         media: 'Медия мениджър',
         documents: 'Документи',
+        documentsMenu: 'Меню на документи',
         news: 'Новини',
         contacts: 'Контактна информация',
         infoAccess: 'Достъп до информация',
@@ -248,7 +265,42 @@ const fallbackTranslations = {
           'Excel документи: За таблици, програми и данни',
           'PowerPoint документи: За презентации и обучителни материали'
         ],
-        documentsFolder: 'Папка Documents ({count} документа)'
+        documentsFolder: 'Папка Documents ({count} документа)',
+        documentTypes: {
+          pdf: 'PDF документ',
+          word: 'Word документ',
+          excel: 'Excel документ',
+          powerpoint: 'PowerPoint презентация',
+          text: 'Текстов документ',
+          other: 'Друг документ'
+        },
+        deleteConfirm: 'Сигурни ли сте, че искате да изтриете документа "{filename}"?',
+        uploadSuccess: 'Документът "{filename}" беше качен успешно!'
+      },
+      documentsMenuManager: {
+        title: 'Мениджър на меню за документи',
+        description: 'Управлявайте документните страници в менюто "Документи". Всички нови елементи се добавят като подстраници на Документи.',
+        addMenuItem: 'Добави меню елемент',
+        addNewItem: 'Добави нов меню елемент',
+        currentMenuItems: 'Текущи меню елементи',
+        loading: 'Зареждане на меню елементи...',
+        titlePlaceholder: 'напр. Моят нов документ',
+        pathPlaceholder: 'my-new-document',
+        position: 'Позиция',
+        parentItem: 'Родителски елемент',
+        noParent: 'Няма родител (Високо ниво)',
+        isActive: 'Активен',
+        active: 'Активен',
+        inactive: 'Неактивен',
+        save: 'Запази',
+        cancel: 'Отказ',
+        edit: 'Редактирай',
+        delete: 'Изтрий',
+        activate: 'Активирай',
+        deactivate: 'Деактивирай',
+        editItem: 'Редактиране на меню елемент',
+        deleteConfirm: 'Сигурни ли сте, че искате да изтриете този меню елемент?',
+        path: 'Път'
       },
       contactManager: {
         title: 'Мениджър на контактна информация',
@@ -391,6 +443,24 @@ const fallbackTranslations = {
         help1: 'Проверете интернет връзката си',
         help2: 'Опитайте да презаредите страницата',
         help3: 'Свържете се с администратора на сайта, ако проблемът продължава'
+      },
+      pdfViewer: {
+        title: 'PDF Преглед',
+        loading: 'Зарежда PDF...',
+        error: 'Грешка в PDF',
+        noFilename: 'Не е посочен PDF файл',
+        fileNotFound: 'PDF файлът не е намерен',
+        loadError: 'Грешка при зареждане на PDF файла',
+        errorTitle: 'Не може да се зареди PDF',
+        retry: 'Опитай отново',
+        back: 'Назад',
+        download: 'Изтегли',
+        print: 'Принтирай',
+        openNewTab: 'Нов таб',
+        browserNotSupported: 'PDF преглед не се поддържа',
+        downloadToView: 'Моля, изтеглете файла за да го прегледате.',
+        downloadNow: 'Изтегли сега',
+        helpText: 'Използвайте контролите на браузъра за мащабиране, навигиране и взаимодействие с PDF документа.'
       }
     }
   },
@@ -399,7 +469,23 @@ const fallbackTranslations = {
     nav: {
       home: 'Home',
       school: { title: 'School', history: 'History', patron: 'Patron', team: 'Team', council: 'Council' },
-      documents: { title: 'Documents', calendar: 'Calendar', schedules: 'Schedules' },
+      documents: { 
+        title: 'Documents', 
+        calendar: 'Calendar', 
+        schedules: 'Schedules',
+        budget: 'Budget Reports',
+        rules: 'Rules',
+        ethics: 'Ethics Code',
+        adminServices: 'Admin Services',
+        admissions: 'Admissions',
+        roadSafety: 'Road Safety',
+        ores: 'ORES',
+        continuingEducation: 'Continuing Education',
+        faq: 'FAQ',
+        announcement: 'Announcements',
+        students: 'Students',
+        olympiads: 'Olympiads'
+      },
       gallery: 'Gallery',
       usefulLinks: 'Useful Links',
       projects: { title: 'Projects', yourHour: 'Your Hour' },
@@ -591,6 +677,7 @@ const fallbackTranslations = {
       tabs: {
         media: 'Media Manager',
         documents: 'Documents',
+        documentsMenu: 'Documents Menu',
         news: 'News',
         contacts: 'Contact Info',
         infoAccess: 'Access to Information',
@@ -640,7 +727,42 @@ const fallbackTranslations = {
           'Excel documents: For spreadsheets, schedules and data',
           'PowerPoint documents: For presentations and educational materials'
         ],
-        documentsFolder: 'Documents Folder ({count} documents)'
+        documentsFolder: 'Documents Folder ({count} documents)',
+        documentTypes: {
+          pdf: 'PDF Document',
+          word: 'Word Document',
+          excel: 'Excel Document',
+          powerpoint: 'PowerPoint Presentation',
+          text: 'Text Document',
+          other: 'Other Document'
+        },
+        deleteConfirm: 'Are you sure you want to delete the document "{filename}"?',
+        uploadSuccess: 'Document "{filename}" uploaded successfully!'
+      },
+      documentsMenuManager: {
+        title: 'Documents Menu Manager',
+        description: 'Manage document pages in the Documents menu. All new items are added as children of Documents.',
+        addMenuItem: 'Add Menu Item',
+        addNewItem: 'Add New Menu Item',
+        currentMenuItems: 'Current Menu Items',
+        loading: 'Loading menu items...',
+        titlePlaceholder: 'e.g. My New Document',
+        pathPlaceholder: 'my-new-document',
+        position: 'Position',
+        parentItem: 'Parent Item',
+        noParent: 'No Parent (Top Level)',
+        isActive: 'Active',
+        active: 'Active',
+        inactive: 'Inactive',
+        save: 'Save',
+        cancel: 'Cancel',
+        edit: 'Edit',
+        delete: 'Delete',
+        activate: 'Activate',
+        deactivate: 'Deactivate',
+        editItem: 'Edit Menu Item',
+        deleteConfirm: 'Are you sure you want to delete this menu item?',
+        path: 'Path'
       },
       contactManager: {
         title: 'Contact Information Manager',
@@ -783,6 +905,24 @@ const fallbackTranslations = {
         help1: 'Check your internet connection',
         help2: 'Try refreshing the page',
         help3: 'Contact the website administrator if the problem persists'
+      },
+      pdfViewer: {
+        title: 'PDF Viewer',
+        loading: 'Loading PDF...',
+        error: 'PDF Error',
+        noFilename: 'No PDF file specified',
+        fileNotFound: 'PDF file not found',
+        loadError: 'Error loading PDF file',
+        errorTitle: 'Cannot Load PDF',
+        retry: 'Try Again',
+        back: 'Back',
+        download: 'Download',
+        print: 'Print',
+        openNewTab: 'New Tab',
+        browserNotSupported: 'PDF Viewing Not Supported',
+        downloadToView: 'Please download the file to view it.',
+        downloadNow: 'Download Now',
+        helpText: 'Use your browser controls to zoom, navigate, and interact with the PDF document.'
       }
     }
   }

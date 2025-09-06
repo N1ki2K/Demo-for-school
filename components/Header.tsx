@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { NavItem } from '../types';
 import { useLanguage } from '../context/LanguageContext';
-import { useNavigation } from '../hooks/useNavigation';
+import { useNavigationContext } from '../context/NavigationContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import Search from './Search';
 import { LoginButton } from './cms/LoginButton';
@@ -101,7 +101,7 @@ function debounce<T extends (...args: any[]) => any>(func: T, delay: number) {
 
 const Header: React.FC = () => {
   const { t, getTranslation } = useLanguage();
-  const { navItems: navLinks } = useNavigation();
+  const { navItems: navLinks } = useNavigationContext();
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
   

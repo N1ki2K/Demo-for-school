@@ -8,6 +8,7 @@ import CalendarManagerTab from './CalendarManagerTab';
 import PatronManagerTab from './PatronManagerTab';
 import UsefulLinksManagerTab from './UsefulLinksManagerTab';
 import TranslationsManagerTab from './TranslationsManagerTab';
+import DocumentsMenuManagerTab from './DocumentsMenuManagerTab';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -2794,6 +2795,12 @@ const CMSDashboard: React.FC = () => {
           label: 'Useful Links',
           icon: '🔗',
           content: <UsefulLinksManagerTab />
+        },
+        {
+          id: 'documents-menu',
+          label: t.cms.tabs.documentsMenu,
+          icon: '📋',
+          content: <DocumentsMenuManagerTab isActive={activeTab === 'documents-menu'} />
         },
         {
           id: 'translations',
