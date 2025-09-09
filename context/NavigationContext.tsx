@@ -49,6 +49,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
         { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
         { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
         { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
+        { label: getTranslation('nav.school.news', 'News'), path: '/news' },
       ],
     },
     {
@@ -72,7 +73,6 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
       ],
     },
     { label: getTranslation('nav.gallery', 'Gallery'), path: '/gallery' },
-    { label: getTranslation('nav.news', 'News'), path: '/news' },
     { label: getTranslation('nav.usefulLinks', 'Useful Links'), path: '/useful-links' },
     {
       label: getTranslation('nav.projects.title', 'Projects'),
@@ -91,6 +91,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
       'school-patron': getTranslation('nav.school.patron', 'Patron'),
       'school-team': getTranslation('nav.school.team', 'Team'),
       'school-council': getTranslation('nav.school.council', 'Council'),
+      'school-news': getTranslation('nav.school.news', 'News'),
       'documents': getTranslation('nav.documents.title', 'Documents'),
       'documents-calendar': getTranslation('nav.documents.calendar', 'Calendar'),
       'documents-schedules': getTranslation('nav.documents.schedules', 'Schedules'),

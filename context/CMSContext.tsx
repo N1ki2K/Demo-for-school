@@ -112,6 +112,8 @@ export const CMSProvider: React.FC<{ children: ReactNode }> = ({ children }) => 
       // setEditableSections({}); 
       setStaffData([]); // Staff data can be cleared as it's admin-only
       setIsLoading(false);
+      // Redirect to home page
+      window.location.hash = '#/';
     }
   };
 

@@ -576,4 +576,169 @@ router.post('/document', authenticateToken, (req: AuthRequest, res: Response) =>
   });
 });
 
+// Configure multer specifically for presentations to Presentations folder
+const presentationStorage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    const presentationsDir = path.join(__dirname, '../../../Presentations');
+    console.log('Presentations directory path:', presentationsDir);
+    console.log('Directory exists:', fs.existsSync(presentationsDir));
+    
+    if (!fs.existsSync(presentationsDir)) {
+      console.log('Creating Presentations directory...');
+      fs.mkdirSync(presentationsDir, { recursive: true });
+    }
+    cb(null, presentationsDir);
+  },
+  filename: (req, file, cb) => {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    const extension = path.extname(file.originalname);
+    const sanitizedName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    cb(null, `${sanitizedName.split('.')[0]}-${uniqueSuffix}${extension}`);
+  }
+});
+
+const presentationFilter = (req: any, file: any, cb: any) => {
+  console.log('🔍 Filtering presentation file:', file.originalname, 'MIME:', file.mimetype);
+  
+  const allowedExtensions = ['.ppt', '.pptx'];
+  const allowedMimes = [
+    'application/vnd.ms-powerpoint',
+    'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+  ];
+  
+  const extname = path.extname(file.originalname).toLowerCase();
+  const mimetypeValid = allowedMimes.includes(file.mimetype);
+  const extensionValid = allowedExtensions.includes(extname);
+  
+  console.log(`Extension: ${extname} (valid: ${extensionValid}), MIME: ${file.mimetype} (valid: ${mimetypeValid})`);
+  
+  if (mimetypeValid && extensionValid) {
+    return cb(null, true);
+  } else {
+    cb(new Error(`Invalid presentation type. File: ${file.originalname}, MIME: ${file.mimetype}. Extension valid: ${extensionValid}, MIME valid: ${mimetypeValid}`));
+  }
+};
+
+const uploadPresentation = multer({
+  storage: presentationStorage,
+  limits: {
+    fileSize: 50 * 1024 * 1024, // 50MB limit for presentations
+  },
+  fileFilter: presentationFilter
+});
+
+// Get all presentations from Presentations folder
+router.get('/presentations', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const presentationsDir = path.join(__dirname, '../../../Presentations');
+    
+    if (!fs.existsSync(presentationsDir)) {
+      fs.mkdirSync(presentationsDir, { recursive: true });
+    }
+    
+    const files = fs.readdirSync(presentationsDir)
+      .filter(file => {
+        const filePath = path.join(presentationsDir, file);
+        const isFile = fs.statSync(filePath).isFile();
+        const isPresentation = /\.(ppt|pptx)$/i.test(file);
+        return isFile && isPresentation;
+      })
+      .map(file => {
+        const filePath = path.join(presentationsDir, file);
+        const stats = fs.statSync(filePath);
+        const extension = path.extname(file).toLowerCase();
+        
+        return {
+          filename: file,
+          url: `/Presentations/${file}`,
+          size: stats.size,
+          created: stats.birthtime,
+          modified: stats.mtime,
+          lastModified: stats.mtime.toISOString(),
+          type: 'powerpoint',
+          extension: extension
+        };
+      })
+      .sort((a, b) => new Date(b.modified).getTime() - new Date(a.modified).getTime());
+
+    console.log(`📊 Found ${files.length} presentations in Presentations folder`);
+    res.json({
+      presentations: files,
+      total: files.length
+    });
+  } catch (error) {
+    console.error('Error listing Presentations folder:', error);
+    res.status(500).json({ error: 'Failed to list presentations from Presentations folder' });
+  }
+});
+
+// Delete presentation from Presentations folder
+router.delete('/presentations/:filename', authenticateToken, (req: AuthRequest, res: Response) => {
+  try {
+    const { filename } = req.params;
+    const presentationsDir = path.join(__dirname, '../../../Presentations');
+    const filePath = path.join(presentationsDir, filename);
+    
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({ error: 'Presentation not found' });
+    }
+    
+    fs.unlinkSync(filePath);
+    console.log(`📊 Presentation deleted: ${filename}`);
+    
+    res.json({ 
+      message: 'Presentation deleted successfully',
+      filename: filename 
+    });
+  } catch (error) {
+    console.error('Error deleting presentation:', error);
+    res.status(500).json({ error: 'Failed to delete presentation' });
+  }
+});
+
+// Upload presentation to Presentations folder
+router.post('/presentation', authenticateToken, (req: AuthRequest, res: Response) => {
+  uploadPresentation.single('presentation')(req, res, (err) => {
+    if (err) {
+      console.error('Multer error:', err);
+      return res.status(500).json({ error: `Upload error: ${err.message}` });
+    }
+
+    try {
+      if (!req.file) {
+        return res.status(400).json({ error: 'No presentation uploaded' });
+      }
+
+      console.log('Presentation uploaded successfully to Presentations folder:', req.file);
+      
+      const filename = req.file.filename;
+      const presentationUrl = `/Presentations/${filename}`;
+
+      res.status(201).json({
+        url: presentationUrl,
+        filename: filename,
+        originalName: req.file.originalname,
+        size: req.file.size,
+        message: 'Presentation uploaded successfully to Presentations folder'
+      });
+    } catch (error) {
+      console.error('Presentation upload processing error:', error);
+      res.status(500).json({ error: 'Presentation upload processing failed' });
+    }
+  });
+});
+
+// Serve presentations from Presentations folder
+router.get('/presentations/:filename', (req, res) => {
+  const { filename } = req.params;
+  const presentationsDir = path.join(__dirname, '../../../Presentations');
+  const filePath = path.join(presentationsDir, filename);
+  
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).json({ error: 'Presentation not found' });
+  }
+  
+  res.sendFile(filePath);
+});
+
 export default router;

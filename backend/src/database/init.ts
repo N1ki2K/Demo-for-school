@@ -336,14 +336,7 @@ const seedPages = (): Promise<void> => {
 const seedNavigationItems = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const defaultNavItems = [
-      { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null },
-      { id: 'documents-calendar', title: 'Calendar', path: '/documents/calendar', position: 1, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-schedules', title: 'Schedules', path: '/documents/schedules', position: 2, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-budget', title: 'Budget Reports', path: '/documents/budget', position: 3, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-rules', title: 'Rules', path: '/documents/rules', position: 4, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-ethics', title: 'Ethics Code', path: '/documents/ethics', position: 5, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-admin-services', title: 'Admin Services', path: '/documents/admin-services', position: 6, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-admissions', title: 'Admissions', path: '/documents/admissions', position: 7, is_active: 1, parent_id: 'documents' }
+      { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null }
     ];
 
     let inserted = 0;

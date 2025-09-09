@@ -401,6 +401,46 @@ class ApiService {
     }
   }
 
+  // PowerPoint presentations folder management
+  async getPresentations() {
+    return this.request<{ presentations: any[]; total: number }>('/upload/presentations');
+  }
+
+  async deletePresentation(filename: string) {
+    return this.request(`/upload/presentations/${filename}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async uploadPresentation(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
+    const formData = new FormData();
+    formData.append('presentation', file);
+    const url = `${API_BASE_URL}/upload/presentation`;
+    const headers: HeadersInit = {};
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response not OK:', response.status, response.statusText);
+        console.error('Error data:', errorData);
+        throw new ApiError(response.status, errorData.error || `Presentation upload failed: ${response.status} ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, 'Network error during presentation upload');
+    }
+  }
+
   // Upload methods
   async uploadFile(file: File, altText?: string) {
     const formData = new FormData();

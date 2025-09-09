@@ -6,25 +6,12 @@ const fallbackTranslations = {
     header: { title: 'ОУ "Кольо Ганчев"', toggleMenu: 'Отвори меню' },
     nav: {
       home: 'Начало',
-      school: { title: 'Училището', history: 'История', patron: 'Патрон', team: 'Екип', council: 'Съвет' },
+      school: { title: 'Училището', history: 'История', patron: 'Патрон', team: 'Екип', council: 'Съвет', news: 'Новини' },
       documents: { 
-        title: 'Документи', 
-        calendar: 'Календар', 
-        schedules: 'Разписания',
-        budget: 'Бюджетни отчети',
-        rules: 'Правилници',
-        ethics: 'Етичен кодекс',
-        adminServices: 'Административни услуги',
-        admissions: 'Прием на ученици',
-        roadSafety: 'Пътна безопасност',
-        ores: 'ОРЕС',
-        continuingEducation: 'Непрекъснато образование',
-        faq: 'Често задавани въпроси',
-        announcement: 'Обяви',
-        students: 'Ученици',
-        olympiads: 'Олимпиади'
+        title: 'Документи'
       },
       gallery: 'Галерия',
+      news: 'Новини',
       usefulLinks: 'Полезни връзки',
       projects: { title: 'Проекти', yourHour: 'Твоят час' },
       contacts: 'Контакти',
@@ -50,6 +37,10 @@ const fallbackTranslations = {
       design: 'Дизайн и разработка от талантлив екип.'
     },
     search: { label: 'Търсене', placeholder: 'Търсете...', button: 'Търси', noResults: 'Няма резултати', resultsCount: 'резултата' },
+    common: {
+      loading: 'Зареждане...',
+      error: 'Грешка'
+    },
     contactsPage: {
       title: 'Контакти',
       address: {
@@ -207,10 +198,23 @@ const fallbackTranslations = {
         next: 'Следваща снимка'
       }
     },
+    news: {
+      title: 'Новини',
+      featured: 'Препоръчани',
+      allNews: 'Всички новини',
+      readMore: 'Прочети повече',
+      noArticles: 'Няма новинарски статии',
+      checkBackSoon: 'Проверете отново скоро за най-новите новини и актуализации.',
+      loadError: 'Неуспешно зареждане на новинарските статии'
+    },
     cms: {
       dashboard: {
         title: 'CMS Табло',
-        logout: 'Изход'
+        logout: 'Изход',
+        accessDenied: {
+          title: 'Достъп отказан',
+          message: 'Нямате права за достъп до тази страница. Моля, влезте в системата.'
+        }
       },
       tabs: {
         media: 'Медия мениджър',
@@ -468,25 +472,12 @@ const fallbackTranslations = {
     header: { title: 'Kolyo Ganchev Elementary School', toggleMenu: 'Open menu' },
     nav: {
       home: 'Home',
-      school: { title: 'School', history: 'History', patron: 'Patron', team: 'Team', council: 'Council' },
+      school: { title: 'School', history: 'History', patron: 'Patron', team: 'Team', council: 'Council', news: 'News' },
       documents: { 
-        title: 'Documents', 
-        calendar: 'Calendar', 
-        schedules: 'Schedules',
-        budget: 'Budget Reports',
-        rules: 'Rules',
-        ethics: 'Ethics Code',
-        adminServices: 'Admin Services',
-        admissions: 'Admissions',
-        roadSafety: 'Road Safety',
-        ores: 'ORES',
-        continuingEducation: 'Continuing Education',
-        faq: 'FAQ',
-        announcement: 'Announcements',
-        students: 'Students',
-        olympiads: 'Olympiads'
+        title: 'Documents'
       },
       gallery: 'Gallery',
+      news: 'News',
       usefulLinks: 'Useful Links',
       projects: { title: 'Projects', yourHour: 'Your Hour' },
       contacts: 'Contacts',
@@ -512,6 +503,10 @@ const fallbackTranslations = {
       design: 'Design and development by a talented team.'
     },
     search: { label: 'Search', placeholder: 'Search...', button: 'Search', noResults: 'No results', resultsCount: 'results' },
+    common: {
+      loading: 'Loading...',
+      error: 'Error'
+    },
     contactsPage: {
       title: 'Contacts',
       address: {
@@ -669,10 +664,23 @@ const fallbackTranslations = {
         next: 'Next image'
       }
     },
+    news: {
+      title: 'News',
+      featured: 'Featured',
+      allNews: 'All News',
+      readMore: 'Read more',
+      noArticles: 'No news articles',
+      checkBackSoon: 'Check back soon for the latest news and updates.',
+      loadError: 'Failed to load news articles'
+    },
     cms: {
       dashboard: {
         title: 'CMS Dashboard',
-        logout: 'Logout'
+        logout: 'Logout',
+        accessDenied: {
+          title: 'Access Denied',
+          message: 'You do not have permission to access this page. Please log in.'
+        }
       },
       tabs: {
         media: 'Media Manager',

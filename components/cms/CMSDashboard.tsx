@@ -1827,6 +1827,235 @@ const DocumentManagerTab: React.FC = () => {
   );
 };
 
+const PowerPointManagerTab: React.FC = () => {
+  const { t } = useLanguage();
+  const { isLoading, error } = useCMS();
+  const [presentations, setPresentations] = useState<any[]>([]);
+  const [isLoadingPresentations, setIsLoadingPresentations] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Load presentations from Presentations folder
+  useEffect(() => {
+    loadPresentations();
+  }, []);
+
+  const loadPresentations = async () => {
+    try {
+      setIsLoadingPresentations(true);
+      const response = await apiService.getPresentations();
+      setPresentations(response.presentations || []);
+    } catch (error) {
+      console.error('❌ Failed to load Presentations folder:', error);
+    } finally {
+      setIsLoadingPresentations(false);
+    }
+  };
+
+  const handleFileUpload = async (files: FileList) => {
+    const fileArray = Array.from(files);
+    let successCount = 0;
+    let errorCount = 0;
+
+    setIsUploading(true);
+
+    for (const file of fileArray) {
+      // Check if file is a PowerPoint presentation
+      const isPowerPoint = file.type === 'application/vnd.ms-powerpoint' || 
+                          file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+                          file.name.toLowerCase().endsWith('.ppt') ||
+                          file.name.toLowerCase().endsWith('.pptx');
+
+      if (!isPowerPoint) {
+        alert(`${file.name} is not a valid PowerPoint presentation file. Only .ppt and .pptx files are allowed.`);
+        errorCount++;
+        continue;
+      }
+
+      try {
+        console.log(`📊 Uploading presentation: ${file.name}, size: ${file.size}, type: ${file.type}`);
+        const result = await apiService.uploadPresentation(file);
+        console.log('✅ Presentation uploaded successfully:', result);
+        successCount++;
+      } catch (error) {
+        console.error('❌ Failed to upload presentation:', error);
+        errorCount++;
+        alert(`Failed to upload ${file.name}: ${error.message || 'Please try again.'}`);
+      }
+    }
+
+    setIsUploading(false);
+
+    if (successCount > 0) {
+      alert(`${successCount} presentation(s) uploaded successfully!`);
+      loadPresentations();
+    }
+
+    if (errorCount > 0) {
+      console.log(`⚠️ Upload completed with ${errorCount} errors out of ${fileArray.length} files`);
+    }
+  };
+
+  const handleDeletePresentation = async (filename: string) => {
+    if (!confirm(`Are you sure you want to delete the presentation "${filename}"?`)) {
+      return;
+    }
+
+    try {
+      await apiService.deletePresentation(filename);
+      alert('Presentation deleted successfully!');
+      loadPresentations();
+    } catch (error) {
+      console.error('❌ Failed to delete presentation:', error);
+      alert(`Failed to delete presentation: ${error.message || 'Unknown error'}`);
+    }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-orange-800 mb-2">
+          📊 PowerPoint Presentation Manager
+        </h3>
+        <p className="text-sm text-orange-700">
+          Upload and manage PowerPoint presentations. Only .ppt and .pptx files are supported.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Upload Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Upload Presentations</h4>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <input
+            type="file"
+            multiple
+            accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            onChange={(e) => {
+              if (e.target.files) {
+                handleFileUpload(e.target.files);
+              }
+            }}
+            disabled={isUploading}
+            className="hidden"
+            id="presentation-upload"
+          />
+          <label
+            htmlFor="presentation-upload"
+            className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="mt-4">
+              <p className="text-lg text-gray-600">
+                {isUploading ? 'Uploading...' : 'Click to upload PowerPoint presentations'}
+              </p>
+              <p className="text-sm text-gray-500">
+                Supports .ppt and .pptx files
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <div className="mt-4">
+          <h5 className="text-sm font-semibold mb-2 text-gray-700">File Guidelines:</h5>
+          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
+            <li>PowerPoint Presentations: Only .ppt and .pptx files are accepted</li>
+            <li>File Size: Keep files under 50MB for optimal performance</li>
+            <li>Content: Ensure presentations are appropriate for school use</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Presentations List */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">
+          📊 Presentations Folder ({presentations.length} presentations)
+        </h4>
+        
+        {isLoadingPresentations ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-gray-500">Loading presentations...</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {presentations.map((presentation, index) => (
+              <div key={index} className="border rounded-lg p-3 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-lg">📊</span>
+                      <h5 className="text-sm font-medium text-gray-900 truncate" title={presentation.filename}>
+                        {presentation.filename}
+                      </h5>
+                    </div>
+                    <div className="text-xs text-gray-500 space-y-1">
+                      <div>Size: {formatFileSize(presentation.size || 0)}</div>
+                      <div>Modified: {formatDate(presentation.lastModified || presentation.dateModified || new Date().toISOString())}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2 mt-3">
+                  <button
+                    onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/presentations/${encodeURIComponent(presentation.filename)}`, '_blank')}
+                    className="text-blue-600 hover:text-blue-800 p-1"
+                    title="Download presentation"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeletePresentation(presentation.filename)}
+                    className="text-red-600 hover:text-red-800 p-1"
+                    title="Delete presentation"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+            
+            {presentations.length === 0 && (
+              <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 00-2-2z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No presentations uploaded</h3>
+                <p className="mt-1 text-sm text-gray-500">Get started by uploading your first PowerPoint presentation.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 const NewsManagerTab: React.FC = () => {
   const { t, getTranslation } = useLanguage();
   const { isLoading, error } = useCMS();
@@ -2710,20 +2939,10 @@ const CMSDashboard: React.FC = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('media');
   const { isLoggedIn, logout } = useCMS();
-
-  if (!isLoggedIn) {
-    return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
-          <h2 className="text-xl font-bold text-red-800 mb-2">{t.cms.dashboard.accessDenied.title}</h2>
-          <p className="text-red-700">{t.cms.dashboard.accessDenied.message}</p>
-        </div>
-      </div>
-    );
-  }
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
 
   // Organize tabs into categories
-  const tabCategories = [
+  const tabCategories = useMemo(() => [
     {
       id: 'uploads',
       label: 'Uploads',
@@ -2740,6 +2959,12 @@ const CMSDashboard: React.FC = () => {
           label: t.cms.tabs.documents,
           icon: '📄',
           content: <DocumentManagerTab />
+        },
+        {
+          id: 'presentations',
+          label: 'Presentations',
+          icon: '📊',
+          content: <PowerPointManagerTab />
         }
       ]
     },
@@ -2829,19 +3054,7 @@ const CMSDashboard: React.FC = () => {
         }
       ]
     }
-  ];
-
-  // Flatten all tabs for easy lookup
-  const allTabs = tabCategories.flatMap(category => category.tabs);
-  
-  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  
-  const toggleDropdown = (categoryId: string) => {
-    setOpenDropdowns(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
+  ], [t]);
 
   // Auto-open dropdown containing active tab
   useEffect(() => {
@@ -2854,7 +3067,28 @@ const CMSDashboard: React.FC = () => {
         [activeCategory.id]: true
       }));
     }
-  }, [activeTab]);
+  }, [activeTab, tabCategories, openDropdowns]);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
+          <h2 className="text-xl font-bold text-red-800 mb-2">{t.cms.dashboard.accessDenied.title}</h2>
+          <p className="text-red-700">{t.cms.dashboard.accessDenied.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Flatten all tabs for easy lookup
+  const allTabs = tabCategories.flatMap(category => category.tabs);
+  
+  const toggleDropdown = (categoryId: string) => {
+    setOpenDropdowns(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6">

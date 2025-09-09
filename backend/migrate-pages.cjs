@@ -59,29 +59,20 @@ const pages = [
     show_in_menu: true
   },
   {
+    id: 'school-news',
+    name: 'News',
+    path: '/news',
+    parent_id: 'school',
+    position: 4,
+    is_active: true,
+    show_in_menu: true
+  },
+  {
     id: 'documents',
     name: 'Documents',
     path: '/documents',
     parent_id: null,
     position: 2,
-    is_active: true,
-    show_in_menu: true
-  },
-  {
-    id: 'documents-calendar',
-    name: 'Calendar',
-    path: '/calendar',
-    parent_id: 'documents',
-    position: 0,
-    is_active: true,
-    show_in_menu: true
-  },
-  {
-    id: 'documents-schedules',
-    name: 'Schedules',
-    path: '/schedules',
-    parent_id: 'documents',
-    position: 1,
     is_active: true,
     show_in_menu: true
   },
