@@ -13,7 +13,12 @@ const fallbackTranslations = {
       gallery: 'Галерия',
       news: 'Новини',
       usefulLinks: 'Полезни връзки',
-      projects: { title: 'Проекти', yourHour: 'Твоят час' },
+      projects: { 
+        title: 'Проекти', 
+        yourHour: 'Проект "Твоят час"',
+        supportForSuccess: 'Проект "Подкрепа за успех"',
+        educationForTomorrow: 'Проект "Образование за утрешния ден"'
+      },
       contacts: 'Контакти',
       infoAccess: 'Достъп до информация'
     },
@@ -220,6 +225,7 @@ const fallbackTranslations = {
         media: 'Медия мениджър',
         documents: 'Документи',
         documentsMenu: 'Меню на документи',
+        projectsMenu: 'Меню на проекти',
         news: 'Новини',
         contacts: 'Контактна информация',
         infoAccess: 'Достъп до информация',
@@ -479,7 +485,12 @@ const fallbackTranslations = {
       gallery: 'Gallery',
       news: 'News',
       usefulLinks: 'Useful Links',
-      projects: { title: 'Projects', yourHour: 'Your Hour' },
+      projects: { 
+        title: 'Projects', 
+        yourHour: 'Project "Your Hour"',
+        supportForSuccess: 'Project "Support for Success"',
+        educationForTomorrow: 'Project "Education for Tomorrow"'
+      },
       contacts: 'Contacts',
       infoAccess: 'Info Access'
     },
@@ -686,6 +697,7 @@ const fallbackTranslations = {
         media: 'Media Manager',
         documents: 'Documents',
         documentsMenu: 'Documents Menu',
+        projectsMenu: 'Projects Menu',
         news: 'News',
         contacts: 'Contact Info',
         infoAccess: 'Access to Information',

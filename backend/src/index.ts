@@ -84,6 +84,19 @@ app.use('/Documents', (req, res, next) => {
   next();
 }, express.static(documentsDir));
 
+// Serve Presentations folder for CMS presentations
+const presentationsDir = path.join(__dirname, '../../Presentations');
+if (!fs.existsSync(presentationsDir)) {
+  fs.mkdirSync(presentationsDir, { recursive: true });
+}
+app.use('/Presentations', (req, res, next) => {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', 'GET');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  res.header('Cross-Origin-Resource-Policy', 'cross-origin');
+  next();
+}, express.static(presentationsDir));
+
 app.use('/api/auth', authRoutes);
 app.use('/api/content', contentRoutes);
 app.use('/api/staff', staffRoutes);
@@ -107,6 +120,7 @@ const startServer = async () => {
       console.log(`📁 Uploads directory: ${uploadsDir}`);
       console.log(`📸 Pictures directory: ${picturesDir}`);
       console.log(`📄 Documents directory: ${documentsDir}`);
+      console.log(`📊 Presentations directory: ${presentationsDir}`);
     });
   } catch (error) {
     console.error('Failed to start server:', error);

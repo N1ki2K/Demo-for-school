@@ -22,7 +22,8 @@
       "Bash(find:*)",
       "Bash(pkill:*)",
       "Bash(sed:*)",
-      "Bash(git checkout:*)"
+      "Bash(git checkout:*)",
+      "Bash(netstat:*)"
     ],
     "deny": [],
     "ask": []

@@ -336,7 +336,8 @@ const seedPages = (): Promise<void> => {
 const seedNavigationItems = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const defaultNavItems = [
-      { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null }
+      { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null },
+      { id: 'projects', title: 'Projects', path: '/projects', position: 1, is_active: 1, parent_id: null }
     ];
 
     let inserted = 0;

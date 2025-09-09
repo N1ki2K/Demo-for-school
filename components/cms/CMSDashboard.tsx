@@ -9,6 +9,7 @@ import PatronManagerTab from './PatronManagerTab';
 import UsefulLinksManagerTab from './UsefulLinksManagerTab';
 import TranslationsManagerTab from './TranslationsManagerTab';
 import DocumentsMenuManagerTab from './DocumentsMenuManagerTab';
+import ProjectsMenuManagerTab from './ProjectsMenuManagerTab';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -3028,6 +3029,12 @@ const CMSDashboard: React.FC = () => {
           content: <DocumentsMenuManagerTab isActive={activeTab === 'documents-menu'} />
         },
         {
+          id: 'projects-menu',
+          label: 'Projects Menu',
+          icon: '📊',
+          content: <ProjectsMenuManagerTab isActive={activeTab === 'projects-menu'} />
+        },
+        {
           id: 'translations',
           label: 'Translations',
           icon: '🌐',
@@ -3164,7 +3171,9 @@ const CMSDashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-screen">
-        {allTabs.find(tab => tab.id === activeTab)?.content}
+        {activeTab === 'projects-menu' && <ProjectsMenuManagerTab isActive={true} />}
+        {activeTab === 'documents-menu' && <DocumentsMenuManagerTab isActive={true} />}
+        {activeTab !== 'projects-menu' && activeTab !== 'documents-menu' && allTabs.find(tab => tab.id === activeTab)?.content}
       </div>
     </div>
   );

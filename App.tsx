@@ -43,6 +43,8 @@ import NewsPage from './pages/NewsPage';
 import EventsPage from './pages/EventsPage';
 import PDFViewerPage from './pages/documents/PDFViewerPage';
 import PDFDocumentPage from './pages/documents/PDFDocumentPage';
+import PresentationViewerPage from './pages/projects/PresentationViewerPage';
+import PresentationEmbedPage from './pages/projects/PresentationEmbedPage';
 // import Home from './pages/Home';
 // import CreatePost from './pages/CreatePost';
 
@@ -87,6 +89,8 @@ const App: React.FC = () => {
               <Route path="/projects/your-hour" element={<YourHourPage />} />
               <Route path="/projects/support-for-success" element={<SupportSuccessPage />} />
               <Route path="/projects/education-for-tomorrow" element={<EducationTomorrowPage />} />
+              <Route path="/projects/presentations/view/:filename" element={<PresentationViewerPage />} />
+              <Route path="/projects/presentations/embed/:filename" element={<PresentationEmbedPage />} />
 
               {/* Other main links */}
               <Route path="/useful-links" element={<UsefulLinksPage />} />

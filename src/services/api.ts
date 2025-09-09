@@ -367,6 +367,16 @@ class ApiService {
     });
   }
 
+  async getPresentations() {
+    return this.request<{ presentations: any[]; total: number }>('/upload/presentations');
+  }
+
+  async deletePresentation(filename: string) {
+    return this.request(`/upload/presentations/${filename}`, {
+      method: 'DELETE',
+    });
+  }
+
   async uploadDocument(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
     const formData = new FormData();
     formData.append('document', file);

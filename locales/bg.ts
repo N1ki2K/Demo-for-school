@@ -17,7 +17,9 @@ export const bg = {
       history: 'История на училището',
       schoolTeam: 'Училищен екип',
       publicCouncil: 'Обществен съвет',
-      gallery: 'Галерия'
+      gallery: 'Галерия',
+      documentsMenu: 'Меню Документи',
+      projectsMenu: 'Меню Проекти'
     },
     mediaManager: {
       title: 'Мениджър на медийни файлове',
@@ -1188,6 +1190,55 @@ contactsPage: {
             s3: "Няма постъпили заявления по електронен път."
         },
         p2: "Пълният отчет е на разположение за преглед в канцеларията на училището."
+    },
+    documentsMenuManager: {
+      title: 'Мениджър на меню Документи',
+      description: 'Управление на елементите от навигационното меню за секция Документи.',
+      addMenuItem: 'Добави елемент',
+      addNewItem: 'Добави нов елемент от менюто',
+      titlePlaceholder: 'Заглавие на елемента',
+      selectDocument: 'Избери PDF документ',
+      viewerType: 'Тип на PDF визуализатора',
+      position: 'Позиция',
+      parentItem: 'Родителски елемент',
+      isActive: 'Активен',
+      save: 'Запази',
+      cancel: 'Отказ',
+      edit: 'Редактирай',
+      delete: 'Изтрий',
+      activate: 'Активирай',
+      deactivate: 'Деактивирай',
+      active: 'Активен',
+      inactive: 'Неактивен',
+      currentMenuItems: 'Текущи елементи от менюто',
+      loading: 'Зареждане на елементите...',
+      deleteConfirm: 'Сигурни ли сте, че искате да изтриете този елемент от менюто?',
+      editItem: 'Редактирай елемент'
+    },
+    projectsMenuManager: {
+      title: 'Мениджър на меню Проекти',
+      description: 'Управление на елементите от навигационното меню за секция Проекти.',
+      addMenuItem: 'Добави елемент',
+      addNewItem: 'Добави нов елемент от менюто',
+      titlePlaceholder: 'Заглавие на елемента',
+      fileType: 'Тип на файла',
+      selectFile: 'Избери файл',
+      viewerType: 'Тип на визуализатора',
+      position: 'Позиция',
+      parentItem: 'Родителски елемент',
+      isActive: 'Активен',
+      save: 'Запази',
+      cancel: 'Отказ',
+      edit: 'Редактирай',
+      delete: 'Изтрий',
+      activate: 'Активирай',
+      deactivate: 'Деактивирай',
+      active: 'Активен',
+      inactive: 'Неактивен',
+      currentMenuItems: 'Текущи елементи от менюто',
+      loading: 'Зареждане на елементите...',
+      deleteConfirm: 'Сигурни ли сте, че искате да изтриете този елемент от менюто?',
+      editItem: 'Редактирай елемент'
     }
   }
 };
