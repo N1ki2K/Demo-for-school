@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { CMSProvider } from './context/CMSContext';
 import { NavigationProvider } from './context/NavigationContext';
@@ -56,7 +56,7 @@ const App: React.FC = () => {
         <NavigationProvider>
           <AppHealthWrapper>
             <CMSProvider>
-            <HashRouter>
+            <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
@@ -119,7 +119,7 @@ const App: React.FC = () => {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
-            </HashRouter>
+            </BrowserRouter>
             </CMSProvider>
           </AppHealthWrapper>
         </NavigationProvider>

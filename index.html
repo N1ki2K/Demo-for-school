@@ -32,6 +32,15 @@
         },
       };
     </script>
+    <script>
+      // Suppress source map errors from browser extensions
+      window.addEventListener('error', function(e) {
+        if (e.message && e.message.includes('installHook.js.map')) {
+          e.preventDefault();
+          return true;
+        }
+      });
+    </script>
   <script type="importmap">
 {
   "imports": {
