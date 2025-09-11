@@ -10,6 +10,7 @@ import UsefulLinksManagerTab from './UsefulLinksManagerTab';
 import TranslationsManagerTab from './TranslationsManagerTab';
 import DocumentsMenuManagerTab from './DocumentsMenuManagerTab';
 import ProjectsMenuManagerTab from './ProjectsMenuManagerTab';
+import AchievementsDirectorsManager from './AchievementsDirectorsManager';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -162,10 +163,13 @@ const HistoryPageTab: React.FC = () => {
     'achievements-title': '',
     'achievements-list': [],
     'directors-title': '',
+    'directors-list': [],
     'history-main-image': ''
   });
   
   const [showImagePicker, setShowImagePicker] = useState(false);
+  const [imagePreview, setImagePreview] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   // Memoize content to prevent infinite loops
   const loadedContent = useMemo(() => {
@@ -186,6 +190,11 @@ const HistoryPageTab: React.FC = () => {
         t.historyPage.achievements?.list?.[4] || ''
       ].filter(Boolean)),
       'directors-title': getContent(`directors-title_${locale}`, t.historyPage.directors?.title || ''),
+      'directors-list': getContent(`directors-list_${locale}`, [
+        t.historyPage.directors?.list?.[0] || '',
+        t.historyPage.directors?.list?.[1] || '',
+        t.historyPage.directors?.list?.[2] || ''
+      ].filter(Boolean)),
       'history-main-image': '' // Will be loaded separately from images table
     };
   }, [locale, t.historyPage, getContent]);
@@ -435,43 +444,8 @@ const HistoryPageTab: React.FC = () => {
             </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-2">
-              Achievements List
-            </label>
-            {(content['achievements-list'] as string[]).map((achievement, index) => (
-              <div key={index} className="flex items-center gap-2 mb-2">
-                <input
-                  type="text"
-                  value={achievement}
-                  onChange={(e) => handleArrayItemChange('achievements-list', index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={`Achievement ${index + 1}...`}
-                />
-                <button
-                  onClick={() => handleArrayRemove('achievements-list', index)}
-                  className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => handleArrayAdd('achievements-list')}
-                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-              >
-                Add Achievement
-              </button>
-              <button
-                onClick={() => handleSave('achievements-list')}
-                disabled={isLoading}
-                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
-              >
-                {isLoading ? 'Saving...' : 'Save Achievements'}
-              </button>
-            </div>
-          </div>
+          {/* Database-driven Achievements Section */}
+          <AchievementsDirectorsManager />
           
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-2">
@@ -492,6 +466,7 @@ const HistoryPageTab: React.FC = () => {
               {isLoading ? 'Saving...' : 'Save'}
             </button>
           </div>
+          
         </div>
       </div>
 
@@ -507,6 +482,7 @@ const HistoryPageTab: React.FC = () => {
           View History Page
         </a>
       </div>
+
 
       {/* Image Picker Modal */}
       {showImagePicker && (

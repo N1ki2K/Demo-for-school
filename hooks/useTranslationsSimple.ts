@@ -949,15 +949,15 @@ const fallbackTranslations = {
 };
 
 let databaseTranslations: { [lang: string]: any } = {};
-let isLoading = false;
 
 export const useTranslationsSimple = (language: string = 'bg') => {
+  const [loading, setLoading] = useState(false);
   const [, forceUpdate] = useState({});
   
-  // Try to load from database once
+  // Load from database whenever language changes
   useEffect(() => {
-    if (!isLoading && !databaseTranslations[language]) {
-      isLoading = true;
+    if (!databaseTranslations[language]) {
+      setLoading(true);
       
       fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${language}`)
         .then(response => response.json())
@@ -969,7 +969,7 @@ export const useTranslationsSimple = (language: string = 'bg') => {
           // Silently fail - we'll use fallbacks
         })
         .finally(() => {
-          isLoading = false;
+          setLoading(false);
         });
     }
   }, [language]);
@@ -996,13 +996,31 @@ export const useTranslationsSimple = (language: string = 'bg') => {
     return typeof current === 'string' ? current : (fallback || keyPath);
   };
 
+  const refreshTranslations = async (lang?: string) => {
+    const targetLang = lang || language;
+    delete databaseTranslations[targetLang];
+    
+    setLoading(true);
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${targetLang}`);
+      const data = await response.json();
+      databaseTranslations[targetLang] = data;
+      forceUpdate({});
+    } catch (error) {
+      // Silently fail - we'll use fallbacks
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     translations: mergedTranslations,
-    flatTranslations: {},
-    loading: false, // Always false since we have fallbacks
+    flatTranslations: databaseTranslations[language] || {},
+    loading,
     error: null,
     t: getTranslation,
     getTranslation,
-    refreshTranslations: () => {}
+    refreshTranslations
   };
 };

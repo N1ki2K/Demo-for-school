@@ -772,6 +772,112 @@ class ApiService {
       method: 'DELETE',
     });
   }
+
+  // ============== ACHIEVEMENTS API ==============
+
+  async getAchievements() {
+    return this.request<any[]>('/achievements', {
+      method: 'GET',
+    });
+  }
+
+  async getAchievement(id: number) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createAchievement(data: {
+    title: string;
+    description?: string;
+    year?: number;
+    position?: number;
+  }) {
+    return this.request<any>('/achievements', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateAchievement(id: number, data: {
+    title: string;
+    description?: string;
+    year?: number;
+    position?: number;
+    is_active?: boolean;
+  }) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteAchievement(id: number) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async updateAchievementPositions(achievements: Array<{ id: number; position: number }>) {
+    return this.request<any>('/achievements/bulk/positions', {
+      method: 'PUT',
+      body: JSON.stringify({ achievements }),
+    });
+  }
+
+  // ============== DIRECTORS API ==============
+
+  async getDirectors() {
+    return this.request<any[]>('/directors', {
+      method: 'GET',
+    });
+  }
+
+  async getDirector(id: number) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createDirector(data: {
+    name: string;
+    tenure_start?: string;
+    tenure_end?: string;
+    description?: string;
+    position?: number;
+  }) {
+    return this.request<any>('/directors', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateDirector(id: number, data: {
+    name: string;
+    tenure_start?: string;
+    tenure_end?: string;
+    description?: string;
+    position?: number;
+    is_active?: boolean;
+  }) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteDirector(id: number) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async updateDirectorPositions(directors: Array<{ id: number; position: number }>) {
+    return this.request<any>('/directors/bulk/positions', {
+      method: 'PUT',
+      body: JSON.stringify({ directors }),
+    });
+  }
 }
 
 export const apiService = new ApiService();

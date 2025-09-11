@@ -21,6 +21,9 @@ import usefulLinksRoutes from './routes/useful-links';
 import translationsRoutes from './routes/translations';
 import navigationRoutes from './routes/navigation';
 import healthRoutes from './routes/health';
+import achievementsRoutes from './routes/achievements';
+import directorsRoutes from './routes/directors';
+import migrateRoutes from './routes/migrate';
 
 dotenv.config();
 
@@ -110,6 +113,9 @@ app.use('/api/patron', patronRoutes);
 app.use('/api/useful-links', usefulLinksRoutes);
 app.use('/api/translations', translationsRoutes);
 app.use('/api/navigation', navigationRoutes);
+app.use('/api/achievements', achievementsRoutes);
+app.use('/api/directors', directorsRoutes);
+app.use('/api/migrate', migrateRoutes);
 app.use('/api', healthRoutes);
 
 const startServer = async () => {
