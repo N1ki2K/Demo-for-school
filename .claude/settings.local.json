@@ -23,7 +23,8 @@
       "Bash(pkill:*)",
       "Bash(sed:*)",
       "Bash(git checkout:*)",
-      "Bash(netstat:*)"
+      "Bash(netstat:*)",
+      "Bash(npx tailwindcss init:*)"
     ],
     "deny": [],
     "ask": []
