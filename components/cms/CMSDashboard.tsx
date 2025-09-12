@@ -9,6 +9,8 @@ import PatronManagerTab from './PatronManagerTab';
 import UsefulLinksManagerTab from './UsefulLinksManagerTab';
 import TranslationsManagerTab from './TranslationsManagerTab';
 import DocumentsMenuManagerTab from './DocumentsMenuManagerTab';
+import ProjectsMenuManagerTab from './ProjectsMenuManagerTab';
+import AchievementsDirectorsManager from './AchievementsDirectorsManager';
 
 // Reusable Image Picker Component for selecting from Pictures folder
 interface ImagePickerProps {
@@ -161,10 +163,13 @@ const HistoryPageTab: React.FC = () => {
     'achievements-title': '',
     'achievements-list': [],
     'directors-title': '',
+    'directors-list': [],
     'history-main-image': ''
   });
   
   const [showImagePicker, setShowImagePicker] = useState(false);
+  const [imagePreview, setImagePreview] = useState('');
+  const [imageUrl, setImageUrl] = useState('');
 
   // Memoize content to prevent infinite loops
   const loadedContent = useMemo(() => {
@@ -185,6 +190,11 @@ const HistoryPageTab: React.FC = () => {
         t.historyPage.achievements?.list?.[4] || ''
       ].filter(Boolean)),
       'directors-title': getContent(`directors-title_${locale}`, t.historyPage.directors?.title || ''),
+      'directors-list': getContent(`directors-list_${locale}`, [
+        t.historyPage.directors?.list?.[0] || '',
+        t.historyPage.directors?.list?.[1] || '',
+        t.historyPage.directors?.list?.[2] || ''
+      ].filter(Boolean)),
       'history-main-image': '' // Will be loaded separately from images table
     };
   }, [locale, t.historyPage, getContent]);
@@ -434,43 +444,8 @@ const HistoryPageTab: React.FC = () => {
             </button>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-600 mb-2">
-              Achievements List
-            </label>
-            {(content['achievements-list'] as string[]).map((achievement, index) => (
-              <div key={index} className="flex items-center gap-2 mb-2">
-                <input
-                  type="text"
-                  value={achievement}
-                  onChange={(e) => handleArrayItemChange('achievements-list', index, e.target.value)}
-                  className="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                  placeholder={`Achievement ${index + 1}...`}
-                />
-                <button
-                  onClick={() => handleArrayRemove('achievements-list', index)}
-                  className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600 transition-colors"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-            <div className="flex gap-2 mt-2">
-              <button
-                onClick={() => handleArrayAdd('achievements-list')}
-                className="px-3 py-1 bg-green-600 text-white text-sm rounded hover:bg-green-700 transition-colors"
-              >
-                Add Achievement
-              </button>
-              <button
-                onClick={() => handleSave('achievements-list')}
-                disabled={isLoading}
-                className="px-3 py-1 bg-blue-600 text-white text-sm rounded hover:bg-blue-700 disabled:opacity-50 transition-colors"
-              >
-                {isLoading ? 'Saving...' : 'Save Achievements'}
-              </button>
-            </div>
-          </div>
+          {/* Database-driven Achievements Section */}
+          <AchievementsDirectorsManager />
           
           <div>
             <label className="block text-sm font-medium text-gray-600 mb-2">
@@ -491,6 +466,7 @@ const HistoryPageTab: React.FC = () => {
               {isLoading ? 'Saving...' : 'Save'}
             </button>
           </div>
+          
         </div>
       </div>
 
@@ -506,6 +482,7 @@ const HistoryPageTab: React.FC = () => {
           View History Page
         </a>
       </div>
+
 
       {/* Image Picker Modal */}
       {showImagePicker && (
@@ -535,6 +512,8 @@ const SchoolTeamTab: React.FC = () => {
   const [showAddForm, setShowAddForm] = useState(false);
   const [showImagePicker, setShowImagePicker] = useState(false);
   const [staffImages, setStaffImages] = useState<{[key: string]: any}>({});
+  const [showTeamPhotoManager, setShowTeamPhotoManager] = useState(false);
+  const [teamGroupPhoto, setTeamGroupPhoto] = useState<string | null>(null);
 
   useEffect(() => {
     const staff = getSchoolStaff();
@@ -542,7 +521,21 @@ const SchoolTeamTab: React.FC = () => {
     
     // Load staff images
     loadStaffImages(staff);
+    
+    // Load current team group photo
+    loadTeamGroupPhoto();
   }, [getSchoolStaff]);
+
+  const loadTeamGroupPhoto = async () => {
+    try {
+      const response = await apiService.getImage('team-group-photo');
+      if (response && response.url) {
+        setTeamGroupPhoto(response.url);
+      }
+    } catch (error) {
+      console.log('No team group photo set yet');
+    }
+  };
 
   const loadStaffImages = async (staff: any[]) => {
     const imagePromises = staff.map(async (member) => {
@@ -661,6 +654,28 @@ const SchoolTeamTab: React.FC = () => {
     setShowImagePicker(false);
   };
 
+  const handleTeamPhotoSelect = async (imageUrl: string, filename: string) => {
+    try {
+      // Save the team group photo using the image mapping system
+      await apiService.setImageMapping('team-group-photo', {
+        filename: filename,
+        original_name: filename,
+        url: imageUrl,
+        alt_text: 'Team group photo'
+      });
+      
+      // Update local state
+      setTeamGroupPhoto(imageUrl);
+      
+      console.log('✅ Team group photo saved:', filename);
+      alert('Team group photo updated successfully!');
+    } catch (error) {
+      console.error('❌ Failed to save team photo:', error);
+      alert(`Failed to save team photo: ${error.message || 'Please try again.'}`);
+    }
+    setShowTeamPhotoManager(false);
+  };
+
   return (
     <div className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
@@ -677,6 +692,49 @@ const SchoolTeamTab: React.FC = () => {
           {error}
         </div>
       )}
+
+      {/* Team Photo Management */}
+      <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-6 rounded-lg">
+        <div className="flex items-center justify-between mb-4">
+          <div>
+            <h4 className="text-lg font-semibold text-purple-800 mb-1">🏫 Team Group Photo</h4>
+            <p className="text-sm text-purple-600">Manage the main team photo that appears on the team page</p>
+          </div>
+          <button
+            onClick={() => setShowTeamPhotoManager(true)}
+            className="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors flex items-center gap-2"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            Manage Photo
+          </button>
+        </div>
+        
+        <div className="bg-white rounded-lg p-4 border border-purple-200">
+          <div className="aspect-video bg-gray-200 rounded-lg overflow-hidden max-w-md">
+            {teamGroupPhoto ? (
+              <img 
+                src={teamGroupPhoto}
+                alt="Current team group photo" 
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <div className="w-full h-full flex items-center justify-center text-gray-500">
+                <div className="text-center">
+                  <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <p className="text-sm">No team photo set</p>
+                </div>
+              </div>
+            )}
+          </div>
+          <p className="text-sm text-gray-600 mt-2">
+            Current photo: {teamGroupPhoto ? teamGroupPhoto.split('/').pop() || 'Unknown' : 'None selected'}
+          </p>
+        </div>
+      </div>
 
       {/* Add New Member Button */}
       <div className="flex justify-between items-center">
@@ -965,6 +1023,15 @@ const SchoolTeamTab: React.FC = () => {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Team Photo Manager Modal */}
+      {showTeamPhotoManager && (
+        <ImagePicker
+          onImageSelect={handleTeamPhotoSelect}
+          currentImage={teamGroupPhoto}
+          onClose={() => setShowTeamPhotoManager(false)}
+        />
       )}
 
       {/* Image Picker Modal */}
@@ -1827,8 +1894,237 @@ const DocumentManagerTab: React.FC = () => {
   );
 };
 
-const NewsManagerTab: React.FC = () => {
+const PowerPointManagerTab: React.FC = () => {
   const { t } = useLanguage();
+  const { isLoading, error } = useCMS();
+  const [presentations, setPresentations] = useState<any[]>([]);
+  const [isLoadingPresentations, setIsLoadingPresentations] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
+
+  // Load presentations from Presentations folder
+  useEffect(() => {
+    loadPresentations();
+  }, []);
+
+  const loadPresentations = async () => {
+    try {
+      setIsLoadingPresentations(true);
+      const response = await apiService.getPresentations();
+      setPresentations(response.presentations || []);
+    } catch (error) {
+      console.error('❌ Failed to load Presentations folder:', error);
+    } finally {
+      setIsLoadingPresentations(false);
+    }
+  };
+
+  const handleFileUpload = async (files: FileList) => {
+    const fileArray = Array.from(files);
+    let successCount = 0;
+    let errorCount = 0;
+
+    setIsUploading(true);
+
+    for (const file of fileArray) {
+      // Check if file is a PowerPoint presentation
+      const isPowerPoint = file.type === 'application/vnd.ms-powerpoint' || 
+                          file.type === 'application/vnd.openxmlformats-officedocument.presentationml.presentation' ||
+                          file.name.toLowerCase().endsWith('.ppt') ||
+                          file.name.toLowerCase().endsWith('.pptx');
+
+      if (!isPowerPoint) {
+        alert(`${file.name} is not a valid PowerPoint presentation file. Only .ppt and .pptx files are allowed.`);
+        errorCount++;
+        continue;
+      }
+
+      try {
+        console.log(`📊 Uploading presentation: ${file.name}, size: ${file.size}, type: ${file.type}`);
+        const result = await apiService.uploadPresentation(file);
+        console.log('✅ Presentation uploaded successfully:', result);
+        successCount++;
+      } catch (error) {
+        console.error('❌ Failed to upload presentation:', error);
+        errorCount++;
+        alert(`Failed to upload ${file.name}: ${error.message || 'Please try again.'}`);
+      }
+    }
+
+    setIsUploading(false);
+
+    if (successCount > 0) {
+      alert(`${successCount} presentation(s) uploaded successfully!`);
+      loadPresentations();
+    }
+
+    if (errorCount > 0) {
+      console.log(`⚠️ Upload completed with ${errorCount} errors out of ${fileArray.length} files`);
+    }
+  };
+
+  const handleDeletePresentation = async (filename: string) => {
+    if (!confirm(`Are you sure you want to delete the presentation "${filename}"?`)) {
+      return;
+    }
+
+    try {
+      await apiService.deletePresentation(filename);
+      alert('Presentation deleted successfully!');
+      loadPresentations();
+    } catch (error) {
+      console.error('❌ Failed to delete presentation:', error);
+      alert(`Failed to delete presentation: ${error.message || 'Unknown error'}`);
+    }
+  };
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="bg-orange-50 border border-orange-200 p-4 rounded-lg">
+        <h3 className="text-lg font-semibold text-orange-800 mb-2">
+          📊 PowerPoint Presentation Manager
+        </h3>
+        <p className="text-sm text-orange-700">
+          Upload and manage PowerPoint presentations. Only .ppt and .pptx files are supported.
+        </p>
+      </div>
+
+      {error && (
+        <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+          {error}
+        </div>
+      )}
+
+      {/* Upload Section */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">Upload Presentations</h4>
+        
+        <div className="border-2 border-dashed border-gray-300 rounded-lg p-8 text-center">
+          <input
+            type="file"
+            multiple
+            accept=".ppt,.pptx,application/vnd.ms-powerpoint,application/vnd.openxmlformats-officedocument.presentationml.presentation"
+            onChange={(e) => {
+              if (e.target.files) {
+                handleFileUpload(e.target.files);
+              }
+            }}
+            disabled={isUploading}
+            className="hidden"
+            id="presentation-upload"
+          />
+          <label
+            htmlFor="presentation-upload"
+            className={`cursor-pointer ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}
+          >
+            <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+              <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="mt-4">
+              <p className="text-lg text-gray-600">
+                {isUploading ? 'Uploading...' : 'Click to upload PowerPoint presentations'}
+              </p>
+              <p className="text-sm text-gray-500">
+                Supports .ppt and .pptx files
+              </p>
+            </div>
+          </label>
+        </div>
+
+        <div className="mt-4">
+          <h5 className="text-sm font-semibold mb-2 text-gray-700">File Guidelines:</h5>
+          <ul className="text-xs text-gray-600 space-y-1 list-disc list-inside">
+            <li>PowerPoint Presentations: Only .ppt and .pptx files are accepted</li>
+            <li>File Size: Keep files under 50MB for optimal performance</li>
+            <li>Content: Ensure presentations are appropriate for school use</li>
+          </ul>
+        </div>
+      </div>
+
+      {/* Presentations List */}
+      <div className="bg-white border rounded-lg p-4">
+        <h4 className="text-md font-semibold mb-4 text-gray-700">
+          📊 Presentations Folder ({presentations.length} presentations)
+        </h4>
+        
+        {isLoadingPresentations ? (
+          <div className="flex justify-center items-center py-8">
+            <div className="text-gray-500">Loading presentations...</div>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {presentations.map((presentation, index) => (
+              <div key={index} className="border rounded-lg p-3 hover:shadow-md transition-shadow">
+                <div className="flex items-start justify-between">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center space-x-2 mb-2">
+                      <span className="text-lg">📊</span>
+                      <h5 className="text-sm font-medium text-gray-900 truncate" title={presentation.filename}>
+                        {presentation.filename}
+                      </h5>
+                    </div>
+                    <div className="text-xs text-gray-500 space-y-1">
+                      <div>Size: {formatFileSize(presentation.size || 0)}</div>
+                      <div>Modified: {formatDate(presentation.lastModified || presentation.dateModified || new Date().toISOString())}</div>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex justify-end space-x-2 mt-3">
+                  <button
+                    onClick={() => window.open(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/presentations/${encodeURIComponent(presentation.filename)}`, '_blank')}
+                    className="text-blue-600 hover:text-blue-800 p-1"
+                    title="Download presentation"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={() => handleDeletePresentation(presentation.filename)}
+                    className="text-red-600 hover:text-red-800 p-1"
+                    title="Delete presentation"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+            ))}
+            
+            {presentations.length === 0 && (
+              <div className="col-span-full text-center py-12 bg-gray-50 rounded-lg">
+                <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v4a2 2 0 01-2 2h-2a2 2 0 00-2-2z" />
+                </svg>
+                <h3 className="mt-2 text-sm font-medium text-gray-900">No presentations uploaded</h3>
+                <p className="mt-1 text-sm text-gray-500">Get started by uploading your first PowerPoint presentation.</p>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const NewsManagerTab: React.FC = () => {
+  const { t, getTranslation } = useLanguage();
   const { isLoading, error } = useCMS();
   const [newsArticles, setNewsArticles] = useState<any[]>([]);
   const [isLoadingNews, setIsLoadingNews] = useState(true);
@@ -1907,7 +2203,7 @@ const NewsManagerTab: React.FC = () => {
   const handleSaveNews = async () => {
     // Validation
     if (!formData.title_bg || !formData.title_en || !formData.excerpt_bg || !formData.excerpt_en) {
-      alert(t.cms.newsManager.form.requiredFields);
+      alert(getTranslation("cms.newsManager.form.requiredFields", "Please fill in all required fields"));
       return;
     }
 
@@ -1919,10 +2215,10 @@ const NewsManagerTab: React.FC = () => {
 
       if (editingArticle) {
         await apiService.updateNewsArticle(editingArticle.id, articleData);
-        alert(t.cms.newsManager.messages.updateSuccess);
+        alert(getTranslation("cms.newsManager.messages.updateSuccess", "News article updated successfully"));
       } else {
         await apiService.createNewsArticle(articleData);
-        alert(t.cms.newsManager.messages.createSuccess);
+        alert(getTranslation("cms.newsManager.messages.createSuccess", "News article created successfully"));
       }
 
       setShowAddForm(false);
@@ -1930,24 +2226,24 @@ const NewsManagerTab: React.FC = () => {
     } catch (error) {
       console.error('❌ Failed to save news article:', error);
       const errorMsg = editingArticle ? 
-        t.cms.newsManager.messages.updateError.replace('{error}', error.message || 'Unknown error') :
-        t.cms.newsManager.messages.createError.replace('{error}', error.message || 'Unknown error');
+        getTranslation('cms.newsManager.messages.updateError', 'Failed to update news article: {error}').replace('{error}', error.message || 'Unknown error') :
+        getTranslation('cms.newsManager.messages.createError', 'Failed to create news article: {error}').replace('{error}', error.message || 'Unknown error');
       alert(errorMsg);
     }
   };
 
   const handleDeleteNews = async (article: any) => {
-    if (!confirm(t.cms.newsManager.messages.deleteConfirm)) {
+    if (!confirm(getTranslation("cms.newsManager.messages.deleteConfirm", "Are you sure you want to delete this news article?"))) {
       return;
     }
 
     try {
       await apiService.deleteNewsArticle(article.id);
-      alert(t.cms.newsManager.messages.deleteSuccess);
+      alert(getTranslation("cms.newsManager.messages.deleteSuccess", "News article deleted successfully"));
       loadNews();
     } catch (error) {
       console.error('❌ Failed to delete news article:', error);
-      alert(t.cms.newsManager.messages.deleteError.replace('{error}', error.message || 'Unknown error'));
+      alert(getTranslation('cms.newsManager.messages.deleteError', 'Failed to delete news article: {error}').replace('{error}', error.message || 'Unknown error'));
     }
   };
 
@@ -1972,10 +2268,10 @@ const NewsManagerTab: React.FC = () => {
     <div className="space-y-6">
       <div className="bg-blue-50 border border-blue-200 p-4 rounded-lg">
         <h3 className="text-lg font-semibold text-blue-800 mb-2">
-          📰 {t.cms.newsManager.title}
+          📰 {getTranslation("cms.newsManager.title", "News Manager")}
         </h3>
         <p className="text-sm text-blue-700">
-          {t.cms.newsManager.description}
+          {getTranslation("cms.newsManager.description", "Manage news articles and announcements")}
         </p>
       </div>
 
@@ -1987,12 +2283,12 @@ const NewsManagerTab: React.FC = () => {
 
       {/* Add News Button */}
       <div className="flex justify-between items-center">
-        <h4 className="text-lg font-semibold text-gray-800">{t.cms.newsManager.newsList}</h4>
+        <h4 className="text-lg font-semibold text-gray-800">{getTranslation("cms.newsManager.newsList", "News Articles")}</h4>
         <button
           onClick={handleAddNews}
           className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors"
         >
-          ➕ {t.cms.newsManager.addNews}
+          ➕ {getTranslation("cms.newsManager.addNews", "Add News Article")}
         </button>
       </div>
 
@@ -2009,8 +2305,8 @@ const NewsManagerTab: React.FC = () => {
               <svg className="mx-auto h-12 w-12 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 011 2v1m2 13a2 2 0 01-2-2V7m2 0V6a2 2 0 00-2-2H9a2 2 0 00-2 2v1" />
               </svg>
-              <h3 className="mt-2 text-sm font-medium text-gray-900">{t.cms.newsManager.noNews}</h3>
-              <p className="mt-1 text-sm text-gray-500">{t.cms.newsManager.createFirst}</p>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">{getTranslation("cms.newsManager.noNews", "No news articles")}</h3>
+              <p className="mt-1 text-sm text-gray-500">{getTranslation("cms.newsManager.createFirst", "Create your first news article")}</p>
             </div>
           ) : (
             <div className="divide-y divide-gray-200">
@@ -2025,17 +2321,17 @@ const NewsManagerTab: React.FC = () => {
                         <div className="flex space-x-1">
                           {article.is_published && (
                             <span className="inline-block bg-green-100 text-green-800 text-xs px-2 py-1 rounded-full">
-                              {t.cms.newsManager.status.published}
+                              {getTranslation("cms.newsManager.status.published", "Published")}
                             </span>
                           )}
                           {!article.is_published && (
                             <span className="inline-block bg-gray-100 text-gray-800 text-xs px-2 py-1 rounded-full">
-                              {t.cms.newsManager.status.draft}
+                              {getTranslation("cms.newsManager.status.draft", "Draft")}
                             </span>
                           )}
                           {article.is_featured && (
                             <span className="inline-block bg-yellow-100 text-yellow-800 text-xs px-2 py-1 rounded-full">
-                              {t.cms.newsManager.status.featured}
+                              {getTranslation("cms.newsManager.status.featured", "Featured")}
                             </span>
                           )}
                         </div>
@@ -2049,7 +2345,7 @@ const NewsManagerTab: React.FC = () => {
                       <button
                         onClick={() => handleEditNews(article)}
                         className="text-blue-600 hover:text-blue-800 p-1"
-                        title={t.cms.newsManager.actions.edit}
+                        title={getTranslation("cms.newsManager.actions.edit", "Edit")}
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -2058,7 +2354,7 @@ const NewsManagerTab: React.FC = () => {
                       <button
                         onClick={() => handleDeleteNews(article)}
                         className="text-red-600 hover:text-red-800 p-1"
-                        title={t.cms.newsManager.actions.delete}
+                        title={getTranslation("cms.newsManager.actions.delete", "Delete")}
                       >
                         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -2079,7 +2375,7 @@ const NewsManagerTab: React.FC = () => {
           <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold">
-                {editingArticle ? t.cms.newsManager.editNews : t.cms.newsManager.addNews}
+                {editingArticle ? getTranslation("cms.newsManager.editNews", "Edit News Article") : getTranslation("cms.newsManager.addNews", "Add News Article")}
               </h3>
               <button
                 onClick={() => setShowAddForm(false)}
@@ -2094,7 +2390,7 @@ const NewsManagerTab: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.titleBg}
+                    {getTranslation('cms.newsManager.form.titleBg', 'Title (Bulgarian)')}
                   </label>
                   <input
                     type="text"
@@ -2106,7 +2402,7 @@ const NewsManagerTab: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.titleEn}
+                    {getTranslation('cms.newsManager.form.titleEn', 'Title (English)')}
                   </label>
                   <input
                     type="text"
@@ -2122,7 +2418,7 @@ const NewsManagerTab: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.excerptBg}
+                    {getTranslation("cms.newsManager.form.excerptBg", "Excerpt (Bulgarian)")}
                   </label>
                   <textarea
                     value={formData.excerpt_bg}
@@ -2134,7 +2430,7 @@ const NewsManagerTab: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.excerptEn}
+                    {getTranslation("cms.newsManager.form.excerptEn", "Excerpt (English)")}
                   </label>
                   <textarea
                     value={formData.excerpt_en}
@@ -2150,7 +2446,7 @@ const NewsManagerTab: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.contentBg}
+                    {getTranslation("cms.newsManager.form.contentBg", "Content (Bulgarian)")}
                   </label>
                   <textarea
                     value={formData.content_bg}
@@ -2162,7 +2458,7 @@ const NewsManagerTab: React.FC = () => {
                 </div>
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.contentEn}
+                    {getTranslation("cms.newsManager.form.contentEn", "Content (English)")}
                   </label>
                   <textarea
                     value={formData.content_en}
@@ -2177,7 +2473,7 @@ const NewsManagerTab: React.FC = () => {
               {/* Featured Image */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  {t.cms.newsManager.form.featuredImage}
+                  {getTranslation("cms.newsManager.form.featuredImage", "Featured Image")}
                 </label>
                 <div className="flex items-center space-x-4">
                   <button
@@ -2185,7 +2481,7 @@ const NewsManagerTab: React.FC = () => {
                     onClick={() => setShowImagePicker(true)}
                     className="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700"
                   >
-                    {t.cms.newsManager.form.selectImage}
+                    {getTranslation("cms.newsManager.form.selectImage", "Select Image")}
                   </button>
                   {formData.featured_image_url && (
                     <>
@@ -2199,7 +2495,7 @@ const NewsManagerTab: React.FC = () => {
                         onClick={() => setFormData(prev => ({ ...prev, featured_image_url: '', featured_image_alt: '' }))}
                         className="text-red-600 hover:text-red-800 text-sm"
                       >
-                        {t.cms.newsManager.form.removeImage}
+                        {getTranslation("cms.newsManager.form.removeImage", "Remove")}
                       </button>
                     </>
                   )}
@@ -2210,7 +2506,7 @@ const NewsManagerTab: React.FC = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
-                    {t.cms.newsManager.form.publishedDate}
+                    {getTranslation("cms.newsManager.form.publishedDate", "Published Date")}
                   </label>
                   <input
                     type="date"
@@ -2227,7 +2523,7 @@ const NewsManagerTab: React.FC = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, is_published: e.target.checked }))}
                       className="mr-2"
                     />
-                    {t.cms.newsManager.form.isPublished}
+                    {getTranslation("cms.newsManager.form.isPublished", "Published")}
                   </label>
                   <label className="flex items-center">
                     <input
@@ -2236,7 +2532,7 @@ const NewsManagerTab: React.FC = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, is_featured: e.target.checked }))}
                       className="mr-2"
                     />
-                    {t.cms.newsManager.form.isFeatured}
+                    {getTranslation("cms.newsManager.form.isFeatured", "Featured")}
                   </label>
                 </div>
               </div>
@@ -2248,14 +2544,14 @@ const NewsManagerTab: React.FC = () => {
                 onClick={() => setShowAddForm(false)}
                 className="px-4 py-2 text-gray-600 border border-gray-300 rounded hover:bg-gray-50"
               >
-                {t.cms.newsManager.actions.cancel}
+                {getTranslation("cms.newsManager.actions.cancel", "Cancel")}
               </button>
               <button
                 onClick={handleSaveNews}
                 disabled={isLoading}
                 className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50"
               >
-                {isLoading ? 'Saving...' : t.cms.newsManager.actions.save}
+                {isLoading ? 'Saving...' : getTranslation("cms.newsManager.actions.save", "Save")}
               </button>
             </div>
           </div>
@@ -2710,20 +3006,10 @@ const CMSDashboard: React.FC = () => {
   const { t } = useLanguage();
   const [activeTab, setActiveTab] = useState('media');
   const { isLoggedIn, logout } = useCMS();
-
-  if (!isLoggedIn) {
-    return (
-      <div className="max-w-4xl mx-auto p-6">
-        <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
-          <h2 className="text-xl font-bold text-red-800 mb-2">{t.cms.dashboard.accessDenied.title}</h2>
-          <p className="text-red-700">{t.cms.dashboard.accessDenied.message}</p>
-        </div>
-      </div>
-    );
-  }
+  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
 
   // Organize tabs into categories
-  const tabCategories = [
+  const tabCategories = useMemo(() => [
     {
       id: 'uploads',
       label: 'Uploads',
@@ -2740,6 +3026,12 @@ const CMSDashboard: React.FC = () => {
           label: t.cms.tabs.documents,
           icon: '📄',
           content: <DocumentManagerTab />
+        },
+        {
+          id: 'presentations',
+          label: 'Presentations',
+          icon: '📊',
+          content: <PowerPointManagerTab />
         }
       ]
     },
@@ -2803,6 +3095,12 @@ const CMSDashboard: React.FC = () => {
           content: <DocumentsMenuManagerTab isActive={activeTab === 'documents-menu'} />
         },
         {
+          id: 'projects-menu',
+          label: 'Projects Menu',
+          icon: '📊',
+          content: <ProjectsMenuManagerTab isActive={activeTab === 'projects-menu'} />
+        },
+        {
           id: 'translations',
           label: 'Translations',
           icon: '🌐',
@@ -2829,19 +3127,7 @@ const CMSDashboard: React.FC = () => {
         }
       ]
     }
-  ];
-
-  // Flatten all tabs for easy lookup
-  const allTabs = tabCategories.flatMap(category => category.tabs);
-  
-  const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
-  
-  const toggleDropdown = (categoryId: string) => {
-    setOpenDropdowns(prev => ({
-      ...prev,
-      [categoryId]: !prev[categoryId]
-    }));
-  };
+  ], [t]);
 
   // Auto-open dropdown containing active tab
   useEffect(() => {
@@ -2854,7 +3140,28 @@ const CMSDashboard: React.FC = () => {
         [activeCategory.id]: true
       }));
     }
-  }, [activeTab]);
+  }, [activeTab, tabCategories, openDropdowns]);
+
+  if (!isLoggedIn) {
+    return (
+      <div className="max-w-4xl mx-auto p-6">
+        <div className="bg-red-50 border border-red-200 p-4 rounded-lg text-center">
+          <h2 className="text-xl font-bold text-red-800 mb-2">{t.cms.dashboard.accessDenied.title}</h2>
+          <p className="text-red-700">{t.cms.dashboard.accessDenied.message}</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Flatten all tabs for easy lookup
+  const allTabs = tabCategories.flatMap(category => category.tabs);
+  
+  const toggleDropdown = (categoryId: string) => {
+    setOpenDropdowns(prev => ({
+      ...prev,
+      [categoryId]: !prev[categoryId]
+    }));
+  };
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -2930,7 +3237,9 @@ const CMSDashboard: React.FC = () => {
 
       {/* Tab Content */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 min-h-screen">
-        {allTabs.find(tab => tab.id === activeTab)?.content}
+        {activeTab === 'projects-menu' && <ProjectsMenuManagerTab isActive={true} />}
+        {activeTab === 'documents-menu' && <DocumentsMenuManagerTab isActive={true} />}
+        {activeTab !== 'projects-menu' && activeTab !== 'documents-menu' && allTabs.find(tab => tab.id === activeTab)?.content}
       </div>
     </div>
   );

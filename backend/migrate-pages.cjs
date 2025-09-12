@@ -25,7 +25,7 @@ const pages = [
   {
     id: 'school-history',
     name: 'History',
-    path: '/history',
+    path: '/school/history',
     parent_id: 'school',
     position: 0,
     is_active: true,
@@ -34,7 +34,7 @@ const pages = [
   {
     id: 'school-patron',
     name: 'Patron',
-    path: '/patron',
+    path: '/school/patron',
     parent_id: 'school',
     position: 1,
     is_active: true,
@@ -43,7 +43,7 @@ const pages = [
   {
     id: 'school-team',
     name: 'Team',
-    path: '/team',
+    path: '/school/team',
     parent_id: 'school',
     position: 2,
     is_active: true,
@@ -52,9 +52,18 @@ const pages = [
   {
     id: 'school-council',
     name: 'Council',
-    path: '/council',
+    path: '/school/council',
     parent_id: 'school',
     position: 3,
+    is_active: true,
+    show_in_menu: true
+  },
+  {
+    id: 'school-news',
+    name: 'News',
+    path: '/news',
+    parent_id: 'school',
+    position: 4,
     is_active: true,
     show_in_menu: true
   },
@@ -64,24 +73,6 @@ const pages = [
     path: '/documents',
     parent_id: null,
     position: 2,
-    is_active: true,
-    show_in_menu: true
-  },
-  {
-    id: 'documents-calendar',
-    name: 'Calendar',
-    path: '/calendar',
-    parent_id: 'documents',
-    position: 0,
-    is_active: true,
-    show_in_menu: true
-  },
-  {
-    id: 'documents-schedules',
-    name: 'Schedules',
-    path: '/schedules',
-    parent_id: 'documents',
-    position: 1,
     is_active: true,
     show_in_menu: true
   },

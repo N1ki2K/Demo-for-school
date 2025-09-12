@@ -49,6 +49,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
         { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
         { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
         { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
+        { label: getTranslation('nav.school.news', 'News'), path: '/news' },
       ],
     },
     {
@@ -90,6 +91,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
       'school-patron': getTranslation('nav.school.patron', 'Patron'),
       'school-team': getTranslation('nav.school.team', 'Team'),
       'school-council': getTranslation('nav.school.council', 'Council'),
+      'school-news': getTranslation('nav.school.news', 'News'),
       'documents': getTranslation('nav.documents.title', 'Documents'),
       'documents-calendar': getTranslation('nav.documents.calendar', 'Calendar'),
       'documents-schedules': getTranslation('nav.documents.schedules', 'Schedules'),
@@ -106,7 +108,9 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
       'documents-students': getTranslation('nav.documents.students', 'Students'),
       'documents-olympiads': getTranslation('nav.documents.olympiads', 'Olympiads'),
       'projects': getTranslation('nav.projects.title', 'Projects'),
-      'projects-your-hour': getTranslation('nav.projects.yourHour', 'Your Hour'),
+      'projects-your-hour': getTranslation('nav.projects.yourHour', 'Project "Your Hour"'),
+      'projects-support-success': getTranslation('nav.projects.supportForSuccess', 'Project "Support for Success"'),
+      'projects-education-tomorrow': getTranslation('nav.projects.educationForTomorrow', 'Project "Education for Tomorrow"'),
       'useful-links': getTranslation('nav.usefulLinks', 'Useful Links'),
       'gallery': getTranslation('nav.gallery', 'Gallery'),
       'contacts': getTranslation('nav.contacts', 'Contacts'),
@@ -157,11 +161,12 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
                 children: documentsNav?.children || []
               };
             } else if (pageId === 'projects') {
-              // Special handling for projects - empty dropdown
+              // Use dynamic navigation items for projects
+              const projectsNav = dynamicNavItems.find(item => item.id === 'projects');
               navItem = {
                 label: getTranslatedLabel(page.id, page.name),
                 path: page.path,
-                children: [], // Empty dropdown as requested
+                children: projectsNav?.children || []
               };
             } else {
               // Use the already-structured children from backend

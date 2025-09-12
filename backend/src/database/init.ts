@@ -246,6 +246,31 @@ const createTables = (): Promise<void> => {
         created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
         FOREIGN KEY (parent_id) REFERENCES navigation_items(id) ON DELETE CASCADE
+      )`,
+
+      // School achievements table
+      `CREATE TABLE IF NOT EXISTS school_achievements (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        title TEXT NOT NULL,
+        description TEXT,
+        year INTEGER,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`,
+
+      // School directors table
+      `CREATE TABLE IF NOT EXISTS school_directors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        name TEXT NOT NULL,
+        tenure_start DATETIME,
+        tenure_end DATETIME,
+        description TEXT,
+        position INTEGER DEFAULT 0,
+        is_active BOOLEAN DEFAULT 1,
+        created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+        updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
       )`
     ];
 
@@ -293,10 +318,10 @@ const seedPages = (): Promise<void> => {
     const defaultPages = [
       { id: 'home', name: 'Home', path: '/', parent_id: null, position: 0, is_active: 1, show_in_menu: 1 },
       { id: 'school', name: 'School', path: '/school', parent_id: null, position: 1, is_active: 1, show_in_menu: 1 },
-      { id: 'school-history', name: 'History', path: '/history', parent_id: 'school', position: 0, is_active: 1, show_in_menu: 1 },
-      { id: 'school-patron', name: 'Patron', path: '/patron', parent_id: 'school', position: 1, is_active: 1, show_in_menu: 1 },
-      { id: 'school-team', name: 'Team', path: '/team', parent_id: 'school', position: 2, is_active: 1, show_in_menu: 1 },
-      { id: 'school-council', name: 'Council', path: '/council', parent_id: 'school', position: 3, is_active: 1, show_in_menu: 1 },
+      { id: 'school-history', name: 'History', path: '/school/history', parent_id: 'school', position: 0, is_active: 1, show_in_menu: 1 },
+      { id: 'school-patron', name: 'Patron', path: '/school/patron', parent_id: 'school', position: 1, is_active: 1, show_in_menu: 1 },
+      { id: 'school-team', name: 'Team', path: '/school/team', parent_id: 'school', position: 2, is_active: 1, show_in_menu: 1 },
+      { id: 'school-council', name: 'Council', path: '/school/council', parent_id: 'school', position: 3, is_active: 1, show_in_menu: 1 },
       { id: 'documents', name: 'Documents', path: '/documents', parent_id: null, position: 2, is_active: 1, show_in_menu: 1 },
       { id: 'documents-calendar', name: 'Calendar', path: '/calendar', parent_id: 'documents', position: 0, is_active: 1, show_in_menu: 1 },
       { id: 'documents-schedules', name: 'Schedules', path: '/schedules', parent_id: 'documents', position: 1, is_active: 1, show_in_menu: 1 },
@@ -337,13 +362,7 @@ const seedNavigationItems = (): Promise<void> => {
   return new Promise((resolve, reject) => {
     const defaultNavItems = [
       { id: 'documents', title: 'Documents', path: '/documents', position: 0, is_active: 1, parent_id: null },
-      { id: 'documents-calendar', title: 'Calendar', path: '/documents/calendar', position: 1, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-schedules', title: 'Schedules', path: '/documents/schedules', position: 2, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-budget', title: 'Budget Reports', path: '/documents/budget', position: 3, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-rules', title: 'Rules', path: '/documents/rules', position: 4, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-ethics', title: 'Ethics Code', path: '/documents/ethics', position: 5, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-admin-services', title: 'Admin Services', path: '/documents/admin-services', position: 6, is_active: 1, parent_id: 'documents' },
-      { id: 'documents-admissions', title: 'Admissions', path: '/documents/admissions', position: 7, is_active: 1, parent_id: 'documents' }
+      { id: 'projects', title: 'Projects', path: '/projects', position: 1, is_active: 1, parent_id: null }
     ];
 
     let inserted = 0;

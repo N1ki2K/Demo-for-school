@@ -2,6 +2,122 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiService } from '../../src/services/api';
 
+// Import ImagePicker component
+interface ImagePickerProps {
+  onImageSelect: (imageUrl: string, filename: string) => void;
+  currentImage?: string;
+  onClose: () => void;
+}
+
+const ImagePicker: React.FC<ImagePickerProps> = ({ onImageSelect, currentImage, onClose }) => {
+  const { t } = useLanguage();
+  const [picturesImages, setPicturesImages] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    loadPicturesImages();
+  }, []);
+
+  const loadPicturesImages = async () => {
+    try {
+      setIsLoading(true);
+      const response = await apiService.getPicturesImages();
+      setPicturesImages(response.images || []);
+    } catch (error) {
+      console.error('❌ Failed to load Pictures folder images:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const filteredImages = picturesImages.filter(image =>
+    image.filename.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const formatFileSize = (bytes: number): string => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+  };
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white rounded-lg p-6 w-full max-w-6xl max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4">
+          <h3 className="text-lg font-semibold">📁 Select Image from Pictures</h3>
+          <button
+            onClick={onClose}
+            className="text-gray-500 hover:text-gray-700 text-2xl"
+          >
+            ×
+          </button>
+        </div>
+        
+        {/* Search */}
+        <div className="mb-4">
+          <input
+            type="text"
+            placeholder="Search images..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+        </div>
+
+        {isLoading ? (
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="text-gray-500 mt-2">Loading images...</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-4 max-h-96 overflow-y-auto">
+            {filteredImages.map((image) => {
+              const imageUrl = `${import.meta.env.VITE_API_URL || 'http://localhost:3001'}${image.url}`;
+              const isSelected = currentImage === imageUrl || currentImage === image.url;
+              
+              return (
+                <div 
+                  key={image.filename} 
+                  className={`border-2 rounded-lg p-2 cursor-pointer transition-all hover:shadow-md ${
+                    isSelected ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-blue-300'
+                  }`}
+                  onClick={() => onImageSelect(imageUrl, image.filename)}
+                >
+                  <div className="aspect-square mb-2 bg-gray-200 rounded overflow-hidden">
+                    <img 
+                      src={imageUrl}
+                      alt={image.filename}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23f3f4f6"/%3E%3Ctext x="50" y="50" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle" dy=".3em"%3EError%3C/text%3E%3C/svg%3E';
+                      }}
+                    />
+                  </div>
+                  <p className="text-xs text-gray-600 truncate font-medium" title={image.filename}>
+                    {image.filename}
+                  </p>
+                  <p className="text-xs text-gray-500">
+                    {formatFileSize(image.size)}
+                  </p>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {filteredImages.length === 0 && !isLoading && (
+          <div className="text-center py-8">
+            <p className="text-gray-500">No images found matching "{searchTerm}"</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 interface PatronContent {
   id: number;
   section_key: string;
@@ -28,6 +144,7 @@ const PatronManagerTab: React.FC = () => {
     image_url?: string;
   }>({});
   const [isSaving, setIsSaving] = useState<number | null>(null);
+  const [showImagePicker, setShowImagePicker] = useState(false);
 
   useEffect(() => {
     loadPatronContent();
@@ -92,6 +209,11 @@ const PatronManagerTab: React.FC = () => {
   const handleCancel = () => {
     setEditingSection(null);
     setEditData({});
+  };
+
+  const handleImageSelect = (imageUrl: string, filename: string) => {
+    setEditData({...editData, image_url: imageUrl});
+    setShowImagePicker(false);
   };
 
   const getSectionDisplayName = (sectionKey: string): string => {
@@ -173,27 +295,54 @@ const PatronManagerTab: React.FC = () => {
             {editingSection === section.id ? (
               <div className="space-y-4">
                 {section.section_key === 'image_main' ? (
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Image URL
-                    </label>
-                    <input
-                      type="url"
-                      value={editData.image_url || ''}
-                      onChange={(e) => setEditData({...editData, image_url: e.target.value})}
-                      className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      placeholder="https://example.com/image.jpg"
-                    />
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">
+                        Patron Image
+                      </label>
+                      <div className="flex gap-3 mb-3">
+                        <button
+                          type="button"
+                          onClick={() => setShowImagePicker(true)}
+                          className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors flex items-center gap-2"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                          📁 Choose from Pictures
+                        </button>
+                        {editData.image_url && (
+                          <button
+                            type="button"
+                            onClick={() => setEditData({...editData, image_url: ''})}
+                            className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-colors"
+                          >
+                            Remove Image
+                          </button>
+                        )}
+                      </div>
+                      <input
+                        type="url"
+                        value={editData.image_url || ''}
+                        onChange={(e) => setEditData({...editData, image_url: e.target.value})}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Or enter image URL manually: https://example.com/image.jpg"
+                      />
+                    </div>
                     {editData.image_url && (
-                      <div className="mt-2">
+                      <div className="bg-gray-50 p-4 rounded-md">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Preview:</p>
                         <img 
                           src={editData.image_url} 
-                          alt="Preview"
-                          className="w-32 h-32 object-cover rounded-md"
+                          alt="Patron preview"
+                          className="w-48 h-auto rounded-md border border-gray-200"
                           onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"%3E%3Crect width="100" height="100" fill="%23f3f4f6"/%3E%3Ctext x="50" y="50" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle" dy=".3em"%3ENo Image%3C/text%3E%3C/svg%3E';
+                            (e.target as HTMLImageElement).src = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" width="200" height="100" viewBox="0 0 200 100"%3E%3Crect width="200" height="100" fill="%23f3f4f6"/%3E%3Ctext x="100" y="50" font-family="Arial" font-size="14" fill="%23666" text-anchor="middle" dy=".3em"%3EInvalid Image URL%3C/text%3E%3C/svg%3E';
                           }}
                         />
+                        <p className="text-xs text-gray-500 mt-2 break-all">
+                          URL: {editData.image_url}
+                        </p>
                       </div>
                     )}
                   </div>
@@ -302,6 +451,15 @@ const PatronManagerTab: React.FC = () => {
           </div>
         )}
       </div>
+
+      {/* Image Picker Modal */}
+      {showImagePicker && (
+        <ImagePicker
+          onImageSelect={handleImageSelect}
+          currentImage={editData.image_url}
+          onClose={() => setShowImagePicker(false)}
+        />
+      )}
     </div>
   );
 };

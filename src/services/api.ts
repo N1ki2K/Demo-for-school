@@ -401,6 +401,46 @@ class ApiService {
     }
   }
 
+  // PowerPoint presentations folder management
+  async getPresentations() {
+    return this.request<{ presentations: any[]; total: number }>('/upload/presentations');
+  }
+
+  async deletePresentation(filename: string) {
+    return this.request(`/upload/presentations/${filename}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async uploadPresentation(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
+    const formData = new FormData();
+    formData.append('presentation', file);
+    const url = `${API_BASE_URL}/upload/presentation`;
+    const headers: HeadersInit = {};
+    if (this.token) {
+      headers.Authorization = `Bearer ${this.token}`;
+    }
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers,
+        body: formData,
+      });
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        console.error('Upload response not OK:', response.status, response.statusText);
+        console.error('Error data:', errorData);
+        throw new ApiError(response.status, errorData.error || `Presentation upload failed: ${response.status} ${response.statusText}`);
+      }
+      return await response.json();
+    } catch (error) {
+      if (error instanceof ApiError) {
+        throw error;
+      }
+      throw new ApiError(0, 'Network error during presentation upload');
+    }
+  }
+
   // Upload methods
   async uploadFile(file: File, altText?: string) {
     const formData = new FormData();
@@ -730,6 +770,112 @@ class ApiService {
   async deleteNavigationMenuItem(id: string) {
     return this.request(`/navigation/menu-items/${id}`, {
       method: 'DELETE',
+    });
+  }
+
+  // ============== ACHIEVEMENTS API ==============
+
+  async getAchievements() {
+    return this.request<any[]>('/achievements', {
+      method: 'GET',
+    });
+  }
+
+  async getAchievement(id: number) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createAchievement(data: {
+    title: string;
+    description?: string;
+    year?: number;
+    position?: number;
+  }) {
+    return this.request<any>('/achievements', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateAchievement(id: number, data: {
+    title: string;
+    description?: string;
+    year?: number;
+    position?: number;
+    is_active?: boolean;
+  }) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteAchievement(id: number) {
+    return this.request<any>(`/achievements/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async updateAchievementPositions(achievements: Array<{ id: number; position: number }>) {
+    return this.request<any>('/achievements/bulk/positions', {
+      method: 'PUT',
+      body: JSON.stringify({ achievements }),
+    });
+  }
+
+  // ============== DIRECTORS API ==============
+
+  async getDirectors() {
+    return this.request<any[]>('/directors', {
+      method: 'GET',
+    });
+  }
+
+  async getDirector(id: number) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'GET',
+    });
+  }
+
+  async createDirector(data: {
+    name: string;
+    tenure_start?: string;
+    tenure_end?: string;
+    description?: string;
+    position?: number;
+  }) {
+    return this.request<any>('/directors', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async updateDirector(id: number, data: {
+    name: string;
+    tenure_start?: string;
+    tenure_end?: string;
+    description?: string;
+    position?: number;
+    is_active?: boolean;
+  }) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteDirector(id: number) {
+    return this.request<any>(`/directors/${id}`, {
+      method: 'DELETE',
+    });
+  }
+
+  async updateDirectorPositions(directors: Array<{ id: number; position: number }>) {
+    return this.request<any>('/directors/bulk/positions', {
+      method: 'PUT',
+      body: JSON.stringify({ directors }),
     });
   }
 }

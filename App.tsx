@@ -1,5 +1,5 @@
 import React from 'react';
-import { HashRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { LanguageProvider } from './context/LanguageContext';
 import { CMSProvider } from './context/CMSContext';
 import { NavigationProvider } from './context/NavigationContext';
@@ -39,9 +39,12 @@ import SearchResultsPage from './pages/SearchResultsPage';
 import DynamicPage from './pages/DynamicPage';
 import CMSDashboard from './components/cms/CMSDashboard';
 import NewsArticlePage from './pages/NewsArticlePage';
+import NewsPage from './pages/NewsPage';
 import EventsPage from './pages/EventsPage';
 import PDFViewerPage from './pages/documents/PDFViewerPage';
 import PDFDocumentPage from './pages/documents/PDFDocumentPage';
+import PresentationViewerPage from './pages/projects/PresentationViewerPage';
+import PresentationEmbedPage from './pages/projects/PresentationEmbedPage';
 // import Home from './pages/Home';
 // import CreatePost from './pages/CreatePost';
 
@@ -53,7 +56,7 @@ const App: React.FC = () => {
         <NavigationProvider>
           <AppHealthWrapper>
             <CMSProvider>
-            <HashRouter>
+            <BrowserRouter>
           <Routes>
             <Route path="/" element={<Layout />}>
               <Route index element={<HomePage />} />
@@ -86,6 +89,8 @@ const App: React.FC = () => {
               <Route path="/projects/your-hour" element={<YourHourPage />} />
               <Route path="/projects/support-for-success" element={<SupportSuccessPage />} />
               <Route path="/projects/education-for-tomorrow" element={<EducationTomorrowPage />} />
+              <Route path="/projects/presentations/view/:filename" element={<PresentationViewerPage />} />
+              <Route path="/projects/presentations/embed/:filename" element={<PresentationEmbedPage />} />
 
               {/* Other main links */}
               <Route path="/useful-links" element={<UsefulLinksPage />} />
@@ -97,7 +102,8 @@ const App: React.FC = () => {
               {/* CMS Dashboard */}
               <Route path="/cms-dashboard" element={<CMSDashboard />} />
               
-              {/* News Article */}
+              {/* News */}
+              <Route path="/news" element={<NewsPage />} />
               <Route path="/news/:id" element={<NewsArticlePage />} />
               
               {/* Events Page */}
@@ -113,7 +119,7 @@ const App: React.FC = () => {
               <Route path="*" element={<NotFoundPage />} />
             </Route>
           </Routes>
-            </HashRouter>
+            </BrowserRouter>
             </CMSProvider>
           </AppHealthWrapper>
         </NavigationProvider>

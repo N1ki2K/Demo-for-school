@@ -20,8 +20,8 @@ export const EditableImage: React.FC<EditableImageProps> = ({
 }) => {
   const { isEditing } = useCMS();
   
-  // Force read-only mode - disable inline editing
-  const forceReadOnly = true;
+  // Enable inline editing in CMS mode
+  const forceReadOnly = false;
   const { locale } = useLanguage();
   const location = useLocation();
   const [showUrlInput, setShowUrlInput] = useState(false);

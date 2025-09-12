@@ -23,7 +23,7 @@ class ErrorBoundary extends Component<Props, State> {
     
     // Schedule navigation after rendering is complete
     setTimeout(() => {
-      window.location.hash = '#/404';
+      window.location.href = '/404';
     }, 0);
   }
 
@@ -42,7 +42,7 @@ class ErrorBoundary extends Component<Props, State> {
               Презареди страницата
             </button>
             <button
-              onClick={() => window.location.hash = '#/'}
+              onClick={() => window.location.href = '/'}
               className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
             >
               Начало

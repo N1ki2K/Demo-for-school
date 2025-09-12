@@ -21,8 +21,8 @@ export const EditableText: React.FC<EditableTextProps> = ({
 }) => {
   const { isEditing, getContent, updateContent, contentLoaded } = useCMS();
   
-  // Force read-only mode - disable inline editing
-  const forceReadOnly = true;
+  // Enable inline editing in CMS mode
+  const forceReadOnly = false;
   const { locale } = useLanguage();
   const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);

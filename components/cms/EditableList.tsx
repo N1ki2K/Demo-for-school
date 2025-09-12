@@ -19,15 +19,34 @@ export const EditableList: React.FC<EditableListProps> = ({
 }) => {
   const { isEditing, getContent, updateContent } = useCMS();
   
-  // Force read-only mode - disable inline editing
-  const forceReadOnly = true;
+  // Enable inline editing in CMS mode
+  const forceReadOnly = false;
   const { locale } = useLanguage();
   const location = useLocation();
   const [isEditable, setIsEditable] = useState(false);
   
   // Create language-specific ID for lists
   const languageSpecificId = `${id}_${locale}`;
-  const items = getContent(languageSpecificId, defaultItems);
+  const rawItems = getContent(languageSpecificId, defaultItems);
+  
+  // Ensure items is always an array
+  const items = (() => {
+    if (Array.isArray(rawItems)) {
+      return rawItems;
+    }
+    
+    if (typeof rawItems === 'string') {
+      try {
+        const parsed = JSON.parse(rawItems);
+        return Array.isArray(parsed) ? parsed : defaultItems;
+      } catch (e) {
+        console.warn(`Failed to parse list content for ${languageSpecificId}:`, rawItems);
+        return defaultItems;
+      }
+    }
+    
+    return defaultItems;
+  })();
   const [tempItems, setTempItems] = useState<string[]>([]);
   
   // Helper function to map URL path to page ID

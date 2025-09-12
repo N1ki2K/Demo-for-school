@@ -8,6 +8,15 @@ export default defineConfig(({ mode }) => {
         alias: {
           '@': path.resolve(__dirname, '.'),
         }
+      },
+      build: {
+        sourcemap: false
+      },
+      css: {
+        devSourcemap: false
+      },
+      esbuild: {
+        sourcemap: false
       }
     };
 });

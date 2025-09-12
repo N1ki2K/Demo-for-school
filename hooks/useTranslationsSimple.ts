@@ -6,27 +6,19 @@ const fallbackTranslations = {
     header: { title: 'ОУ "Кольо Ганчев"', toggleMenu: 'Отвори меню' },
     nav: {
       home: 'Начало',
-      school: { title: 'Училището', history: 'История', patron: 'Патрон', team: 'Екип', council: 'Съвет' },
+      school: { title: 'Училището', history: 'История', patron: 'Патрон', team: 'Екип', council: 'Съвет', news: 'Новини' },
       documents: { 
-        title: 'Документи', 
-        calendar: 'Календар', 
-        schedules: 'Разписания',
-        budget: 'Бюджетни отчети',
-        rules: 'Правилници',
-        ethics: 'Етичен кодекс',
-        adminServices: 'Административни услуги',
-        admissions: 'Прием на ученици',
-        roadSafety: 'Пътна безопасност',
-        ores: 'ОРЕС',
-        continuingEducation: 'Непрекъснато образование',
-        faq: 'Често задавани въпроси',
-        announcement: 'Обяви',
-        students: 'Ученици',
-        olympiads: 'Олимпиади'
+        title: 'Документи'
       },
       gallery: 'Галерия',
+      news: 'Новини',
       usefulLinks: 'Полезни връзки',
-      projects: { title: 'Проекти', yourHour: 'Твоят час' },
+      projects: { 
+        title: 'Проекти', 
+        yourHour: 'Проект "Твоят час"',
+        supportForSuccess: 'Проект "Подкрепа за успех"',
+        educationForTomorrow: 'Проект "Образование за утрешния ден"'
+      },
       contacts: 'Контакти',
       infoAccess: 'Достъп до информация'
     },
@@ -50,6 +42,10 @@ const fallbackTranslations = {
       design: 'Дизайн и разработка от талантлив екип.'
     },
     search: { label: 'Търсене', placeholder: 'Търсете...', button: 'Търси', noResults: 'Няма резултати', resultsCount: 'резултата' },
+    common: {
+      loading: 'Зареждане...',
+      error: 'Грешка'
+    },
     contactsPage: {
       title: 'Контакти',
       address: {
@@ -207,15 +203,29 @@ const fallbackTranslations = {
         next: 'Следваща снимка'
       }
     },
+    news: {
+      title: 'Новини',
+      featured: 'Препоръчани',
+      allNews: 'Всички новини',
+      readMore: 'Прочети повече',
+      noArticles: 'Няма новинарски статии',
+      checkBackSoon: 'Проверете отново скоро за най-новите новини и актуализации.',
+      loadError: 'Неуспешно зареждане на новинарските статии'
+    },
     cms: {
       dashboard: {
         title: 'CMS Табло',
-        logout: 'Изход'
+        logout: 'Изход',
+        accessDenied: {
+          title: 'Достъп отказан',
+          message: 'Нямате права за достъп до тази страница. Моля, влезте в системата.'
+        }
       },
       tabs: {
         media: 'Медия мениджър',
         documents: 'Документи',
         documentsMenu: 'Меню на документи',
+        projectsMenu: 'Меню на проекти',
         news: 'Новини',
         contacts: 'Контактна информация',
         infoAccess: 'Достъп до информация',
@@ -468,27 +478,19 @@ const fallbackTranslations = {
     header: { title: 'Kolyo Ganchev Elementary School', toggleMenu: 'Open menu' },
     nav: {
       home: 'Home',
-      school: { title: 'School', history: 'History', patron: 'Patron', team: 'Team', council: 'Council' },
+      school: { title: 'School', history: 'History', patron: 'Patron', team: 'Team', council: 'Council', news: 'News' },
       documents: { 
-        title: 'Documents', 
-        calendar: 'Calendar', 
-        schedules: 'Schedules',
-        budget: 'Budget Reports',
-        rules: 'Rules',
-        ethics: 'Ethics Code',
-        adminServices: 'Admin Services',
-        admissions: 'Admissions',
-        roadSafety: 'Road Safety',
-        ores: 'ORES',
-        continuingEducation: 'Continuing Education',
-        faq: 'FAQ',
-        announcement: 'Announcements',
-        students: 'Students',
-        olympiads: 'Olympiads'
+        title: 'Documents'
       },
       gallery: 'Gallery',
+      news: 'News',
       usefulLinks: 'Useful Links',
-      projects: { title: 'Projects', yourHour: 'Your Hour' },
+      projects: { 
+        title: 'Projects', 
+        yourHour: 'Project "Your Hour"',
+        supportForSuccess: 'Project "Support for Success"',
+        educationForTomorrow: 'Project "Education for Tomorrow"'
+      },
       contacts: 'Contacts',
       infoAccess: 'Info Access'
     },
@@ -512,6 +514,10 @@ const fallbackTranslations = {
       design: 'Design and development by a talented team.'
     },
     search: { label: 'Search', placeholder: 'Search...', button: 'Search', noResults: 'No results', resultsCount: 'results' },
+    common: {
+      loading: 'Loading...',
+      error: 'Error'
+    },
     contactsPage: {
       title: 'Contacts',
       address: {
@@ -669,15 +675,29 @@ const fallbackTranslations = {
         next: 'Next image'
       }
     },
+    news: {
+      title: 'News',
+      featured: 'Featured',
+      allNews: 'All News',
+      readMore: 'Read more',
+      noArticles: 'No news articles',
+      checkBackSoon: 'Check back soon for the latest news and updates.',
+      loadError: 'Failed to load news articles'
+    },
     cms: {
       dashboard: {
         title: 'CMS Dashboard',
-        logout: 'Logout'
+        logout: 'Logout',
+        accessDenied: {
+          title: 'Access Denied',
+          message: 'You do not have permission to access this page. Please log in.'
+        }
       },
       tabs: {
         media: 'Media Manager',
         documents: 'Documents',
         documentsMenu: 'Documents Menu',
+        projectsMenu: 'Projects Menu',
         news: 'News',
         contacts: 'Contact Info',
         infoAccess: 'Access to Information',
@@ -929,15 +949,15 @@ const fallbackTranslations = {
 };
 
 let databaseTranslations: { [lang: string]: any } = {};
-let isLoading = false;
 
 export const useTranslationsSimple = (language: string = 'bg') => {
+  const [loading, setLoading] = useState(false);
   const [, forceUpdate] = useState({});
   
-  // Try to load from database once
+  // Load from database whenever language changes
   useEffect(() => {
-    if (!isLoading && !databaseTranslations[language]) {
-      isLoading = true;
+    if (!databaseTranslations[language]) {
+      setLoading(true);
       
       fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${language}`)
         .then(response => response.json())
@@ -949,7 +969,7 @@ export const useTranslationsSimple = (language: string = 'bg') => {
           // Silently fail - we'll use fallbacks
         })
         .finally(() => {
-          isLoading = false;
+          setLoading(false);
         });
     }
   }, [language]);
@@ -976,13 +996,31 @@ export const useTranslationsSimple = (language: string = 'bg') => {
     return typeof current === 'string' ? current : (fallback || keyPath);
   };
 
+  const refreshTranslations = async (lang?: string) => {
+    const targetLang = lang || language;
+    delete databaseTranslations[targetLang];
+    
+    setLoading(true);
+    
+    try {
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${targetLang}`);
+      const data = await response.json();
+      databaseTranslations[targetLang] = data;
+      forceUpdate({});
+    } catch (error) {
+      // Silently fail - we'll use fallbacks
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return {
     translations: mergedTranslations,
-    flatTranslations: {},
-    loading: false, // Always false since we have fallbacks
+    flatTranslations: databaseTranslations[language] || {},
+    loading,
     error: null,
     t: getTranslation,
     getTranslation,
-    refreshTranslations: () => {}
+    refreshTranslations
   };
 };
