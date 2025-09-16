@@ -1,0 +1,1 @@
+ALTER TABLE  `#__eventgallery_folder` ADD  `catid` int(11) NOT NULL DEFAULT '0';

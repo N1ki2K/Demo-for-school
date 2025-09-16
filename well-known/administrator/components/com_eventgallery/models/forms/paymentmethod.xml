@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="paymentmethod">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="name"
+               type="text"
+               label="COM_EVENTGALLERY_METHOD_NAME"
+               description="COM_EVENTGALLERY_METHOD_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_NAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        <field name="classname"
+               type="methodsclass"
+               superclass="EventgalleryLibraryMethodsPayment"
+               description="COM_EVENTGALLERY_METHOD_CLASSNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_CLASSNAME_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+        
+        <field name="displayname"
+               type="localizabletext"
+               label="COM_EVENTGALLERY_METHOD_DISPLAYNAME"
+               description="COM_EVENTGALLERY_METHOD_DISPLAYNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_DISPLAYNAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+	    <field name="description"
+               type="localizabletext"
+               inputtype="textarea"
+               label="COM_EVENTGALLERY_METHOD_DESCRIPTION"
+               description="COM_EVENTGALLERY_METHOD_DESCRIPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_DESCRIPTION_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                /> 
+        
+         <field name="data"
+               type="textarea"
+               label="COM_EVENTGALLERY_METHOD_DATA"
+               description="COM_EVENTGALLERY_METHOD_DATA_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_DATA_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                /> 
+                
+         <field name="taxrate"
+               type="text"
+               label="COM_EVENTGALLERY_METHOD_TAXRATE"
+               description="COM_EVENTGALLERY_METHOD_TAXRATE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_TAXRATE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />  
+          <field name="price"
+               type="text"
+               label="COM_EVENTGALLERY_METHOD_PRICE"
+               description="COM_EVENTGALLERY_METHOD_PRICE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_PRICE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <field name="price_percentaged"
+               type="text"
+               label="COM_EVENTGALLERY_METHOD_PRICE_PERCENTAGED"
+               description="COM_EVENTGALLERY_METHOD_PRICE_PERCENTAGED_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_METHOD_PRICE_PERCENTAGED_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <!--<field name="currency"
+              type="text"
+              label="COM_EVENTGALLERY_METHOD_CURRENCY"
+              description="COM_EVENTGALLERY_METHOD_CURRENCY_DESCRIPTION"
+              placeholder="COM_EVENTGALLERY_METHOD_CURRENCY_PLACEHOLDER"
+              required="true"
+              validate=""
+              class="input-xlarge"
+               /> -->
+
+        <field name="supportsdigital" type="radio" class="btn-group" default="1" label="COM_EVENTGALLERY_METHOD_SUPPORTS_DIGITAL_ITEMS" description="COM_EVENTGALLERY_METHOD_SUPPORTS_DIGITAL_ITEMS_DESCRIPTION">
+            <option value="0">COM_EVENTGALLERY_METHOD_SUPPORTS_DIGITAL_ITEMS_DIGITAL_NO</option>
+            <option value="1">COM_EVENTGALLERY_METHOD_SUPPORTS_DIGITAL_ITEMS_DIGITAL_YES</option>
+            <option value="2">COM_EVENTGALLERY_METHOD_SUPPORTS_DIGITAL_ITEMS_DIGITAL_ONLY</option>
+        </field>
+
+        <field name="default" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_METHOD_DEFAULT" description="COM_EVENTGALLERY_METHOD_DEFAULT_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+         
+         <field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EVENTS_PUBLISHED" description="COM_EVENTGALLERY_EVENTS_PUBLISHED_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+                
+         
+    </fieldset>
+</form>

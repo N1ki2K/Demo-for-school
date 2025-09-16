@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { db } from '../database/init';
+import { db } from '../database/init-mysql';
 import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
@@ -17,19 +17,8 @@ interface Director {
 // Get all directors
 router.get('/', async (req: Request, res: Response) => {
   try {
-    const sql = `
-      SELECT * FROM school_directors 
-      WHERE is_active = 1 
-      ORDER BY position ASC, tenure_start DESC
-    `;
-    
-    db.all(sql, [], (err, rows) => {
-      if (err) {
-        console.error('Error fetching directors:', err);
-        return res.status(500).json({ error: 'Failed to fetch directors' });
-      }
-      res.json(rows);
-    });
+    const [rows] = await db.execute(`SELECT * FROM school_directors WHERE is_active = 1 ORDER BY position ASC, tenure_start DESC`);
+    res.json(rows);
   } catch (error) {
     console.error('Error in GET /directors:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -40,18 +29,12 @@ router.get('/', async (req: Request, res: Response) => {
 router.get('/:id', async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    const sql = 'SELECT * FROM school_directors WHERE id = ? AND is_active = 1';
-    
-    db.get(sql, [id], (err, row) => {
-      if (err) {
-        console.error('Error fetching director:', err);
-        return res.status(500).json({ error: 'Failed to fetch director' });
-      }
-      if (!row) {
-        return res.status(404).json({ error: 'Director not found' });
-      }
-      res.json(row);
-    });
+    const [rows] = await db.execute('SELECT * FROM school_directors WHERE id = ? AND is_active = 1', [id]);
+    const director = (rows as any[])[0];
+    if (!director) {
+      return res.status(404).json({ error: 'Director not found' });
+    }
+    res.json(director);
   } catch (error) {
     console.error('Error in GET /directors/:id:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -62,31 +45,13 @@ router.get('/:id', async (req: Request, res: Response) => {
 router.post('/', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { name, tenure_start, tenure_end, description, position } = req.body as Director;
-    
     if (!name) {
       return res.status(400).json({ error: 'Name is required' });
     }
-    
-    const sql = `
-      INSERT INTO school_directors (name, tenure_start, tenure_end, description, position, is_active, created_at, updated_at)
-      VALUES (?, ?, ?, ?, ?, 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-    `;
-    
-    db.run(sql, [name, tenure_start || null, tenure_end || null, description || null, position || 0], function(err) {
-      if (err) {
-        console.error('Error creating director:', err);
-        return res.status(500).json({ error: 'Failed to create director' });
-      }
-      
-      // Return the created director
-      db.get('SELECT * FROM school_directors WHERE id = ?', [this.lastID], (err, row) => {
-        if (err) {
-          console.error('Error fetching created director:', err);
-          return res.status(500).json({ error: 'Director created but failed to fetch' });
-        }
-        res.status(201).json(row);
-      });
-    });
+    const [result] = await db.execute(`INSERT INTO school_directors (name, tenure_start, tenure_end, description, position, is_active, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 1, NOW(), NOW())`, [name, tenure_start || null, tenure_end || null, description || null, position || 0]);
+    const [selectRows] = await db.execute('SELECT * FROM school_directors WHERE id = ?', [(result as any).insertId]);
+    const director = (selectRows as any[])[0];
+    res.status(201).json(director);
   } catch (error) {
     console.error('Error in POST /directors:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -98,36 +63,16 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
     const { name, tenure_start, tenure_end, description, position, is_active } = req.body as Director;
-    
     if (!name) {
       return res.status(400).json({ error: 'Name is required' });
     }
-    
-    const sql = `
-      UPDATE school_directors 
-      SET name = ?, tenure_start = ?, tenure_end = ?, description = ?, position = ?, is_active = ?, updated_at = CURRENT_TIMESTAMP
-      WHERE id = ?
-    `;
-    
-    db.run(sql, [name, tenure_start || null, tenure_end || null, description || null, position || 0, is_active !== undefined ? is_active : 1, id], function(err) {
-      if (err) {
-        console.error('Error updating director:', err);
-        return res.status(500).json({ error: 'Failed to update director' });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Director not found' });
-      }
-      
-      // Return the updated director
-      db.get('SELECT * FROM school_directors WHERE id = ?', [id], (err, row) => {
-        if (err) {
-          console.error('Error fetching updated director:', err);
-          return res.status(500).json({ error: 'Director updated but failed to fetch' });
-        }
-        res.json(row);
-      });
-    });
+    const [result] = await db.execute(`UPDATE school_directors SET name = ?, tenure_start = ?, tenure_end = ?, description = ?, position = ?, is_active = ?, updated_at = NOW() WHERE id = ?`, [name, tenure_start || null, tenure_end || null, description || null, position || 0, is_active !== undefined ? is_active : 1, id]);
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ error: 'Director not found' });
+    }
+    const [selectRows] = await db.execute('SELECT * FROM school_directors WHERE id = ?', [id]);
+    const director = (selectRows as any[])[0];
+    res.json(director);
   } catch (error) {
     console.error('Error in PUT /directors/:id:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -138,22 +83,11 @@ router.put('/:id', authenticateToken, async (req: Request, res: Response) => {
 router.delete('/:id', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { id } = req.params;
-    
-    // Soft delete by setting is_active = 0
-    const sql = 'UPDATE school_directors SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?';
-    
-    db.run(sql, [id], function(err) {
-      if (err) {
-        console.error('Error deleting director:', err);
-        return res.status(500).json({ error: 'Failed to delete director' });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Director not found' });
-      }
-      
-      res.json({ message: 'Director deleted successfully' });
-    });
+    const [result] = await db.execute('UPDATE school_directors SET is_active = 0, updated_at = NOW() WHERE id = ?', [id]);
+    if ((result as any).affectedRows === 0) {
+      return res.status(404).json({ error: 'Director not found' });
+    }
+    res.json({ message: 'Director deleted successfully' });
   } catch (error) {
     console.error('Error in DELETE /directors/:id:', error);
     res.status(500).json({ error: 'Internal server error' });
@@ -164,25 +98,16 @@ router.delete('/:id', authenticateToken, async (req: Request, res: Response) => 
 router.put('/bulk/positions', authenticateToken, async (req: Request, res: Response) => {
   try {
     const { directors } = req.body as { directors: Array<{ id: number; position: number }> };
-    
     if (!Array.isArray(directors)) {
       return res.status(400).json({ error: 'Invalid directors data' });
     }
-    
-    const updatePromises = directors.map(({ id, position }) => {
-      return new Promise<void>((resolve, reject) => {
-        db.run(
-          'UPDATE school_directors SET position = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-          [position, id],
-          function(err) {
-            if (err) reject(err);
-            else resolve();
-          }
-        );
-      });
+
+    const updatePromises = directors.map((director) => {
+      return db.execute('UPDATE school_directors SET position = ?, updated_at = NOW() WHERE id = ?', [director.position, director.id]);
     });
-    
+
     await Promise.all(updatePromises);
+
     res.json({ message: 'Director positions updated successfully' });
   } catch (error) {
     console.error('Error in PUT /directors/bulk/positions:', error);

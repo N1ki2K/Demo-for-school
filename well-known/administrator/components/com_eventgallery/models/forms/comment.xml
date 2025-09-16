@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="comment">
+
+  
+
+
+    <fieldset name="general" label="COM_EVENTGALLERY_COMMENT_LABEL" description="COM_EVENTGALLERY_COMMENT_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="name"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_COMMENT_NAME"
+               description="COM_EVENTGALLERY_COMMENT_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_COMMENT_NAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        
+         <field name="email"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_COMMENT_EMAIL"
+               description="COM_EVENTGALLERY_COMMENT_EMAIL_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_COMMENT_EMAIL_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+         <field name="link"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_COMMENT_LINK"
+               description="COM_EVENTGALLERY_COMMENT_LINK_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_COMMENT_LINK_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        <field name="date"
+               type="calendar"
+               default="NOW"
+               label="COM_EVENTGALLERY_COMMENT_DATE"
+               description="COM_EVENTGALLERY_COMMENT_DATE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_COMMENT_DATE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+       
+                        
+
+		<field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_COMMENT_PUBLISHED" description="COM_EVENTGALLERY_COMMENT_PUBLISHED_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		
+		<field name="text"
+               type="editor"
+               inputtype="text"
+               label="COM_EVENTGALLERY_COMMENT_TEXT"
+               description="COM_EVENTGALLERY_COMMENT_TEXT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_COMMENT_TEXT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="JComponentHelper::filterText"
+               buttons="true"
+                />
+                
+         
+    </fieldset>
+</form>

@@ -1,12 +1,13 @@
 import { Router, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../database/init';
+import { db } from '../database/init-mysql';
+import { OkPacket, RowDataPacket } from 'mysql2';
 import { authenticateToken } from '../middleware/auth';
 import { AuthRequest } from '../types';
 
 const router = Router();
 
-interface NewsArticle {
+interface NewsArticle extends RowDataPacket {
   id: string;
   title_bg: string;
   title_en: string;
@@ -24,27 +25,24 @@ interface NewsArticle {
 }
 
 // Get all news articles (public endpoint)
-router.get('/', (req, res: Response) => {
+router.get('/', async (req, res: Response) => {
   const language = req.query.lang as string || 'bg';
   const published_only = req.query.published !== 'false'; // Default to true
 
-  let sql = 'SELECT * FROM news';
-  const params: any[] = [];
+  try {
+    let stmt;
+    let articles;
 
-  if (published_only) {
-    sql += ' WHERE is_published = 1';
-  }
-
-  sql += ' ORDER BY published_date DESC';
-
-  db.all(sql, params, (err, articles: NewsArticle[]) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to fetch news articles' });
+    if (published_only) {
+      const [rows] = await db.execute('SELECT * FROM news WHERE is_published = true ORDER BY published_date DESC');
+      articles = rows;
+    } else {
+      const [rows] = await db.execute('SELECT * FROM news ORDER BY published_date DESC');
+      articles = rows;
     }
 
     // Format articles for the requested language
-    const formattedArticles = articles.map(article => ({
+    const formattedArticles = (articles as NewsArticle[]).map((article: NewsArticle) => ({
       id: article.id,
       title: language === 'en' ? article.title_en : article.title_bg,
       excerpt: language === 'en' ? article.excerpt_en : article.excerpt_bg,
@@ -59,19 +57,20 @@ router.get('/', (req, res: Response) => {
     }));
 
     res.json(formattedArticles);
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch news articles' });
+  }
 });
 
 // Get single news article by ID (public endpoint)
-router.get('/:id', (req, res: Response) => {
+router.get('/:id', async (req, res: Response) => {
   const { id } = req.params;
   const language = req.query.lang as string || 'bg';
 
-  db.get('SELECT * FROM news WHERE id = ?', [id], (err, article: NewsArticle) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to fetch news article' });
-    }
+  try {
+    const [rows] = await db.execute('SELECT * FROM news WHERE id = ?', [id]);
+    const article = (rows as NewsArticle[])[0];
 
     if (!article) {
       return res.status(404).json({ error: 'News article not found' });
@@ -93,23 +92,26 @@ router.get('/:id', (req, res: Response) => {
     };
 
     res.json(formattedArticle);
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch news article' });
+  }
 });
 
 // Get all news articles for CMS (admin only)
-router.get('/admin/all', authenticateToken, (req: AuthRequest, res: Response) => {
-  db.all('SELECT * FROM news ORDER BY created_at DESC', (err, articles: NewsArticle[]) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to fetch news articles' });
-    }
-
+router.get('/admin/all', authenticateToken, async (req: AuthRequest, res: Response) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM news ORDER BY created_at DESC');
+    const articles = rows;
     res.json(articles);
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch news articles' });
+  }
 });
 
 // Create new news article (admin only)
-router.post('/admin', authenticateToken, (req: AuthRequest, res: Response) => {
+router.post('/admin', authenticateToken, async (req: AuthRequest, res: Response) => {
   const {
     title_bg,
     title_en,
@@ -133,33 +135,32 @@ router.post('/admin', authenticateToken, (req: AuthRequest, res: Response) => {
   const now = new Date().toISOString();
   const publishDate = published_date || now;
 
-  db.run(
-    `INSERT INTO news (
-      id, title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
-      featured_image_url, featured_image_alt, is_published, is_featured, 
-      published_date, created_at, updated_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [
-      id, title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
-      featured_image_url, featured_image_alt, is_published, is_featured,
-      publishDate, now, now
-    ],
-    function(err) {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Failed to create news article' });
-      }
+  try {
+    await db.execute(
+      `INSERT INTO news (
+        id, title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
+        featured_image_url, featured_image_alt, is_published, is_featured, 
+        published_date, created_at, updated_at
+      ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      [
+        id, title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
+        featured_image_url, featured_image_alt, is_published, is_featured,
+        publishDate, now, now
+      ]
+    );
 
-      res.status(201).json({
-        id,
-        message: 'News article created successfully'
-      });
-    }
-  );
+    res.status(201).json({
+      id,
+      message: 'News article created successfully'
+    });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to create news article' });
+  }
 });
 
 // Update news article (admin only)
-router.put('/admin/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+router.put('/admin/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const {
     title_bg,
@@ -182,82 +183,81 @@ router.put('/admin/:id', authenticateToken, (req: AuthRequest, res: Response) =>
 
   const now = new Date().toISOString();
 
-  db.run(
-    `UPDATE news SET 
-      title_bg = ?, title_en = ?, excerpt_bg = ?, excerpt_en = ?, 
-      content_bg = ?, content_en = ?, featured_image_url = ?, featured_image_alt = ?,
-      is_published = ?, is_featured = ?, published_date = ?, updated_at = ?
-    WHERE id = ?`,
-    [
-      title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
-      featured_image_url, featured_image_alt, is_published, is_featured,
-      published_date, now, id
-    ],
-    function(err) {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Failed to update news article' });
-      }
+  try {
+    const [result] = await db.execute(
+      `UPDATE news SET 
+        title_bg = ?, title_en = ?, excerpt_bg = ?, excerpt_en = ?, 
+        content_bg = ?, content_en = ?, featured_image_url = ?, featured_image_alt = ?,
+        is_published = ?, is_featured = ?, published_date = ?, updated_at = ?
+      WHERE id = ?`,
+      [
+        title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
+        featured_image_url, featured_image_alt, is_published, is_featured,
+        published_date, now, id
+      ]
+    );
 
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'News article not found' });
-      }
-
-      res.json({ message: 'News article updated successfully' });
+    if ((result as OkPacket).affectedRows === 0) {
+      return res.status(404).json({ error: 'News article not found' });
     }
-  );
+
+    res.json({ message: 'News article updated successfully' });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to update news article' });
+  }
 });
 
 // Delete news article (admin only)
-router.delete('/admin/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+router.delete('/admin/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
 
-  db.run('DELETE FROM news WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to delete news article' });
-    }
+  try {
+    const [result] = await db.execute('DELETE FROM news WHERE id = ?', [id]);
 
-    if (this.changes === 0) {
+    if ((result as OkPacket).affectedRows === 0) {
       return res.status(404).json({ error: 'News article not found' });
     }
 
     res.json({ message: 'News article deleted successfully' });
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to delete news article' });
+  }
 });
 
 // Get featured news articles (public endpoint)
-router.get('/featured/latest', (req, res: Response) => {
+router.get('/featured/latest', async (req, res: Response) => {
   const language = req.query.lang as string || 'bg';
   const limit = parseInt(req.query.limit as string) || 3;
 
-  db.all(
-    'SELECT * FROM news WHERE is_published = 1 ORDER BY published_date DESC LIMIT ?',
-    [limit],
-    (err, articles: NewsArticle[]) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Failed to fetch featured news' });
-      }
+  try {
+    const [rows] = await db.execute(
+      'SELECT * FROM news WHERE is_published = true ORDER BY published_date DESC LIMIT ?',
+      [limit]
+    );
+    const articles = rows;
 
-      // Format articles for the requested language
-      const formattedArticles = articles.map(article => ({
-        id: article.id,
-        title: language === 'en' ? article.title_en : article.title_bg,
-        excerpt: language === 'en' ? article.excerpt_en : article.excerpt_bg,
-        content: language === 'en' ? article.content_en : article.content_bg,
-        featuredImage: article.featured_image_url,
-        featuredImageAlt: article.featured_image_alt,
-        isPublished: article.is_published,
-        isFeatured: article.is_featured,
-        publishedDate: article.published_date,
-        createdAt: article.created_at,
-        updatedAt: article.updated_at
-      }));
+    // Format articles for the requested language
+    const formattedArticles = (articles as NewsArticle[]).map((article: NewsArticle) => ({
+      id: article.id,
+      title: language === 'en' ? article.title_en : article.title_bg,
+      excerpt: language === 'en' ? article.excerpt_en : article.excerpt_bg,
+      content: language === 'en' ? article.content_en : article.content_bg,
+      featuredImage: article.featured_image_url,
+      featuredImageAlt: article.featured_image_alt,
+      isPublished: article.is_published,
+      isFeatured: article.is_featured,
+      publishedDate: article.published_date,
+      createdAt: article.created_at,
+      updatedAt: article.updated_at
+    }));
 
-      res.json(formattedArticles);
-    }
-  );
+    res.json(formattedArticles);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch featured news' });
+  }
 });
 
 export default router;

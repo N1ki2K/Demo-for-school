@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="COM_EVENTGALLERY_OPTIONS_LAYOUT_CATEGORIES">
+        <message>
+            <![CDATA[COM_EVENTGALLERY_OPTIONS_LAYOUT_CATEGORIES_MESSAGE]]>
+        </message>
+    </layout>
+    <fields name="request">
+        <fieldset name="request"
+                  addfieldpath="/administrator/components/com_categories/models/fields">
+
+            <field name="catid"
+				type="categoryedit"
+				extension="com_eventgallery"
+				label="COM_EVENTGALLERY_OPTIONS_CATEGORIES_CATEGORY_LABEL"
+				description="COM_EVENTGALLERY_OPTIONS_CATEGORIES_CATEGORY_DESC"
+				class="inputbox"
+				required="false"
+			><option value="root">JGLOBAL_ROOT</option></field>
+        </fieldset>
+    </fields>
+    <fields name="params">
+
+        <fieldset name="params_category" label="COM_EVENTGALLERY_OPTIONS_CATEGORY">
+            <field name="categories_layout" type="list" default="" label="COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="tiles">COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_TILES</option>
+                <option value="textlinks">COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_SIMPLE_LIST</option>
+            </field>
+        </fieldset>
+
+        <fieldset name="params" label="COM_EVENTGALLERY_OPTIONS_EVENT">
+            <field
+                    name="event_layout"
+                    type="componentlayout"
+                    label="COM_EVENTGALLERY_OPTIONS_EVENT_LAYOUT_LABEL"
+                    description="COM_EVENTGALLERY_OPTIONS_EVENT_LAYOUT_DESC"
+                    menuitems="true"
+                    extension="com_eventgallery"
+                    view="event"
+                    useglobal="true"
+                    />
+        </fieldset>
+
+
+        <fieldset name="params1" label="COM_EVENTGALLERY_OPTIONS_EVENTS" addfieldpath="/administrator/components/com_eventgallery/models/fields">
+			
+			<field name="events_layout" type="list" default="" label="COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_DESC">
+                   <option value="">JGLOBAL_USE_GLOBAL</option>
+                   <option value="default">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_DEFAULT</option>
+                   <option value="tiles">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_TILES</option>
+                   <option value="list">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_SIMPLE_LIST</option>
+            </field>
+			
+            <field name="greetings"
+                   id="greetings"
+                   type="localizabletext"
+                   inputtype="textarea"
+                   default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENTS_GREETING_LABEL"
+                   rows="3"
+                   cols="50"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENTS_GREETING_DESC"
+                   filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                    />
+
+            <field name="sort_events_by" type="list" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="ordering">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_ORDERING</option>
+                <option value="date_asc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DATE_ASC</option>
+                <option value="date_desc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DATE_DESC</option>
+                <option value="name_asc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_NAME_ASC</option>
+                <option value="name_desc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_NAME_DESC</option>
+            </field>
+                   
+            
+			
+			 <field name="max_events_per_page" type="integerwithdefault" first="1" last="500" step="1" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_EVENTS_PER_PAGE_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_EVENTS_PER_PAGE_DESC"/>
+
+             
+<!-- AUTO GENERATED BEGIN -->
+    <field name="show_exif" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_date" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="use_event_paging" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field> 
+    <field name="show_image_filename" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_LABEL" 
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_DESCRIPTION">
+            <option value="">JGLOBAL_USE_GLOBAL</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+<!-- AUTO GENERATED END -->           
+
+            
+            <field name="show_text" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_TEXT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_TEXT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_imagecount" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGECOUNT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGECOUNT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_eventhits" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_EVENTHITS_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_EVENTHITS_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            <field name="show_commentcount" type="radio" class="btn-group btn-group-yesno" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_SHOW_COMMENTCOUNT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_COMMENTCOUNT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+            
+            <field name="show_image_caption_overlay" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_LABEL"
+		           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_DESC">
+		        <option value="">JGLOBAL_USE_GLOBAL</option>
+		        <option value="1">JYES</option>
+		        <option value="0">JNO</option>
+		    </field>
+		    
+        <field name="hide_mainimage_for_password_protected_event" type="radio" class="btn-group btn-group-yesno" default=""
+             label="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_PASSWORD_PROTECTED_EVENT_LABEL"
+             description="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_PASSWORD_PROTECTED_EVENT_DESC">
+          <option value="">JGLOBAL_USE_GLOBAL</option>
+          <option value="1">JYES</option>
+          <option value="0">JNO</option>
+        </field>
+
+            <field name="hide_mainimage_for_usergroup_protected_event" type="radio" class="btn-group btn-group-yesno" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_USERGROUP_PROTECTED_EVENT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_USERGROUP_PROTECTED_EVENT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+		    <field name="show_items_per_category_count" type="radio" class="btn-group btn-group-yesno" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+
+            <field name="use_back_button" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_USE_BACK_BUTTON_LABEL" description="COM_EVENTGALLERY_OPTIONS_USE_BACK_BUTTON_LABEL_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="0">JNO</option>
+                <option value="1">JYES</option>
+            </field>
+              
+        </fieldset>
+        <fieldset addfieldpath="/components/com_eventgallery/models/fields" name="params2" label="COM_EVENTGALLERY_LAYOUT_EVENT_AJAX_LIST">
+            			
+			<!-- AUTO GENERATED BEGIN -->
+			<field name="event_ajax_list_thumbnail_size" type="integerwithdefault" first="25" last="500" step="1" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_SIZE_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_SIZE_DESC"/>
+            <field name="event_ajax_list_number_of_thumbnail_on_first_page"
+                   type="integerwithdefault" first="1" last="100" step="1"           
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_FIRSTPAGE_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_FIRSTPAGE_DESC"/>        
+            <field name="event_ajax_list_number_of_thumbnail_per_page"
+                   type="integerwithdefault" first="1" last="100" step="1" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_PAGE_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_PAGE_DESC"/>
+            <field name="event_ajax_show_info_inline" type="radio" class="btn-group btn-group-yesno" default=""
+               label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_SHOW_INFO_INLINE_LABEL"
+               description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_SHOW_INFO_INLINE_DESC">
+                  <option value="">JGLOBAL_USE_GLOBAL</option>
+                  <option value="1">JYES</option>
+                  <option value="0">JNO</option>
+            </field>
+            <!-- AUTO GENERATED BEGIN -->
+            
+        </fieldset>
+        <fieldset name="params3" label="COM_EVENTGALLERY_LAYOUT_EVENT_DEFAULT_LIST">
+            		
+		<!-- AUTO GENERATED BEGIN -->
+   			<field name="event_default_list_thumbnail_height" id="event_default_list_thumbnail_height" type="integerwithdefault"
+                   first="0" last="1000" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_DESC"/>
+            <field name="event_default_list_thumbnail_jitter" type="integerwithdefault"
+                   first="0" last="500" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_DESC"/>
+            <field name="event_default_list_thumbnail_first_item_height"
+                   type="integerwithdefault" first="1" last="10" step="1"
+                   default="" label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_DESC"/>
+            <field name="show_singlepage_imagehits" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGEHITS_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGEHITS_DESC">
+                <option value="">JGLOBAL_USE_GLOBAL</option>
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+            </field>
+			<field name="show_image_caption_overlay" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_LABEL"
+		           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_DESC">
+		        <option value="">JGLOBAL_USE_GLOBAL</option>
+		        <option value="1">JYES</option>
+		        <option value="0">JNO</option>
+		    </field>
+		    <!-- AUTO GENERATED END -->
+		    
+        </fieldset>
+        <fieldset name="params4" label="COM_EVENTGALLERY_LAYOUT_EVENT_IMAGE_LIST">
+            
+			<!-- AUTO GENERATED BEGIN -->
+			<field name="event_image_list_thumbnail_height" id="event_image_list_thumbnail_height" type="integerwithdefault"
+                   first="0" last="1000" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_DESC"/>
+            <field name="event_image_list_thumbnail_jitter" id="event_image_list_thumbnail_jitter" type="integerwithdefault"
+                   first="0" last="500" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_DESC"/>
+            <field name="event_image_list_thumbnail_first_item_height" id="event_image_list_thumbnail_first_item_height"
+                   type="integerwithdefault" first="1" last="10" step="1" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_DESC"/>
+            <field name="show_image_caption_overlay" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_LABEL"
+		           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_DESC">
+		        <option value="">JGLOBAL_USE_GLOBAL</option>
+		        <option value="1">JYES</option>
+		        <option value="0">JNO</option>
+		    </field>
+		    <!-- AUTO GENERATED END -->
+		    
+        </fieldset>
+    </fields>
+</metadata>

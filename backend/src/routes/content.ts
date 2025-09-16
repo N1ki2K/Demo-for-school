@@ -1,89 +1,84 @@
 import { Router, Request, Response } from 'express';
 import { v4 as uuidv4 } from 'uuid';
-import { db } from '../database/init';
+import { db } from '../database/init-mysql';
+import { OkPacket, RowDataPacket } from 'mysql2';
 import { authenticateToken } from '../middleware/auth';
 import { ContentSection, AuthRequest } from '../types';
 
 const router = Router();
 
 // Get all content sections
-router.get('/', (req: Request, res: Response) => {
-  db.all(
-    'SELECT * FROM content_sections WHERE is_active = 1 ORDER BY page_id, position',
-    (err, sections: ContentSection[]) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Failed to fetch content sections' });
-      }
-      res.json(sections);
-    }
-  );
+router.get('/', async (req: Request, res: Response) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM content_sections WHERE is_active = true ORDER BY page_id, position');
+    const sections = rows;
+    res.json(sections);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch content sections' });
+  }
 });
 
 // Get content sections by page
-router.get('/page/:pageId', (req, res: Response) => {
+router.get('/page/:pageId', async (req: Request, res: Response) => {
   const { pageId } = req.params;
   
-  // Handle 'global' and 'home' page filtering
-  let query: string;
-  let params: any[];
-  
-  if (pageId === 'global') {
-    // Global content includes header, footer, nav sections
-    query = `SELECT * FROM content_sections 
-             WHERE (id LIKE 'header-%' OR id LIKE 'footer-%' OR id LIKE 'nav-%') 
-             AND is_active = 1 ORDER BY position`;
-    params = [];
-  } else if (pageId === 'home') {
-    // Home content includes hero, news, features sections
-    query = `SELECT * FROM content_sections 
-             WHERE (id LIKE 'hero-%' OR id LIKE 'news-%' OR id LIKE 'features-%' OR id LIKE 'feature-%') 
-             AND is_active = 1 ORDER BY position`;
-    params = [];
-  } else {
-    // Other pages: filter by page_id or sections that start with pageId
-    // Handle both exact page_id match and section id patterns
-    const sectionIdPattern = `${pageId}-%`;
-    const alternatePattern = `${pageId.replace(/-/g, '_')}-%`; // Also try underscore version
+  try {
+    let stmt;
+    let sections;
     
-    query = `SELECT * FROM content_sections 
-             WHERE (page_id = ? OR id LIKE ? OR id LIKE ?) AND is_active = 1 ORDER BY position`;
-    params = [pageId, sectionIdPattern, alternatePattern];
-  }
-  
-  db.all(query, params, (err, sections: ContentSection[]) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Failed to fetch page content' });
+    if (pageId === 'global') {
+      // Global content includes header, footer, nav sections
+      const [globalRows] = await db.execute(`SELECT * FROM content_sections 
+               WHERE (id LIKE 'header-%' OR id LIKE 'footer-%' OR id LIKE 'nav-%') 
+               AND is_active = true ORDER BY position`);
+      sections = globalRows;
+    } else if (pageId === 'home') {
+      // Home content includes hero, news, features sections
+      const [homeRows] = await db.execute(`SELECT * FROM content_sections 
+               WHERE (id LIKE 'hero-%' OR id LIKE 'news-%' OR id LIKE 'features-%' OR id LIKE 'feature-%') 
+               AND is_active = true ORDER BY position`);
+      sections = homeRows;
+    } else {
+      // Other pages: filter by page_id or sections that start with pageId
+      // Handle both exact page_id match and section id patterns
+      const sectionIdPattern = `${pageId}-%`;
+      const alternatePattern = `${pageId.replace(/-/g, '_')}-%`; // Also try underscore version
+      
+      const [pageRows] = await db.execute(`SELECT * FROM content_sections 
+               WHERE (page_id = ? OR id LIKE ? OR id LIKE ?) AND is_active = true ORDER BY position`,
+               [pageId, sectionIdPattern, alternatePattern]);
+      sections = pageRows;
     }
+    
     res.json(sections);
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch page content' });
+  }
 });
 
 // Get single content section
-router.get('/:id', (req, res: Response) => {
+router.get('/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
   
-  db.get(
-    'SELECT * FROM content_sections WHERE id = ?',
-    [id],
-    (err, section: ContentSection) => {
-      if (err) {
-        console.error('Database error:', err);
-        return res.status(500).json({ error: 'Failed to fetch content section' });
-      }
-      
-      if (!section) {
-        return res.status(404).json({ error: 'Content section not found' });
-      }
-      
-      res.json(section);
+  try {
+    const [rows] = await db.execute('SELECT * FROM content_sections WHERE id = ?', [id]);
+    const section = (rows as ContentSection[])[0];
+    
+    if (!section) {
+      return res.status(404).json({ error: 'Content section not found' });
     }
-  );
+    
+    res.json(section);
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to fetch content section' });
+  }
 });
 
 // Create or update content section
-router.post('/', authenticateToken, (req: AuthRequest, res: Response) => {
+router.post('/', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { id, type, label, content, page_id, position } = req.body;
   
   if (!type || !label || content === undefined) {
@@ -93,132 +88,115 @@ router.post('/', authenticateToken, (req: AuthRequest, res: Response) => {
   const sectionId = id || uuidv4();
   const contentString = typeof content === 'string' ? content : JSON.stringify(content);
   
-  // Check if section exists
-  db.get('SELECT id FROM content_sections WHERE id = ?', [sectionId], (err, existing) => {
-    if (err) {
-      console.error('Database error:', err);
-      return res.status(500).json({ error: 'Database error' });
-    }
+  try {
+    // Check if section exists
+    const [checkRows] = await db.execute('SELECT id FROM content_sections WHERE id = ?', [sectionId]);
+    const existing = (checkRows as RowDataPacket[])[0];
     
     if (existing) {
       // Update existing section
-      db.run(
+      await db.execute(
         `UPDATE content_sections 
-         SET type = ?, label = ?, content = ?, page_id = ?, position = ?, updated_at = CURRENT_TIMESTAMP 
+         SET type = ?, label = ?, content = ?, page_id = ?, position = ?, updated_at = NOW() 
          WHERE id = ?`,
-        [type, label, contentString, page_id, position || 0, sectionId],
-        function(updateErr) {
-          if (updateErr) {
-            console.error('Update error:', updateErr);
-            return res.status(500).json({ error: 'Failed to update content section' });
-          }
-          
-          res.json({ id: sectionId, message: 'Content section updated successfully' });
-        }
+        [type, label, contentString, page_id, position || 0, sectionId]
       );
+      
+      res.json({ id: sectionId, message: 'Content section updated successfully' });
     } else {
       // Create new section
-      db.run(
+      await db.execute(
         `INSERT INTO content_sections (id, type, label, content, page_id, position) 
          VALUES (?, ?, ?, ?, ?, ?)`,
-        [sectionId, type, label, contentString, page_id, position || 0],
-        function(insertErr) {
-          if (insertErr) {
-            console.error('Insert error:', insertErr);
-            return res.status(500).json({ error: 'Failed to create content section' });
-          }
-          
-          res.status(201).json({ id: sectionId, message: 'Content section created successfully' });
-        }
+        [sectionId, type, label, contentString, page_id, position || 0]
       );
+      
+      res.status(201).json({ id: sectionId, message: 'Content section created successfully' });
     }
-  });
+  } catch (err) {
+    console.error('Database error:', err);
+    res.status(500).json({ error: 'Failed to process content section' });
+  }
 });
 
 // Update content section
-router.put('/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+router.put('/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   const { type, label, content, page_id, position, is_active } = req.body;
   
   const contentString = typeof content === 'string' ? content : JSON.stringify(content);
   
-  db.run(
-    `UPDATE content_sections 
-     SET type = COALESCE(?, type), 
-         label = COALESCE(?, label), 
-         content = COALESCE(?, content), 
-         page_id = COALESCE(?, page_id), 
-         position = COALESCE(?, position),
-         is_active = COALESCE(?, is_active),
-         updated_at = CURRENT_TIMESTAMP 
-     WHERE id = ?`,
-    [type, label, contentString, page_id, position, is_active, id],
-    function(err) {
-      if (err) {
-        console.error('Update error:', err);
-        return res.status(500).json({ error: 'Failed to update content section' });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Content section not found' });
-      }
-      
-      res.json({ message: 'Content section updated successfully' });
+  try {
+    const [result] = await db.execute(
+      `UPDATE content_sections 
+       SET type = COALESCE(?, type), 
+           label = COALESCE(?, label), 
+           content = COALESCE(?, content), 
+           page_id = COALESCE(?, page_id), 
+           position = COALESCE(?, position),
+           is_active = COALESCE(?, is_active),
+           updated_at = NOW() 
+       WHERE id = ?`,
+      [type, label, contentString, page_id, position, is_active, id]
+    );
+    
+    if ((result as OkPacket).affectedRows === 0) {
+      return res.status(404).json({ error: 'Content section not found' });
     }
-  );
+    
+    res.json({ message: 'Content section updated successfully' });
+  } catch (err) {
+    console.error('Update error:', err);
+    res.status(500).json({ error: 'Failed to update content section' });
+  }
 });
 
 // Delete content section
-router.delete('/:id', authenticateToken, (req: AuthRequest, res: Response) => {
+router.delete('/:id', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { id } = req.params;
   
-  db.run(
-    'UPDATE content_sections SET is_active = 0, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-    [id],
-    function(err) {
-      if (err) {
-        console.error('Delete error:', err);
-        return res.status(500).json({ error: 'Failed to delete content section' });
-      }
-      
-      if (this.changes === 0) {
-        return res.status(404).json({ error: 'Content section not found' });
-      }
-      
-      res.json({ message: 'Content section deleted successfully' });
+  try {
+    const [result] = await db.execute(
+      'UPDATE content_sections SET is_active = false, updated_at = NOW() WHERE id = ?',
+      [id]
+    );
+    
+    if ((result as OkPacket).affectedRows === 0) {
+      return res.status(404).json({ error: 'Content section not found' });
     }
-  );
+    
+    res.json({ message: 'Content section deleted successfully' });
+  } catch (err) {
+    console.error('Delete error:', err);
+    res.status(500).json({ error: 'Failed to delete content section' });
+  }
 });
 
 // Bulk update content sections (for drag-and-drop reordering)
-router.post('/bulk-update', authenticateToken, (req: AuthRequest, res: Response) => {
+router.post('/bulk-update', authenticateToken, async (req: AuthRequest, res: Response) => {
   const { sections } = req.body;
   
   if (!Array.isArray(sections)) {
     return res.status(400).json({ error: 'Sections must be an array' });
   }
   
-  const updatePromises = sections.map((section: any) => {
-    return new Promise((resolve, reject) => {
-      db.run(
-        'UPDATE content_sections SET position = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?',
-        [section.position, section.id],
-        function(err) {
-          if (err) reject(err);
-          else resolve(this.changes);
-        }
+  try {
+    await db.beginTransaction();
+    
+    for (const section of sections) {
+      await db.execute(
+        'UPDATE content_sections SET position = ?, updated_at = NOW() WHERE id = ?',
+        [section.position, section.id]
       );
-    });
-  });
-  
-  Promise.all(updatePromises)
-    .then(() => {
-      res.json({ message: 'Content sections updated successfully' });
-    })
-    .catch((err) => {
-      console.error('Bulk update error:', err);
-      res.status(500).json({ error: 'Failed to update content sections' });
-    });
+    }
+    
+    await db.commit();
+    res.json({ message: 'Content sections updated successfully' });
+  } catch (err) {
+    await db.rollback();
+    console.error('Bulk update error:', err);
+    res.status(500).json({ error: 'Failed to update content sections' });
+  }
 });
 
 export default router;

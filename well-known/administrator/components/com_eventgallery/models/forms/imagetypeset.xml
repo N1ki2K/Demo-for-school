@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="imagetypeset">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="name"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPESET_NAME"
+               description="COM_EVENTGALLERY_IMAGETYPESET_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPESET_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+		<field name="description"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPESET_DESCRIPTION"
+               description="COM_EVENTGALLERY_IMAGETYPESET_DESCRIPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPESET_DESCRIPTION_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="JComponentHelper::filterText"
+                /> 
+                
+        <field name="note"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPESET_NOTE"
+               description="COM_EVENTGALLERY_IMAGETYPESET_NOTE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPESET_NOTE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"               
+                />               
+         
+         <field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EVENTS_PUBLISHED" description="COM_EVENTGALLERY_EVENTS_PUBLISHED_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="imagetypes"
+               type="imagetypes"
+               multiple="true"
+               label="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES"
+               description="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />    
+        <field name="imagetypesdefault"
+               type="imagetypesdefault"
+               multiple="false"
+               label="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES_DEFAULT"
+               description="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES_DEFAULT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPESET_IMAGETYPES_DEFAULT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />                 
+                
+         
+    </fieldset>
+</form>

@@ -1,0 +1,2 @@
+ALTER TABLE `#__eventgallery_folder` ADD `shuffle_images` tinyint(4) NOT NULL DEFAULT '0' after `sortdirection`;
+UPDATE `#__eventgallery_folder` set `shuffle_images`=1 where `attribs` like '%"shuffle_images":"1"%';

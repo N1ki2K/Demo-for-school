@@ -1,0 +1,1 @@
+ALTER TABLE  `#__eventgallery_folder` ADD  `usergroupids` text;

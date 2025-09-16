@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="imagetype">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="name"
+               type="text"
+               label="COM_EVENTGALLERY_ORDERSTATUS_NAME"
+               description="COM_EVENTGALLERY_ORDERSTATUS_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDERSTATUS_NAME_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+
+        <field name="type" type="list" default="0" label="COM_EVENTGALLERY_ORDERSTATUS_TYPE" description="COM_EVENTGALLERY_ORDERSTATUS_TYPE_DESCRIPTION">
+		  <option value="0">COM_EVENTGALLERY_ORDERSTATUS_TYPE_ORDER</option>
+		  <option value="1">COM_EVENTGALLERY_ORDERSTATUS_TYPE_SHIPPING</option>
+		  <option value="2">COM_EVENTGALLERY_ORDERSTATUS_TYPE_PAYMENT</option>
+		</field>
+		
+        <field name="displayname"
+               type="localizabletext"
+               label="COM_EVENTGALLERY_ORDERSTATUS_DISPLAYNAME"
+               description="COM_EVENTGALLERY_ORDERSTATUS_DISPLAYNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDERSTATUS_DISPLAYNAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+		    <field name="description"
+               type="localizabletext"
+               inputtype="textarea"
+               label="COM_EVENTGALLERY_ORDERSTATUS_DESCRIPTION"
+               description="COM_EVENTGALLERY_ORDERSTATUS_DESCRIPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDERSTATUS_DESCRIPTION_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                /> 
+    </fieldset>
+</form>

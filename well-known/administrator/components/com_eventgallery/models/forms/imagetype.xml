@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="imagetype">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC">
+      <field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+      readonly="true" class="readonly"
+      description="JGLOBAL_FIELD_ID_DESC"/>
+      
+        <field name="name"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_NAME"
+               description="COM_EVENTGALLERY_IMAGETYPE_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_NAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <field name="displayname"
+               type="localizabletext"
+               label="COM_EVENTGALLERY_IMAGETYPE_DISPLAYNAME"
+               description="COM_EVENTGALLERY_IMAGETYPE_DISPLAYNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_DISPLAYNAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <field name="description"
+               type="localizabletext"
+               inputtype="textarea"
+               label="COM_EVENTGALLERY_IMAGETYPE_DESCRIPTION"
+               description="COM_EVENTGALLERY_IMAGETYPE_DESCRIPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_DESCRIPTION_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                /> 
+                
+        <field name="note"
+               type="textarea"
+               label="COM_EVENTGALLERY_IMAGETYPE_NOTE"
+               description="COM_EVENTGALLERY_IMAGETYPE_NOTE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_NOTE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />               
+         
+         <field name="size"
+               type="text"
+               default="0"
+               label="COM_EVENTGALLERY_IMAGETYPE_SIZE"
+               description="COM_EVENTGALLERY_IMAGETYPE_SIZE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_SIZE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class=""
+                />  
+
+                
+         <field name="taxrate"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_TAXRATE"
+               description="COM_EVENTGALLERY_IMAGETYPE_TAXRATE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_TAXRATE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />  
+          <field name="price"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_PRICE"
+               description="COM_EVENTGALLERY_IMAGETYPE_PRICE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_PRICE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <field name="flatprice"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_FLATPRICE"
+               description="COM_EVENTGALLERY_IMAGETYPE_FLATPRICE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_FLATPRICE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+        />
+        <field name="scaleprice"
+               type="scalepriceeditor"
+               label="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICE"
+               description="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICE_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+        <field name="scalepricetype" type="radio" class="btn-group" default="discount" label="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICETYPE_LABEL" description="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICETYPE_DESC">
+            <option value="singlepackage">COM_EVENTGALLERY_IMAGETYPE_SCALEPRICETYPE_SINGLEPACKAGE_LABEL</option>
+            <option value="package">COM_EVENTGALLERY_IMAGETYPE_SCALEPRICETYPE_PACKAGE_LABEL</option>
+            <option value="discount">COM_EVENTGALLERY_IMAGETYPE_SCALEPRICETYPE_DISCOUNT_LABEL</option>
+        </field>
+
+        <field name="scalepricescope" type="radio" class="btn-group" default="imagetype" label="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICESCOPE_LABEL" description="COM_EVENTGALLERY_IMAGETYPE_SCALEPRICESCOPE_DESC">
+            <option value="lineitem">COM_EVENTGALLERY_IMAGETYPE_SCALEPRICESCOPE_LINEITEM_LABEL</option>
+            <option value="imagetype">COM_EVENTGALLERY_IMAGETYPE_SCALEPRICESCOPE_IMAGETYPE_LABEL</option>
+        </field>
+         <!--<field name="currency"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_CURRENCY"
+               description="COM_EVENTGALLERY_IMAGETYPE_CURRENCY_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_CURRENCY_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                /> -->
+         <field name="isdigital" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_IMAGETYPE_ISDIGITAL" description="COM_EVENTGALLERY_IMAGETYPE_ISDIGITAL_DESCRIPTION">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+
+        <field name="maxorderquantity"
+               type="text"
+               default="0"
+               label="COM_EVENTGALLERY_IMAGETYPE_MAXORDERQUANTITY"
+               description="COM_EVENTGALLERY_IMAGETYPE_MAXORDERQUANTITY_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_MAXORDERQUANTITY_PLACEHOLDER"
+               required="true"
+        />
+
+        <field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EVENTS_PUBLISHED" description="COM_EVENTGALLERY_EVENTS_PUBLISHED_DESCRIPTION">
+          <option value="0">JNO</option>
+          <option value="1">JYES</option>
+        </field>
+    
+    </fieldset>
+    
+    <fieldset name="dimensions" label="COM_EVENTGALLERY_IMAGETYPE_OPTIONS_DIMENSIONS_LABEL" description="COM_EVENTGALLERY_IMAGETYPE_OPTIONS_DIMENSIONS_DESC">
+        <field name="width"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_WIDTH"
+               description="COM_EVENTGALLERY_IMAGETYPE_WIDTH_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_WIDTH_PLACEHOLDER"
+               required="false"
+               validate=""
+               class=""
+                />
+                
+        <field name="height"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_HEIGHT"
+               description="COM_EVENTGALLERY_IMAGETYPE_HEIGHT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_HEIGHT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class=""
+                />
+                
+        <field name="depth"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_DEPTH"
+               description="COM_EVENTGALLERY_IMAGETYPE_DEPTH_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_DEPTH_PLACEHOLDER"
+               required="false"
+               validate=""
+               class=""
+                />
+                
+        <field name="weight"
+               type="text"
+               label="COM_EVENTGALLERY_IMAGETYPE_WEIGHT"
+               description="COM_EVENTGALLERY_IMAGETYPE_WEIGHT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_IMAGETYPE_WEIGHT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class=""
+                />
+    </fieldset>
+</form>

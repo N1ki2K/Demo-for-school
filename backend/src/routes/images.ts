@@ -1,153 +1,147 @@
 import { Router } from 'express';
-import { db } from '../database/init';
+import { db } from '../database/init-mysql';
 import { authenticateToken } from '../middleware/auth';
 
 const router = Router();
 
 // Get image by ID
-router.get('/:id', (req, res) => {
+router.get('/:id', async (req, res) => {
   const { id } = req.params;
-  
-  db.get('SELECT * FROM images WHERE id = ?', [id], (err, row) => {
-    if (err) {
-      console.error('Error fetching image:', err);
-      return res.status(500).json({ error: 'Failed to fetch image' });
-    }
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM images WHERE id = ?', [id]);
+    const image = (rows as any[])[0];
     
-    if (!row) {
+    if (!image) {
       return res.status(404).json({ error: 'Image not found' });
     }
     
-    res.json(row);
-  });
+    res.json(image);
+  } catch (err) {
+    console.error('Error fetching image:', err);
+    res.status(500).json({ error: 'Failed to fetch image' });
+  }
 });
 
 // Get all images
-router.get('/', (req, res) => {
-  db.all('SELECT * FROM images ORDER BY created_at DESC', [], (err, rows) => {
-    if (err) {
-      console.error('Error fetching images:', err);
-      return res.status(500).json({ error: 'Failed to fetch images' });
-    }
-    
+router.get('/', async (req, res) => {
+  try {
+    const [rows] = await db.execute('SELECT * FROM images ORDER BY created_at DESC');
     res.json(rows);
-  });
+  } catch (err) {
+    console.error('Error fetching images:', err);
+    res.status(500).json({ error: 'Failed to fetch images' });
+  }
 });
 
 // Set/Update image mapping (admin only)
-router.post('/:id', authenticateToken, (req, res) => {
+router.post('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { filename, original_name, url, alt_text, page_id, description } = req.body;
-  
+
   if (!filename || !url) {
     return res.status(400).json({ error: 'Filename and URL are required' });
   }
-  
-  const sql = `
-    INSERT INTO images (id, filename, original_name, url, alt_text, page_id, description, updated_at)
-    VALUES (?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP)
-    ON CONFLICT(id) DO UPDATE SET
-      filename = excluded.filename,
-      original_name = excluded.original_name,
-      url = excluded.url,
-      alt_text = excluded.alt_text,
-      page_id = excluded.page_id,
-      description = excluded.description,
-      updated_at = CURRENT_TIMESTAMP
-  `;
-  
-  db.run(sql, [id, filename, original_name || null, url, alt_text || null, page_id || null, description || null], function(err) {
-    if (err) {
-      console.error('Error saving image mapping:', err);
-      return res.status(500).json({ error: 'Failed to save image mapping' });
+
+  try {
+    // Check if image exists
+    const [checkRows] = await db.execute('SELECT id FROM images WHERE id = ?', [id]);
+    const existing = (checkRows as any[])[0];
+
+    if (existing) {
+      // Update existing image
+      await db.execute(`
+        UPDATE images SET
+          filename = ?, original_name = ?, url = ?, alt_text = ?,
+          page_id = ?, description = ?, updated_at = NOW()
+        WHERE id = ?
+      `, [filename, original_name || null, url, alt_text || null, page_id || null, description || null, id]);
+    } else {
+      // Insert new image
+      await db.execute(`
+        INSERT INTO images (id, filename, original_name, url, alt_text, page_id, description, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?, NOW())
+      `, [id, filename, original_name || null, url, alt_text || null, page_id || null, description || null]);
     }
-    
+
     console.log(`✅ Image mapping saved: ${id} -> ${filename}`);
-    
+
     // Return the saved image mapping
-    db.get('SELECT * FROM images WHERE id = ?', [id], (selectErr, row) => {
-      if (selectErr) {
-        console.error('Error fetching saved image:', selectErr);
-        return res.status(500).json({ error: 'Saved but failed to fetch image' });
-      }
-      
-      res.json(row);
-    });
-  });
+    const [selectRows] = await db.execute('SELECT * FROM images WHERE id = ?', [id]);
+    const image = (selectRows as any[])[0];
+
+    res.json(image);
+  } catch (err) {
+    console.error('Error saving image mapping:', err);
+    res.status(500).json({ error: 'Failed to save image mapping' });
+  }
 });
 
 // Update image mapping (admin only)
-router.put('/:id', authenticateToken, (req, res) => {
+router.put('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
   const { filename, original_name, url, alt_text, page_id, description } = req.body;
-  
-  const sql = `
-    UPDATE images SET 
-      filename = COALESCE(?, filename),
-      original_name = COALESCE(?, original_name),
-      url = COALESCE(?, url),
-      alt_text = COALESCE(?, alt_text),
-      page_id = COALESCE(?, page_id),
-      description = COALESCE(?, description),
-      updated_at = CURRENT_TIMESTAMP
-    WHERE id = ?
-  `;
-  
-  db.run(sql, [filename, original_name, url, alt_text, page_id, description, id], function(err) {
-    if (err) {
-      console.error('Error updating image mapping:', err);
-      return res.status(500).json({ error: 'Failed to update image mapping' });
-    }
-    
-    if (this.changes === 0) {
+
+  try {
+    const [result] = await db.execute(`
+      UPDATE images SET
+        filename = COALESCE(?, filename),
+        original_name = COALESCE(?, original_name),
+        url = COALESCE(?, url),
+        alt_text = COALESCE(?, alt_text),
+        page_id = COALESCE(?, page_id),
+        description = COALESCE(?, description),
+        updated_at = NOW()
+      WHERE id = ?
+    `, [filename, original_name, url, alt_text, page_id, description, id]);
+
+    if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: 'Image mapping not found' });
     }
-    
+
     console.log(`📝 Image mapping updated: ${id}`);
-    
+
     // Return the updated image mapping
-    db.get('SELECT * FROM images WHERE id = ?', [id], (selectErr, row) => {
-      if (selectErr) {
-        console.error('Error fetching updated image:', selectErr);
-        return res.status(500).json({ error: 'Updated but failed to fetch image' });
-      }
-      
-      res.json(row);
-    });
-  });
+    const [selectRows] = await db.execute('SELECT * FROM images WHERE id = ?', [id]);
+    const image = (selectRows as any[])[0];
+
+    res.json(image);
+  } catch (err) {
+    console.error('Error updating image mapping:', err);
+    res.status(500).json({ error: 'Failed to update image mapping' });
+  }
 });
 
 // Delete image mapping (admin only)
-router.delete('/:id', authenticateToken, (req, res) => {
+router.delete('/:id', authenticateToken, async (req, res) => {
   const { id } = req.params;
-  
-  db.run('DELETE FROM images WHERE id = ?', [id], function(err) {
-    if (err) {
-      console.error('Error deleting image mapping:', err);
-      return res.status(500).json({ error: 'Failed to delete image mapping' });
-    }
-    
-    if (this.changes === 0) {
+
+  try {
+    const [result] = await db.execute('DELETE FROM images WHERE id = ?', [id]);
+
+    if ((result as any).affectedRows === 0) {
       return res.status(404).json({ error: 'Image mapping not found' });
     }
-    
+
     console.log(`🗑️ Image mapping deleted: ${id}`);
     res.json({ message: 'Image mapping deleted successfully' });
-  });
+  } catch (err) {
+    console.error('Error deleting image mapping:', err);
+    res.status(500).json({ error: 'Failed to delete image mapping' });
+  }
 });
 
 // Get images by page ID
-router.get('/page/:pageId', (req, res) => {
+router.get('/page/:pageId', async (req, res) => {
   const { pageId } = req.params;
-  
-  db.all('SELECT * FROM images WHERE page_id = ? ORDER BY created_at DESC', [pageId], (err, rows) => {
-    if (err) {
-      console.error('Error fetching images by page:', err);
-      return res.status(500).json({ error: 'Failed to fetch images' });
-    }
-    
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM images WHERE page_id = ? ORDER BY created_at DESC', [pageId]);
     res.json(rows);
-  });
+  } catch (err) {
+    console.error('Error fetching images by page:', err);
+    res.status(500).json({ error: 'Failed to fetch images' });
+  }
 });
 
 export default router;

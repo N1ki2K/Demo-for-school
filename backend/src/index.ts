@@ -6,7 +6,7 @@ import dotenv from 'dotenv';
 import path from 'path';
 import fs from 'fs';
 
-import { initializeDatabase } from './database/init';
+import { initializeDatabase } from './database/init-mysql';
 import authRoutes from './routes/auth';
 import contentRoutes from './routes/content';
 import staffRoutes from './routes/staff';
@@ -28,7 +28,7 @@ import migrateRoutes from './routes/migrate';
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = parseInt(process.env.PORT || '3001', 10);
 
 app.use(helmet({
   crossOriginResourcePolicy: { policy: "cross-origin" },

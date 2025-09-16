@@ -428,7 +428,22 @@ const fallbackTranslations = {
       },
       schoolTeam: {
         title: 'Управление на училищния екип',
-        addMember: 'Добави член на екипа'
+        description: 'Добавяне, редактиране и управление на членовете на училищния персонал. Можете да пренареждате членовете, като промените номерата на тяхната позиция.',
+        membersCount: 'Членове на екипа ({count})',
+        addMember: 'Добави член на екипа',
+        editMember: 'Редактирай член на екипа',
+        profileImage: 'Профилна снимка',
+        chooseFromPictures: 'Изберете от Pictures',
+        memberSaved: 'Членът на екипа е запазен успешно!',
+        teamPhoto: {
+          title: 'Групова снимка на екипа',
+          description: 'Управлявайте основната снимка на екипа, която се появява на страницата на екипа',
+          managePhoto: 'Управлявай снимката',
+          noPhotoSet: 'Няма зададена снимка на екипа',
+          currentPhoto: 'Текуща снимка',
+          photoUpdated: 'Груповата снимка на екипа е актуализирана успешно!',
+          photoFailed: 'Неуспешно запазване на снимката на екипа: {error}'
+        }
       },
       imagePicker: {
         title: 'Изберете изображение',
@@ -900,7 +915,22 @@ const fallbackTranslations = {
       },
       schoolTeam: {
         title: 'School Team Management',
-        addMember: 'Add Team Member'
+        description: 'Add, edit, and manage school staff members. You can reorder members by changing their position numbers.',
+        membersCount: 'Team Members ({count})',
+        addMember: 'Add Team Member',
+        editMember: 'Edit Team Member',
+        profileImage: 'Profile Image',
+        chooseFromPictures: 'Choose from Pictures',
+        memberSaved: 'Team member saved successfully!',
+        teamPhoto: {
+          title: 'Team Group Photo',
+          description: 'Manage the main team photo that appears on the team page',
+          managePhoto: 'Manage Photo',
+          noPhotoSet: 'No team photo set',
+          currentPhoto: 'Current photo',
+          photoUpdated: 'Team group photo updated successfully!',
+          photoFailed: 'Failed to save team photo: {error}'
+        }
       },
       imagePicker: {
         title: 'Select Image',

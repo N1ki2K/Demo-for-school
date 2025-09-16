@@ -1,0 +1,363 @@
+@CHARSET "UTF-8";
+
+html,body {
+	height:100%;
+	overflow:hidden; 
+}
+
+.hideJStuff{
+	position:absolute;
+	display:block;
+	left:0px;
+	top:90px;
+	margin:0px;
+	padding:0px;
+	width: 100%;
+	height:200px;
+	background-color:white;
+}
+
+.mainWrap{
+	display:block;
+	position:absolute;
+	left:0px;
+	top:90px;
+	margin:0px;
+	padding:0px;
+	width: 100%;
+	background-color:transparent;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	z-index: 50;
+}
+
+
+.firstTable{
+	position:relative;
+	display:block;
+	height:100%;
+	background-color:white;
+	border-top: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	overflow: visible;
+	margin:0;
+	padding:0;
+	width:100%;
+	vertical-align: top; 
+	
+}
+.firstTableFull{
+	position:relative;
+	display:block;
+	height:100%;
+	background-color:transparent;
+	border: none;
+	overflow: visible;
+	text-align: left;
+	margin:0;
+	padding:0;
+	width:100%;
+	text-align: center;
+	vertical-align: top; 
+}
+
+
+.sbWallPaper{
+	position:absolute;
+	display: none;
+	background: transparent url(../images/back-blue.jpg) repeat-x scroll 0 0;
+	width:100%;
+	height:100%;
+	left:0px;
+	top:0px;	
+}
+
+
+
+.outerSbMenu {
+	display: block;
+	width: 100%;
+	height: 30px;
+	background-color: transparent;
+	margin:0;
+	padding:0;
+	}
+
+.imgLeftTop{
+	
+	}
+	
+.imgRightTop{
+	float:right;
+	clear:both;
+	margin-top: -30px;
+	}
+	
+* html .imgRightTop { /*IE6 only*/
+	float:right;
+	clear:both;
+	margin-top: -33px;
+  }
+  
+  *+html .imgRightTop{ /*IE7 only*/
+	float:right;
+	clear:both;
+	margin-top: -33px;
+  }	
+	
+.sbMenu{
+	vertical-align: top;
+	height: 30px;
+	background: transparent url(../images/head-loop.png) repeat-x scroll 0 0;
+	float: left;
+}
+.sbContent{
+	display: block;
+	width: 100%;
+	background: #dce5f2 url(../images/main-back.png) repeat-x scroll 0 0;
+	text-align: left;
+	padding:0;
+	margin:0;
+	
+}
+.sbContentInner{
+	display: block;
+	width:auto;
+	border-left: 1px solid #343434;
+	border-right: 1px solid #343434;
+	border-bottom: 1px solid #343434;
+	padding:0;
+	margin:0;
+	vertical-align: top;
+	overflow: auto;
+}
+
+.navArea{
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	width:100%;
+	position: relative;
+	background: #dfe9f5 url(../images/nav-back.png) repeat-x scroll 0 9px;
+	margin-top:-5px;
+}
+.tabArea{
+	position:absolute;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	height:24px;
+	background-color: transparent;
+	line-height: 200%;
+	font-size: 12px;
+	font-weight: normal;
+	color: #3f3f3f;	
+	text-align: left;
+	overflow: hidden;
+	margin-top:2px;
+	z-index:100;
+
+}
+.spacingBottom{
+	width:100%;
+	height:10px;
+	background-color: transparent;
+	}
+
+#componentWrap{
+	width:950px;
+	margin:10px;
+}
+
+
+.clr{
+	clear:both;
+}
+
+.activeTab{
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	display:block;
+	float:left;
+	height:24px;
+	background-color: transparent;
+	background-image: url(../images/active-tab.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-left:5px;
+	line-height: 200%;
+	font-size: 12px;
+	z-index:100;
+	vertical-align: top;
+	text-align: left;
+	font-weight: normal;
+	
+}
+.activeTabRight{
+
+	float:right;
+}
+a.mTab{
+	position:relative;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	display:block;
+	text-decoration: none;
+	font-weight: normal;
+	padding-left:5px;
+	padding-right:5px;
+	z-index: 99;
+}
+a.mTabIE{
+	position:relative;
+	height:24px;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	display:block;
+	text-decoration: none;
+	font-weight: normal;
+	background-color: transparent;
+	background-image: url(../images/orange-tab.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-left:5px;
+	padding-right:0px;
+	margin-right:5px;
+	z-index: 99;
+}
+
+
+
+a:hover.mTab, a:hover.mTabIE{
+	text-decoration: none;
+	color: #000000;
+}
+
+.tabUnderlay{
+	position: absolute;
+	display:block;
+	left:-10000px;
+	height:22px;
+	background-color: transparent;
+	background-image: url(../images/orange-tab.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-left:5px;
+	margin-right:0px;
+	z-index: 50;
+	top:-50px;
+}
+.tabUnderlay2{
+	position: relative;
+	display:block;
+	width:100%;
+	height:24px;
+	left:-10000px;
+	background-color: transparent;
+	background-image: url(../images/orange-tab.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-left:5px;
+	top: 0px;
+	left: 0px;
+	margin-top:0px;
+	z-index: 98;
+	
+}
+
+a.buttonSizeNormal{
+	position: relative;
+	display:block;
+	width:31px;
+	height:17px;
+	overflow: hidden;
+	border: none;
+	background-color: transparent;
+	background-image: url(../images/buttons-size-normal.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-right:5px;
+	float:left;
+}
+
+a.buttonSizeWide{
+	position: relative;
+	display:block;
+	width:31px;
+	height:17px;
+	overflow: hidden;
+	border: none;
+	background-color: transparent;
+	background-image: url(../images/buttons-size-wide.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-right:5px;
+	float:left;
+}
+a.buttonSizeFullscreen{
+	position: relative;
+	display:block;
+	width:31px;
+	height:17px;
+	overflow: hidden;
+	border: none;
+	background-color: transparent;
+	background-image: url(../images/buttons-size-fullscreen.png);
+	background-repeat: no-repeat;
+	background-position: 0 0;
+	padding-right:5px;
+	float:left;
+}
+
+a:hover.buttonSizeNormal,a:hover.buttonSizeWide,a:hover.buttonSizeFullscreen{
+	background-position: 0 -17px;
+}
+div.sizeButtonWrapper{
+	width: 108px;
+	position:relative; 
+	display:block; 
+	height:17px;
+	margin-top:6px;
+}
+.headerTable{
+	margin: 0;
+	padding:0;
+	border:0;
+	width:100%;
+	height: 30px;
+	overflow: hidden;
+}
+*+html .headerTable{ /*IE7 only*/
+	margin-bottom:-3px;
+	padding:0;
+	border:0;
+	width:100%;	
+  }	
+* html .headerTable { /*IE6 only*/
+	margin-bottom:-6px;
+	padding:0;
+	border:0;
+	width:100%;	
+  }
+.contentWrap{
+	position: relative;
+	display: block;
+	margin: 0;
+	padding: 0;
+	width:100%;
+	height:100px;
+	background-color: white;
+	vertical-align: top;
+	text-align: left;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	font-size: 12px;
+	line-height: 150%;
+	margin-top:-13px;	
+}
+* html .contentWrap,  *+html .contentWrap{ /*IE7+6 only*/
+	position: relative;
+	display: block;
+	margin: 0;
+	padding: 0;
+	width:100%;
+	height: 550px;
+	background-color: white;
+	vertical-align: top;
+	text-align: left;
+	font-family: "Trebuchet MS", "Tahoma", Arial, sans-serif;
+	font-size: 12px;
+	line-height: 150%;
+	margin-top:0px;	
+  }	

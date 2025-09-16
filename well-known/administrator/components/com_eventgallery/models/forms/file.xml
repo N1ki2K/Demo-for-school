@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="file">
+    <fieldset name="general" label="COM_EVENTGALLERY_FILE_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_FILE_OPTIONS_DETAILS_DESC"
+    	addfieldpath="/administrator/components/com_categories/models/fields">
+       
+       	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+       
+       <field name="title"
+               type="localizabletext"
+               inputtype="textarea"
+               label="COM_EVENTGALLERY_FILE_TITLE"
+               description="COM_EVENTGALLERY_FILE_TITLE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_FILE_TITLE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                />
+
+		<field name="caption"
+               type="localizabletext"
+               inputtype="textarea"
+               label="COM_EVENTGALLERY_FILE_CAPTION"
+               description="COM_EVENTGALLERY_FILE_CAPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_FILE_CAPTION_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+                />
+
+
+        <field name="creation_date"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_FILE_CREATION_DATE"
+               description="COM_EVENTGALLERY_FILE_CREATION_DATE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_FILE_CREATION_DATE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+        />
+
+        <field name="url"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_FILE_URL"
+               description="COM_EVENTGALLERY_FILE_URL_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_FILE_URL_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />                
+                
+		</fieldset>
+</form>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="contentpluginbutton">
+    <fieldset name="general" label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_GENERAL_LABEL" description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_GENERAL_DESC"
+    	addfieldpath="/administrator/components/com_eventgallery/models/fields">
+
+        <field name="folder" type="modal_folder"
+               label="COM_EVENTGALLERY_LAYOUT_EVENT_FOLDER_LABEL"
+               required="true"
+               description="COM_EVENTGALLERY_LAYOUT_EVENT_FOLDER_DESC"
+                />
+                
+        <field name="attr"
+           type="list"
+           label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_ATTR"
+           description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_ATTR_DESC"
+           default="images"
+            >
+	        <option value="images">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_ATTR_IMAGES</option>
+	        <option value="displayname">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_ATTR_NAME</option>
+	        <option value="text_intro">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_TEXT_INTRO</option>
+	        <option value="text_full">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_TEXT_FULL</option>
+	    </field>
+
+		<field name="image_mode"
+           type="list"
+           label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE"
+           description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_DESC"
+           default="images"
+            >
+	        <option value="link">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_LINK</option>
+	        <option value="lightbox">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_LIGHTBOX</option>
+	        <option value="imagelist">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_IMAGELIST</option>
+	        <option value="grid">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_GRID</option>
+	        <option value="tiles">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_TILES</option>
+	        <option value="hidden">COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEMODE_HIDDEN</option>
+	    </field>
+	    
+	    <field 	name="image_width" 
+	    		type="integer" 
+	    		first="10" last="1000" step="1" default="50" 
+	    		label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEWIDTH" 
+	    		description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGEWIDTH_DESC"/>
+
+	    <field 	name="max_images" 
+	    		type="integer" 
+	    		first="0" last="1000" step="1" default="5" 
+	    		label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_MAXIMAGES" 
+	    		description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_IMAGES_DESC"/>
+
+	    <field 	name="offset" 
+	    		type="integer" 
+	    		first="0" last="1000" step="1" default="0" 
+	    		label="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_OFFSET" 
+	    		description="COM_EVENTGALLERY_CONTENTPLUGINBUTTON_OFFSET_DESC"/>
+
+	    
+  	</fieldset>
+</form>

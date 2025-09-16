@@ -1053,6 +1053,15 @@ historyPage: {
         updateError: 'Error updating team member: {error}',
         deleteError: 'Error deleting team member: {error}',
         loadError: 'Error loading team members: {error}'
+      },
+      teamPhoto: {
+        title: 'Team Group Photo',
+        description: 'Manage the main team photo that appears on the team page',
+        managePhoto: 'Manage Photo',
+        noPhotoSet: 'No team photo set',
+        currentPhoto: 'Current photo',
+        photoUpdated: 'Team group photo updated successfully!',
+        photoFailed: 'Failed to save team photo: {error}'
       }
     },
     imagePicker: {

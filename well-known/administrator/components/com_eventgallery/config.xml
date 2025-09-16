@@ -1,0 +1,662 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config addfieldpath="/administrator/components/com_eventgallery/models/fields">
+
+<fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_GENERAL_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_GENERAL_DESC">
+		<field name="downloadid" type="text" default="" size="30"
+		label="COM_EVENTGALLERY_OPTIONS_COMMON_DOWNLOADID_LABEL"
+		description ="COM_EVENTGALLERY_OPTIONS_COMMON_DOWNLOADID_DESCRIPTION" />
+		
+		<field 	name="admin_usergroup" 
+				type="usergroup" 
+				default="8" 
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_ADMINUSERGROUP_LABEL" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_ADMINUSERGROUP_DESCRIPTION" />
+		
+		
+		<field name="use_comments" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_USECOMMENTS_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USECOMMENTS_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		
+		<field 	name="eventgallery_default_usergroup" 
+				type="usergroup" 
+				default="1" 
+				multiple="true"
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_DEFAULTUSERGROUP_LABEL" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_DEFAULTUSERGROUP_DESCRIPTION" />
+
+        <field name="show_usergroup_protected_events_in_list" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWUSERGROUPSPECIFICEVENTSINLIST_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWUSERGROUPSPECIFICEVENTSINLIST_DESCRIPTION">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="load_responsive_css" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_LOAD_RESPONSIVE_ASSETS_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_LOAD_RESPONSIVE_ASSETS_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_caching" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_CACHING_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_CACHING_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		
+		<field name="debug" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_LOAD_UNCOMPRESSED_ASSETS_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_LOAD_UNCOMPRESSED_ASSETS_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field 	name="flickr_api_key" 
+				type="text" 
+				default="" 
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_FLICKR_API_KEY_LABEL" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_FLICKR_API_KEY_DESCRIPTION" />
+
+	<field 	name="google_photos_refresh_token"
+			  type="oauthusers"
+			  default=""
+			  label="COM_EVENTGALLERY_OPTIONS_COMMON_GOOGLE_PHOTOS_REFRESH_TOKEN_LABEL"
+			  description="COM_EVENTGALLERY_OPTIONS_COMMON_GOOGLE_PHOTOS_REFRESH_TOKEN_DESCRIPTION" />
+
+		<field name="cache_flickr_lifetime" 
+			default="86400"
+			max="10000000"
+			type="number"
+			validate=""
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CACHE_FLICKR_LIFETIME_LABEL"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CACHE_FLICKR_LIVETIME_DESCRIPTION" />
+
+		<field name="cache_picasa_lifetime" 
+			default="86400"
+			max="10000000"
+			type="number"
+			validate=""
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CACHE_PICASA_LIFETIME_LABEL"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CACHE_PICASA_LIVETIME_DESCRIPTION" />
+		
+
+		
+</fieldset>
+
+
+
+<fieldset name="image" label="COM_EVENTGALLERY_EVENTS_OPTIONS_IMAGE_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_IMAGE_DESC">
+		<field name="use_legacy_image_rendering" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_LEGACY_IMAGE_RENDERING_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_LEGACY_IMAGE_RENDERING_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="image_quality" type="integer" first="40" last="95" step="1" default="85" label="COM_EVENTGALLERY_OPTIONS_COMMON_THUMBNAIL_QUALITY_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_THUMBNAIL_QUALITY_DESC"/>
+		
+		<field name="use_sharpening" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USESHARPENING_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USESHARPENING_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_sharpening_for_originalsize" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USESHARPENING_FOR_ORIGINALSIZE_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USESHARPENING_FOR_ORIGINALSIZE_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field 	name="image_sharpenMatrix" 
+				type="text" 
+				default="[[-1,-1,-1],[-1,16,-1],[-1,-1,-1]]" 
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_SHARPINGMATRIX_LABEL" 
+				rows="1" 
+				cols="50" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_SHARPINGMATRIX_DESCRIPTION" />
+				
+		<field name="use_autorotate" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USEAUTOROTATE_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USEAUTOROTATE_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_iptc_data" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_IPTC_DATA_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_IPTC_DATA_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="overwrite_with_iptc_data" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_OVERWRITE_WITH_IPTC_DATA_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_OVERWRITE_WITH_IPTC_DATA_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="show_image_filename" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="download_original_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_DOWNLOAD_ORIGINAL_IMAGES_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_DOWNLOAD_ORIGINAL_IMAGES_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_htacces_to_protect_original_files" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_HTACCESS_FILE_TO_PROTECT_ORIGINAL_FILES_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_HTACCESS_FILE_TO_PROTECT_ORIGINAL_FILES_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_lazyloading_for_images" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_LAZYLOADING_FOR_IMAGES_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_LAZYLOADING_FOR_IMAGES_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+
+</fieldset>
+
+<fieldset name="cart" label="COM_EVENTGALLERY_EVENTS_OPTIONS_CART_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_CART_DESC">
+		<field name="use_cart" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USECART_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USECART_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_cart_inside_component" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USECART_INSIDE_COMPONENT_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USECART_INSIDE_COMPONENT_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_sticy_imagetype_selection" type="radio" class="btn-group btn-group-yesno" default="0" 
+			label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_STICY_IMAGETYPE_SELECTION_LABEL" 
+			description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_STICY_IMAGETYPE_SELECTION_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="show_cart_connector" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOW_CART_CONNECTOR_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOW_CART_CONNECTOR_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>	
+			
+		<field 	name="cart_connector_link" 
+				type="text" 
+				default="http://mydomain.com/${folder}/${fileBase}" 
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_CART_CONNECTOR_LINK_LABEL" 
+				rows="1" 
+				cols="150" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_CART_CONNECTOR_LINK_DESCRIPTION" />
+				
+		<field name="cart_connector_link_rel" 
+			type="text" 
+			default="nofollow" 
+			rows="1" 
+			cols="150" 
+			label="COM_EVENTGALLERY_OPTIONS_COMMON_CART_CONNECTOR_LINK_REL_LABEL" 
+			description="COM_EVENTGALLERY_OPTIONS_COMMON_CART_CONNECTOR_LINK_REL_DESCRIPTION" />
+		
+</fieldset>
+
+
+<fieldset  addfieldpath="/administrator/components/com_content/models/fields"
+		  
+			name="checkout" 
+			label="COM_EVENTGALLERY_EVENTS_OPTIONS_CHECKOUT_LABEL" 
+			description="COM_EVENTGALLERY_EVENTS_OPTIONS_CHECKOUT_DESC">
+		<field name="currency_symbol" 
+			default="EUR"
+			type="text"
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_CURRENCYSYMBOL"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_CURRENCYSYMBOL_DESCRIPTION" />
+        
+        <field name="currency_code" 
+			default="EUR"
+			type="text"
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_CURRENCYCODE"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_CURRENCYCODE_DESCRIPTION" />
+		
+		<field name="use_terms_conditions_checkbox" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USETERMCONDITIONS_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USETERMCONDITIONS_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="show_vat" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWVAT_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWVAT_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_address_field_state" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSFIELDSTATE_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSFIELDSTATE_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="use_address_field_country" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSFIELDCOUNTRY_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSFIELDCOUNTRY_DESC">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+		<field name="checkout_preselected_country" type="text"
+			   label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_PRESELECTED_COUNTRY_LABEL"
+			   required="false"
+			   maxlength="2"
+			   description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_PRESELECTED_COUNTRY_DESC"
+		/>
+
+		<field name="enable_business_customer_data" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_ENABLEBUSINESSCUSTOMERDATA_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_ENABLEBUSINESSCUSTOMERDATA_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="use_login_form" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USELOGINFORM_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USELOGINFORM_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+        <field name="use_address_data_from_user" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSDATAFROMUSER_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USEADDRESSDATAFROMUSER_DESC">
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+		<field name="protocol_for_incoming_request" class="btn-group btn-group-yesno" type="radio" default="keep" label="COM_EVENTGALLERY_OPTIONS_CHECKOUT_INCOMING_PROTOCOL_LABEL" description="COM_EVENTGALLERY_OPTIONS_CHECKOUT_INCOMING_PROTOCOL_DESC">
+			  <option value="keep">COM_EVENTGALLERY_OPTIONS_CHECKOUT_INCOMING_PROTOCOL_KEEP_LABEL</option>
+			  <option value="secure">COM_EVENTGALLERY_OPTIONS_CHECKOUT_INCOMING_PROTOCOL_SECURE_LABEL</option>
+			  <option value="insecure">COM_EVENTGALLERY_OPTIONS_CHECKOUT_INCOMING_PROTOCOL_INSECURE_LABEL</option>
+		</field>
+
+
+		
+		<field name="checkout_disclaimer"
+			type="localizabletext"
+			inputtype="textarea"
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_DISCLAIMER"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_DISCLAIMER_DESCRIPTION"
+            filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"/>
+            
+        <field name="checkout_merchantaddress" 
+			type="localizabletext"
+			inputtype="textarea"
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_MERCHANTADDRESS"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_MERCHANTADDRESS_DESCRIPTION" 
+            filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"/>
+        
+        <field name="footer_disclaimer"
+			type="localizabletext"
+			inputtype="textarea"
+		    label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_FOOTERDISCLAIMER"
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_FOOTERDISCLAIMER_DESCRIPTION" 
+            filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"/>
+        
+        <field name="pp_article_link" type="text"
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_PRIVACYPOLICYARTICLELINK"
+				required="false"
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_PRIVACYPOLICYARTICLELINK_DESCRIPTION"
+			/>
+        
+        <field name="tac_article_link" type="text"
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_TACARTICLELINK"
+				required="false"
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_TACARTICLELINK_DESCRIPTION"
+			/>
+			
+		<field name="impress_article_link" type="text"
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_IMPRESSARTICLELINK"
+				required="false"
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_CHECKOUT_IMPRESSARTICLELINK_DESCRIPTION"
+			/>	
+		
+</fieldset>
+
+
+
+<fieldset name="social" label="COM_EVENTGALLERY_EVENTS_OPTIONS_SOCIAL_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_SOCIAL_DESC">
+		<field name="use_social_sharing_button" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_BUTTON_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_BUTTON_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="social_sharing_link_type" type="radio" class="btn-group" default="singleimage" label="COM_EVENTGALLERY_OPTIONS_COMMON_SOCIAL_SHARING_LINK_TYPE_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SOCIAL_SHARING_LINK_TYPE_DESCRIPTION">
+			<option value="singleimage">COM_EVENTGALLERY_OPTIONS_COMMON_SOCIAL_SHARING_LINK_TYPE_SINGLEIMAGE_LABEL</option>
+            <option value="singleimage_to_event">COM_EVENTGALLERY_OPTIONS_COMMON_SOCIAL_SHARING_LINK_TYPE_SINGLEIMAGE_TO_EVENT_LABEL</option>
+			<option value="event">COM_EVENTGALLERY_OPTIONS_COMMON_SOCIAL_SHARING_LINK_TYPE_EVENT_LABEL</option>
+		</field>
+
+		<field 	name="social_sharing_facebook_appid" 
+				type="text" 
+				default="" 
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_APPDID" 
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_APPIC_DESCRIPTION" />
+		
+		<field name="use_social_sharing_facebook_type" type="list" class="" default="share_dialog"
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_TYPE_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_TYPE_DESCRIPTION">
+			<option value="photo_share">COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_PHOTOSHARE</option>
+			<option value="feed_dialog">COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_FEEDDIALOG</option>
+			<option value="share_dialog">COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_SHAREDIALOG</option>
+		</field>
+		
+		<field name="use_social_sharing_facebook" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_social_sharing_google" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_GOOGLE_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_GOOGLE_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_social_sharing_twitter" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_TWITTER_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_TWITTER_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_social_sharing_pinterest" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_PINTEREST_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_PINTEREST_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_social_sharing_email" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_EMAIL_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_EMAIL_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="use_social_sharing_download" type="radio" class="btn-group btn-group-yesno" default="0" 
+		            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_DOWNLOAD_LABEL" 
+		      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_DOWNLOAD_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+</fieldset>
+
+
+<fieldset name="categories" label="COM_EVENTGALLERY_OPTIONS_CATEGORIES" description="COM_EVENTGALLERY_OPTIONS_CATEGORIES_DESC"
+	addfieldpath="/administrator/components/com_categories/models/fields">
+
+	<field name="show_items_per_category_count_recursive" type="radio" class="btn-group btn-group-yesno" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_RECURSIVE_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_RECURSIVE_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+	
+	<field name="show_items_per_category_recursive" type="radio" class="btn-group btn-group-yesno" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_RECURSIVE_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_RECURSIVE_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+
+	<field name="categories_layout" type="list" default="textlinks" label="COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_DESC">
+		<option value="tiles">COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_TILES</option>
+		<option value="textlinks">COM_EVENTGALLERY_OPTIONS_CATEGORY_LAYOUT_SIMPLE_LIST</option>
+	</field>
+
+	<field name="show_items_per_category_count" type="radio" class="btn-group btn-group-yesno" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_SHOW_ITEMS_PER_CATEGORY_COUNT_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+</fieldset>
+
+<fieldset name="lightbox" label="COM_EVENTGALLERY_OPTIONS_LIGHTBOX_LABEL" description="COM_EVENTGALLERY_OPTIONS_LIGHTBOX_DESC">
+
+	<field name="lightbox_navgation_fade_delay"
+		   type="number" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_LIGHTBOX_NAV_FADE_DELAY_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_LIGHTBOX_NAV_FADE_DELAY_DESC"/>
+	<field name="lightbox_enable_swipe" type="radio" class="btn-group btn-group-yesno" default="1"
+		   label="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_ENABLE_SWIPE_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_ENABLE_SWIPE_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+    <field name="use_lightbox_slideshow" type="radio" class="btn-group btn-group-yesno" default="0"
+           label="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+	<field name="use_lightbox_slideshow_autoplay" type="radio" class="btn-group btn-group-yesno" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_AUTOPLAY_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_AUTOPLAY_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+	<field name="lightbox_slideshow_speed"
+		   type="number" default="3000"
+		   label="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_SPEED_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_SLIDESHOW_SPEED_DESC"/>
+    <field name="lightbox_prevent_right_click" type="radio" class="btn-group btn-group-yesno" default="0"
+           label="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_PREVENT_RIGHT_CLICK_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_USE_LIGHTBOX_PREVENT_RIGHT_CLICK_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+</fieldset>
+
+<fieldset name="events" label="COM_EVENTGALLERY_OPTIONS_LAYOUT_EVENTS_LIST" description="COM_EVENTGALLERY_OPTIONS_LAYOUT_EVENTS_LIST_DESC"
+	addfieldpath="/administrator/components/com_categories/models/fields">
+
+	<field
+	    name="event_layout"
+	    type="componentlayout"
+	    label="COM_EVENTGALLERY_OPTIONS_EVENT_LAYOUT_LABEL"
+	    description="COM_EVENTGALLERY_OPTIONS_EVENT_LAYOUT_DESC"
+	    menuitems="true"
+	    extension="com_eventgallery"
+	    view="event"
+	    default="_:imagelist"
+	    useglobal="false"
+	  />
+	  
+	  <field name="events_layout" type="list" default="default" label="COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_LABEL"
+               description="COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_DESC">
+               <option value="default">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_DEFAULT</option>
+               <option value="tiles">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_TILES</option>
+               <option value="list">COM_EVENTGALLERY_OPTIONS_EVENTS_LAYOUT_SIMPLE_LIST</option>
+        </field>
+
+    <field name="greetings"
+           id="greetings"
+           type="localizabletext"
+		   inputtype="textarea"
+           default=""
+           label="COM_EVENTGALLERY_OPTIONS_EVENTS_GREETING_LABEL"
+           rows="3"
+           cols="50"
+           description="COM_EVENTGALLERY_OPTIONS_EVENTS_GREETING_DESC"
+           filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+            />
+
+    <field name="sort_events_by" type="list" default="ordering"
+           label="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DESC">
+        <option value="ordering">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_ORDERING</option>
+        <option value="date_asc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DATE_ASC</option>
+        <option value="date_desc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_DATE_DESC</option>
+        <option value="name_asc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_NAME_ASC</option>
+        <option value="name_desc">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_EVENTS_BY_NAME_DESC</option>
+    </field>
+
+    <field name="sort_files_by_column" type="list" default="ordering"
+           label="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_COLUMN_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_COLUMN_DESC">
+        <option value="ordering">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_ORDERING</option>
+		<option value="file">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_FILENAME</option>
+        <option value="creation_date">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_CREATION_DATE</option>
+    </field>
+
+	<field name="sort_files_by_direction" type="list" default="ASC"
+           label="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_DIRECTION_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_DIRECTION_DESC">
+        <option value="ASC">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_DIRECTION_ASCENDING</option>
+        <option value="DESC">COM_EVENTGALLERY_OPTIONS_EVENTS_SORT_FILES_BY_DIRECTION_DESCENDING</option>
+    </field>
+
+	<field name="shuffle_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHUFFLEIMAGES_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHUFFLEIMAGES_DESCRIPTION">
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+	</field>
+
+	<field name="tags" type="tag" label="JTAG" description="JTAG_DESC" mode="ajax" class="inputbox span12 small" multiple="true" />
+
+	<field name="catid"
+			type="categoryedit"
+			extension="com_eventgallery"
+			label="JCATEGORY"
+			description="JFIELD_CATEGORY_DESC"
+			class="inputbox"
+			required="false"
+		><option value="">JNONE</option></field>
+
+	<field name="max_events_per_page" type="text" default="12" label="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_EVENTS_PER_PAGE_LABEL" description="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_EVENTS_PER_PAGE_DESC" />
+
+	<field name="max_images_per_page" type="text" default="20" label="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_IMAGES_PER_PAGE_LABEL" description="COM_EVENTGALLERY_OPTIONS_EVENTS_MAX_IMAGES_PER_PAGE_DESC" />
+
+    <field type="spacer"/>
+
+    
+    <field name="show_exif" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_date" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_text" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_SHOW_TEXT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_TEXT_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_imagecount" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGECOUNT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGECOUNT_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_eventhits" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_SHOW_EVENTHITS_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_EVENTHITS_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_commentcount" type="radio" class="btn-group btn-group-yesno" default="1"
+           label="COM_EVENTGALLERY_OPTIONS_SHOW_COMMENTCOUNT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_COMMENTCOUNT_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>   
+    <field name="show_image_caption_overlay" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+     <field name="use_event_paging" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+	<field name="hide_mainimage_for_password_protected_event" type="radio" class="btn-group btn-group-yesno" default="0"
+		   label="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_PASSWORD_PROTECTED_EVENT_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_PASSWORD_PROTECTED_EVENT_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+    <field name="hide_mainimage_for_usergroup_protected_event" type="radio" class="btn-group btn-group-yesno" default="0"
+           label="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_USERGROUP_PROTECTED_EVENT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_HIDE_MAINIMAGE_FOR_USERGROUP_PROTECTED_EVENT_DESC">
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+
+	<field name="use_back_button" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_USE_BACK_BUTTON_LABEL" description="COM_EVENTGALLERY_OPTIONS_USE_BACK_BUTTON_LABEL_DESC">
+		<option value="0">JNO</option>
+		<option value="1">JYES</option>
+	</field>
+</fieldset>
+
+<fieldset name="event_ajax" label="COM_EVENTGALLERY_LAYOUT_EVENT_AJAX_LIST" description="COM_EVENTGALLERY_LAYOUT_EVENT_AJAX_LIST_DESC">
+    <field name="event_ajax_list_thumbnail_size" type="integer" first="25" last="500" step="1" default="75"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_SIZE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_SIZE_DESC"/>
+    <field name="event_ajax_list_number_of_thumbnail_on_first_page"
+           type="integer" first="1" last="100" step="1" default="11"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_FIRSTPAGE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_FIRSTPAGE_DESC"/>
+    <field name="event_ajax_list_number_of_thumbnail_per_page"
+           type="integer" first="1" last="100" step="1" default="22"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_PAGE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_THUMBNAIL_PER_PAGE_DESC" />
+    <field name="event_ajax_show_info_inline" type="radio" class="btn-group btn-group-yesno" default="1"
+		   label="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_SHOW_INFO_INLINE_LABEL"
+		   description="COM_EVENTGALLERY_OPTIONS_EVENT_AJAX_SHOW_INFO_INLINE_DESC">
+		<option value="1">JYES</option>
+		<option value="0">JNO</option>
+	</field>
+</fieldset>
+
+<fieldset name="event_pageablelist" label="COM_EVENTGALLERY_LAYOUT_EVENT_DEFAULT_LIST" description="COM_EVENTGALLERY_LAYOUT_EVENT_DEFAULT_LIST_DESC">
+    <field name="event_default_list_thumbnail_height" id="event_default_list_thumbnail_height" type="integer"
+           first="0" last="1000" step="10" default="250"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_DESC"/>
+    <field name="event_default_list_thumbnail_jitter" id="event_default_list_thumbnail_jitter" type="integer"
+           first="0" last="500" step="10" default="50"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_DESC"/>
+    <field name="event_default_list_thumbnail_first_item_height"
+           id="event_default_list_thumbnail_first_item_height" type="integer" first="1" last="10" step="1"
+           default="2" label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_DESC"/>
+    <field name="show_singlepage_imagehits" type="radio" class="btn-group btn-group-yesno" default="1" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGEHITS_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGEHITS_DESC">                
+                <option value="1">JYES</option>
+                <option value="0">JNO</option>
+    </field>
+</fieldset>
+
+<fieldset name="event_imagelist" label="COM_EVENTGALLERY_LAYOUT_EVENT_IMAGE_LIST" description="COM_EVENTGALLERY_LAYOUT_EVENT_IMAGE_LIST_DESC">
+    <field name="event_image_list_thumbnail_height" id="event_image_list_thumbnail_height" type="integer"
+           first="0" last="1000" step="10" default="250"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_DESC"/>
+    <field name="event_image_list_thumbnail_jitter" id="event_image_list_thumbnail_jitter" type="integer"
+           first="0" last="500" step="10" default="50"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_DESC"/>
+    <field name="event_image_list_thumbnail_first_item_height" id="event_image_list_thumbnail_first_item_height"
+           type="integer" first="1" last="10" step="1" default="2"
+           label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_DESC"/>
+</fieldset>
+
+	<fieldset name="storage" label="COM_EVENTGALLERY_STORAGE">
+		<field type="spacer" name="myspacer" label="COM_EVENTGALLERY_STOREAGE_S3" />
+		<field name="storage_s3_region" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_REGION_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_REGION_DESC" />
+		<field name="storage_s3_credentials_key" type="password" default="" label="COM_EVENTGALLERY_STOREAGE_S3_CREDENTIALS_KEY_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_CREDENTIALS_KEY_DESC" />
+		<field name="storage_s3_credentials_secret" type="password" default="" label="COM_EVENTGALLERY_STOREAGE_S3_CREDENTIALS_SECRET_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_CREDENTIALS_SECRET_DESC" />
+		<field name="storage_s3_bucket_originals" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_BUCKET_ORIGINALS_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_BUCKET_ORIGINALS_DESC" />
+		<field name="storage_s3_bucket_resized" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_BUCKET_RESIZED_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_BUCKET_RESIZED_DESC" />
+		<field name="storage_s3_resize_api_url" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_RESIZE_API_URL_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_RESIZE_API_URL_DESC" />
+		<field name="storage_s3_resize_api_key" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_RESIZE_API_KEY_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_RESIZE_API_KEY_DESC" />
+		<field name="storage_s3_cloudfront_domain" type="text" default="" label="COM_EVENTGALLERY_STOREAGE_S3_CLOUDFRONT_DOMAIN_LABEL" description="COM_EVENTGALLERY_STOREAGE_S3_CLOUDFRONT_DOMAIN_DESC" />
+	</fieldset>
+
+<fieldset name="accesscontrol" label="Permissions">
+ 
+		<field name="asset_id" type="hidden" filter="unset" /> 
+ 
+		<field
+			name="rules"
+			type="rules"
+			label="Permissions"
+			translate_label="false"
+			filter="rules"
+			validate="rules"
+			class="inputbox"
+			component="com_eventgallery"
+			section="component" />
+	</fieldset>
+</config>

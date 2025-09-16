@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiService } from '../../src/services/api';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from './ConfirmDialog';
 
 interface Event {
   id: number;
@@ -16,6 +18,7 @@ interface Event {
 
 const CalendarManagerTab: React.FC = () => {
   const { t, locale } = useLanguage();
+  const { confirm, dialogProps } = useConfirm();
   const [events, setEvents] = useState<Event[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedDate, setSelectedDate] = useState(new Date().toISOString().split('T')[0]);
@@ -80,7 +83,15 @@ const CalendarManagerTab: React.FC = () => {
   };
 
   const handleDelete = async (eventId: number) => {
-    if (window.confirm('Are you sure you want to delete this event?')) {
+    const confirmed = await confirm({
+      title: 'Delete Event',
+      message: 'Are you sure you want to delete this event?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (confirmed) {
       try {
         await apiService.deleteEvent(eventId);
         await loadEvents();
@@ -483,6 +494,8 @@ const CalendarManagerTab: React.FC = () => {
           </div>
         </div>
       )}
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 };

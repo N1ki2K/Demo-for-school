@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="watermark">
+
+  
+
+
+    <fieldset name="general" label="COM_EVENTGALLERY_WATERMARK_LABEL" description="COM_EVENTGALLERY_WATERMARK_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="name"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_WATERMARK_NAME"
+               description="COM_EVENTGALLERY_WATERMARK_NAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_NAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+
+		<field name="description"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_WATERMARK_DESCRIPTION"
+               description="COM_EVENTGALLERY_WATERMARK_DESCRIPTION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_DESCRIPTION_PLACEHOLDER"
+                />
+                
+        <field name="image"
+               type="media"
+               label="COM_EVENTGALLERY_WATERMARK_IMAGE"
+               description="COM_EVENTGALLERY_WATERMARK_IMAGE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_IMAGE_PLACEHOLDER"
+               preview="true"
+               directory=""
+                />
+                
+        <field name="image_margin_horizontal"
+        		type="integer" first="0" last="100" step="1" default="0" 
+               label="COM_EVENTGALLERY_WATERMARK_MARGIN_HORIZONTAL"
+               description="COM_EVENTGALLERY_WATERMARK_MARGIN_HORIZONTAL_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_MARGIN_HORIZONTAL_PLACEHOLDER"
+                />
+                
+        <field name="image_margin_vertical"
+        		type="integer" first="0" last="100" step="1" default="0" 
+        
+               label="COM_EVENTGALLERY_WATERMARK_MARGIN_VERTICAL"
+               description="COM_EVENTGALLERY_WATERMARK_MARGIN_VERTICAL_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_MARGIN_VERTICAL_PLACEHOLDER"
+                />
+        
+        <field name="image_opacity"
+        		type="integer" first="0" last="100" step="1" default="50" 
+        
+               label="COM_EVENTGALLERY_WATERMARK_OPACITY"
+               description="COM_EVENTGALLERY_WATERMARK_OPACITY_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_OPACITY_PLACEHOLDER"
+                />
+        
+        <field name="image_position"
+               type="list"
+               label="COM_EVENTGALLERY_WATERMARK_POSITION"
+               description="COM_EVENTGALLERY_WATERMARK_POSITION_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_POSITION_PLACEHOLDER"
+               default="br"
+                >
+                <option value="tl">COM_EVENTGALLERY_WATERMARK_POSITION_TL</option>
+                <option value="tc">COM_EVENTGALLERY_WATERMARK_POSITION_TC</option>
+                <option value="tr">COM_EVENTGALLERY_WATERMARK_POSITION_TR</option>
+                <option value="ml">COM_EVENTGALLERY_WATERMARK_POSITION_ML</option>
+                <option value="mc">COM_EVENTGALLERY_WATERMARK_POSITION_MC</option>
+                <option value="mr">COM_EVENTGALLERY_WATERMARK_POSITION_MR</option>
+                <option value="bl">COM_EVENTGALLERY_WATERMARK_POSITION_BL</option>
+                <option value="bc">COM_EVENTGALLERY_WATERMARK_POSITION_BC</option>
+                <option value="br">COM_EVENTGALLERY_WATERMARK_POSITION_BR</option>
+        </field>
+        
+        <field name="image_mode"
+               type="radio"
+               label="COM_EVENTGALLERY_WATERMARK_MODE"
+               description="COM_EVENTGALLERY_WATERMARK_MODE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_WATERMARK_MODE_PLACEHOLDER"
+               class="btn-group"
+               default="prop"
+                >
+                <option value="prop">COM_EVENTGALLERY_WATERMARK_MODE_PROPORTIONAL</option>
+                <option value="fill">COM_EVENTGALLERY_WATERMARK_MODE_FILL</option>
+                <option value="fit">COM_EVENTGALLERY_WATERMARK_MODE_FIT</option>
+        </field>
+        
+        <field name="image_mode_prop" type="integer" first="1" last="100" step="1" default="20" 
+        	label="COM_EVENTGALLERY_WATERMARK_MODE_PROP" 
+        	description="COM_EVENTGALLERY_WATERMARK_MODE_PROP_DESCRIPTION"/>
+        	
+        <field name="image_thumbthresholdsize" type="text" default="0" 
+        	label="COM_EVENTGALLERY_WATERMARK_THUMBTHRESHOLDSIZE" 
+        	description="COM_EVENTGALLERY_WATERMARK_THUMBTHRESHOLDSIZE_DESCRIPTION"/>
+
+		<field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_WATERMARK_PUBLISHED" description="COM_EVENTGALLERY_WATERMARK_PUBLISHED_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+        
+         
+    </fieldset>
+</form>

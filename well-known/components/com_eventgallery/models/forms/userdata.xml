@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="userdata">
+    <fieldset name="userdata">
+        <field name="email"
+               type="html5text"
+               inputtype="email"
+               label="COM_EVENTGALLERY_CHECKOUT_USERDATA_EMAIL_LABEL"
+               description="COM_EVENTGALLERY_CHECKOUT_USERDATA_EMAIL_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_CHECKOUT_USERDATA_EMAIL_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge validate-email"
+                />
+        <field name="phone"
+               type="html5text"
+               label="COM_EVENTGALLERY_CHECKOUT_USERDATA_PHONE_LABEL"
+               description="COM_EVENTGALLERY_CHECKOUT_USERDATA_PHONE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_CHECKOUT_USERDATA_PHONE_PLACEHOLDER"
+               required="false"
+               class="input-xlarge"/>
+        <field name="message"
+               type="textarea"
+               inputtype="text"
+               label="COM_EVENTGALLERY_CHECKOUT_USERDATA_MESSAGE_LABEL"
+               description="COM_EVENTGALLERY_CHECKOUT_USERDATA_MESSAGE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_CHECKOUT_USERDATA_MESSAGE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               rows="5"
+                />
+
+    </fieldset>
+</form>

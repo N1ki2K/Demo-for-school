@@ -1,0 +1,185 @@
+--------------------------------
+-- GPL FRIENDLY MEDIA LICENSE --
+--------------------------------
+
+PREAMBLE
+
+The GPL Friendly Media License is a software and media license of the company: 
+
+MAD4MEDIA 
+Dipl. Informatiker(FH) Fahrettin Kutyol 
+Amerikastraße 21 
+66482 Zweibrücken 
+Germany.
+
+Hereinafter the license and copyright holder shall be shortened by `Mad4Media`.
+Hereinafter this licenses name shall be shortened by `GFML`.
+
+Mad4Media offers a variety of products and services. 
+The range includes proprietary and free software/ media files.
+Free Mad4Media products are commonly offered under the GNU GPL v2.0 license why 
+the name of this license uses `GPL`. The GFML may also apply to software packages 
+which are not GPL licensed but use a different free license. 
+
+As one of the core competence of Mad4Media is to create high end media elements 
+such as graphics, cascading style sheets, videos in combination with high end 
+media scripts such as JavaScript, Actions Script™, Shockwave™ and other various 
+media files which are combined in browsers; this license offers the free community 
+to take advantage of such media files which are normally proprietary. 
+
+By the GFML Mad4Media allows users to use the media files within GPL based 
+software packages without restricting the freedom of GNU GPL but likewise protects 
+the interests of Mad4Media to offer unique service and high quality products 
+and is used for quality assurance. 
+
+
+DEFINITIONS
+
+Media files: Media file refers to any image, audio, video, data containers, cascading
+style sheets, text files and software which can be used on a computer. The definition 
+of Media file in the meaning of the GFML applies to files which are located standalone 
+on a server /computer and get compiled in a browser or any other displaying device.
+
+Package License: Media files under GFML are only intended to be part of a software 
+package. The GFML requires that the parent license must be a free license such as for 
+GNU GPL, GNU LGPL, BSD, MIT etc.  
+
+Viral License: Viral license is a copyright / copyleft license that allows derivate 
+works only when licensed under the same or compatible license to the original. 
+Especially GNU GPL allows dynamic linking to GPL licensed software (-parts) if the 
+linking software / code is compatible to GPL.
+
+
+COPYRIGHT
+
+The copyright holder of GFML licensed media files is Mad4Media – All rights reserved.
+As a copyright holder Mad4Media has the right to determine freely its products.
+Mad4Media reserves the right to offer software, parts of software, source code and 
+media -files in other license types. Mad4Media prohibits the use of GFML licensed 
+software and media if the using party is violating the law or is used for any fraudulent 
+or criminal action. 
+
+
+INTERACTION WITH GNU GPL AND OTHER VIRAL LICENSES
+
+Following the definition of media files in the meaning of GFML and as stated by the GPL 
+version 2.0 the elements of a software package that are not compiled together but are sent 
+independently of GPL (or other viral license) code, and combined in a client’s browser 
+( displaying/processing device), do not have to be GPL themselves.  
+Based on this the GFML is compatible to GPL and commonly to other viral licenses. 
+
+
+SECURING THE GPL (FREE LICENSE) FREEDOMS
+
+GFML does not force that all media files must be part of the software package.
+In GPL or other free licensed software packages all GFML media files may be removed 
+and replaced by own media files under a different license. 
+ 
+
+TERMS AND CONDITIONS
+
+1.	GFML licensed media files may only be used within software packages created and 
+	provided by Mad4Media. Standalone usage or usage of all / partial GFML licensed 
+	parts in software packages which are not created and provided by Mad4Media is not 
+	allowed, except explicitly authorized by Mad4Media. 
+	This only applies to GFML files and source code. Remaining free license parts of 
+	the software package are unaffected and can be used under the terms and condition 
+	of the appropriate free (GPL) license but all including GFML licensed files must 
+	be entirely removed and replaced by own media files.
+
+2.	GFML licensed media files may only be used if received directly from Mad4Media 
+	resources or via resources of authorized partners or partner web sites.
+	If the whole software package or parts of the software package has been received 
+	by resources other than Mad4Media’s and its partner’s (partner’s sites) all including 
+	GFML licensed files must be entirely removed and replaced by own media files.
+
+3.	Point 2 does not apply for installations as a service. If the software package has 
+	been installed by a company or a person who has received the software package directly 
+	from Mad4Media resources or partner’s resources GFML licensed media files may be used. 
+	If the company or person passes the whole software package as is, all including GFML 
+	licensed files must be entirely removed and replaced by own media files.
+
+4.	Only if the requirements 1 -3 have been met GFML grants following freedoms as long 
+	as not restricted by and compliant to the free package license:
+
+	- GFML licensed files may be used for commercial and non-commercial projects. 
+
+	- GFML licensed files may be used infinitely within the software package.
+
+	- The usage is not limited to a predefined amount of installations, domains or  
+	  domain names.  (Please note that service can be limited to a predefined amount 
+	  of installation, domains or domain names) 
+
+	- GFML licensed files may be studied modified and extended within the software package.
+
+	- The software package may be forked if all GFML licensed files are entirely removed 
+	  and replaced by own media files.
+
+	- The software package including GFML files may be offered, published or re-
+	  published only via Mad4Media’s resources. If offered, published / re-published via 
+	  other resources all GFML licensed files must be entirely removed and replaced by 
+	  own media files.  Mad4Media reserves the right to determine the conditions of 
+	  re-publishing and rejecting software packages because of quality assurance. 
+
+5.	If the software package is an extension of another parent software package, 
+	GFML licensed media files may not be used in distributions (re-distributions) of the 
+	root software and must be replaced by own media files, 
+	except explicitly authorized by Mad4Media. 
+
+6.	GFML media files can be compressed for performance matters. 
+
+7.	Parts of GFML media files can be encoded for security matters. 
+	Encoded parts must be left intact. 
+
+8.	There is no claim for achieving the source code / construction files of 
+	compiled software and media files. 
+
+9.	When modifying GFML licensed software files, modifications may not dynamically link to 
+	other software with a viral license. This also applies to software with viral license 
+	which links dynamically to GFML licensed software.
+
+	
+LEGALS AND WARRANTY
+
+1.	For all modified media files by other companies or person than Mad4Media or Mad4Media’s 
+	staffs there is no warranty. If at least one GFML media file has been modified the 
+	responsibility lies with the modifier. 
+
+2.	The GFML is accepted by using the software. The only way that GFML not applies is not 
+	using the software package or replacing all GFML licensed files by own media files.
+
+3.	By accepting the GFML the using party proves to be clarified about the terms and conditions. 
+	The using party proves to be clarified about that any violation of the GFML can lead to 
+	claims for compensation. 
+
+4.	As Mad4Media is located in Germany only German jurisdiction applies.
+	Place of venue is Zweibrücken – Germany. 
+
+5.	If this license violates the rights of third parties or the rights of other licenses; 
+	Mad4Media must be informed immediately to remedy the violation. 
+	For this you must use the contact opportunities at www.mad4media.de.
+	Mad4Media will correct the violation in a timely manner. 
+	Claims can’t be invoked as long Mad4Media is not informed of the violation 
+	and hasn't corrected the breach.
+
+6.	Should there be a warranty claim against the agreement; Mad4Media is only liable for 
+	negligence or gross negligence. The claiming party must prove that only GFML licensed 
+	files has caused an issue.
+
+	
+FINAL WARRANTY AGREEMENT
+
+As long explicitly no money has been charged for the purchase of GFML licensed software 
+and media files or money has been charged for a service subscription and not for the 
+software itself following warranty exclusion applies: 
+
+THE SOFTWARE IS ''AS IS'' AND ANY
+EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL MAD4MEDIA BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.

@@ -1,0 +1,1 @@
+ALTER TABLE `#__eventgallery_folder` CHANGE  `tags`  `foldertags` text;

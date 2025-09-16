@@ -1,0 +1,1 @@
+ALTER TABLE  `#__eventgallery_file` ADD  `ismainimage` TINYINT( 4 ) NOT NULL DEFAULT  '0' AFTER  `ordering` , ADD  `ismainimageonly` TINYINT( 4 ) NOT NULL DEFAULT  '0' AFTER  `ismainimage`

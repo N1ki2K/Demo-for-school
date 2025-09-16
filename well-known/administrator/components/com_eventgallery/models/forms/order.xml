@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="order">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+
+        <field name="version" type="hidden" default="0" label="Version"
+               readonly="true" class="readonly"
+               description=""/>
+			
+        <field name="orderstatusid"
+               type="orderstatustypes"
+               inputtype="text"
+               label="COM_EVENTGALLERY_ORDER_ORDERSTATUS"
+               description="COM_EVENTGALLERY_ORDER_ORDERSTATUS_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDER_ORDERSTATUS_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        <field name="paymentstatusid"
+               type="paymentstatustypes"
+               inputtype="text"
+               label="COM_EVENTGALLERY_ORDER_PAYMENTSTATUS"
+               description="COM_EVENTGALLERY_ORDER_PAYMENTSTATUS_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDER_PAYMENTSTATUS_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        <field name="shippingstatusid"
+               type="shippingstatustypes"
+               inputtype="text"
+               label="COM_EVENTGALLERY_ORDER_SHIPPINGSTATUS"
+               description="COM_EVENTGALLERY_ORDER_SHIPPINGSTATUS_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_ORDER_SHIPPINGSTATUS_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        
+         
+    </fieldset>
+</form>

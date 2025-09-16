@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<extension type="component" version="1.5.0" method="upgrade">
+	<name>com_profiles</name>
+	<author>Mad4Media - Fahrettin Kutyol</author>
+	<creationDate>2015-02-18</creationDate>
+	<copyright>Copyright(C) Mad4Media - All rights reserved!</copyright>
+	<license>This component is released under the GNU/GPL License http://www.gnu.org/copyleft/gpl.html</license>
+	<authorEmail>joomla@mad4media.com</authorEmail>
+	<authorUrl>http://www.mad4media.de</authorUrl>
+	<version>1.5.0</version>
+  	<description>Joomla Filemanager</description>
+	
+	<files folder="site">
+		<filename>profiles.php</filename>
+		<filename>index.html</filename>
+	</files>	
+			
+	<administration>
+		<menu img="components/com_profiles/filemanager/images/icons/folder.png" >COM_PROFILES</menu>
+		<menu>COM_PROFILES</menu>
+		<files folder="admin">
+			<filename>gpl-friendly-media-license.txt</filename>
+			<filename>gpl-license.txt</filename>
+			<filename>profiles.php</filename>
+			<filename>index.html</filename>
+			<folder>filemanager</folder>
+			<folder>sandbox</folder>
+		</files>	
+		
+		<languages folder="languages">
+			<language tag="en-GB">en-GB.com_profiles.ini</language>          
+			<language tag="en-GB">en-GB.com_profiles.sys.ini</language>    
+			<language tag="de-DE">de-DE.com_profiles.ini</language>          
+			<language tag="de-DE">de-DE.com_profiles.sys.ini</language>     			
+        </languages>
+	</administration>
+	<scriptfile>profiles.script.php</scriptfile>
+</extension>
+

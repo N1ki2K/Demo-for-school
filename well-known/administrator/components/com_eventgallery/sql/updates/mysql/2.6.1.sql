@@ -1,0 +1,1 @@
+ALTER TABLE  `#__eventgallery_file` ADD  `title` text AFTER `caption`

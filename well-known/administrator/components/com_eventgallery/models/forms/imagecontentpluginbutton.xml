@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="imagecontentpluginbutton">
+    <fieldset name="general" label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_GENERAL_LABEL" description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_GENERAL_DESC"
+    	>
+
+		<field name="folder" type="text"
+			   label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_FOLDER_LABEL"
+			   required="true"
+			   readonly="true"
+			   description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_FOLDER_DESC"
+		/>
+
+        <field name="file" type="text"
+               label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_FILE_LABEL"
+               required="true"
+			   readonly="true"
+               description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_FILE_DESC"
+                />
+
+		<field type="spacer" label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_SELECT_FILE_LABEL" name="myspacer" class="btn select-file-button" hr="false" />
+
+        <field name="attr"
+           type="list"
+           label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_LABEL"
+           description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_DESC"
+           default="images"
+            >
+	        <option value="image">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_IMAGE</option>
+	        <option value="title">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_TITLE</option>
+	        <option value="caption">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_CAPTION</option>
+	        <option value="id">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_ATTR_ID</option>
+	    </field>
+
+		<field name="image_crop"
+			   type="list"
+			   label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_CROP_LABEL"
+			   description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_CROP_DESC"
+			   default="false"
+		>
+			<option value="false">JNO</option>
+			<option value="true">JYES</option>
+		</field>
+
+		<field name="image_mode"
+           type="list"
+           label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEMODE_LABEL"
+           description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEMODE_DESC"
+           default="link"
+            >
+	        <option value="raw">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEMODE_RAW</option>
+	        <option value="lightbox">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEMODE_LIGHTBOX</option>
+	        <option value="link">COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEMODE_LINK</option>
+	    </field>
+	    
+	    <field 	name="image_width" 
+	    		type="text"
+	    		default="50"
+	    		label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEWIDTH_LABEL"
+	    		description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_IMAGEWIDTH_DESC"/>
+
+	    <field 	name="cssclass"
+	    		type="text"
+	    		default=""
+	    		label="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_CSSCLASS_LABEL"
+	    		description="COM_EVENTGALLERY_IMAGECONTENTPLUGINBUTTON_CSSCLASS_DESC"/>
+	    
+  	</fieldset>
+</form>

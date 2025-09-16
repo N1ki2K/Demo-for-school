@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+    <layout title="COM_EVENTGALLERY_LAYOUT_EVENT_IMAGE_LIST">
+        <message>
+            <![CDATA[COM_EVENTGALLERY_LAYOUT_EVENT_IMAGE_LIST_MESSAGE]]>
+        </message>
+    </layout>
+    <!-- Add fields to the request variables for the layout. -->
+    <fields name="request">
+        <fieldset name="request"
+                  addfieldpath="/administrator/components/com_eventgallery/models/fields">
+
+            <field name="folder" type="modal_folder"
+                   label="COM_EVENTGALLERY_LAYOUT_EVENT_FOLDER_LABEL"
+                   required="true"
+                   description="COM_EVENTGALLERY_LAYOUT_EVENT_FOLDER_DESC"
+                    />
+        </fieldset>
+    </fields>
+    <fields name="params" addfieldpath="/components/com_eventgallery/models/fields">
+        <fieldset name="params" label="COM_EVENTGALLERY_LAYOUT_EVENT_FIELDSET_LABEL">
+         	
+<!-- AUTO GENERATED BEGIN -->
+    <field name="show_exif" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_EXIF_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="show_date" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_SHOW_DATE_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field>
+    <field name="use_event_paging" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_LABEL"
+           description="COM_EVENTGALLERY_OPTIONS_EVENT_USE_PAGING_DESC">
+        <option value="">JGLOBAL_USE_GLOBAL</option>
+        <option value="1">JYES</option>
+        <option value="0">JNO</option>
+    </field> 
+    <field name="show_image_filename" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_LABEL" 
+            description="COM_EVENTGALLERY_OPTIONS_COMMON_SHOWIMAGEFILENAME_DESCRIPTION">
+            <option value="">JGLOBAL_USE_GLOBAL</option>
+            <option value="0">JNO</option>
+            <option value="1">JYES</option>
+        </field>
+
+<!-- AUTO GENERATED END -->           
+
+			
+			<!-- AUTO GENERATED BEGIN -->
+			<field name="event_image_list_thumbnail_height" id="event_image_list_thumbnail_height" type="integerwithdefault"
+                   first="0" last="1000" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_DESC"/>
+            <field name="event_image_list_thumbnail_jitter" id="event_image_list_thumbnail_jitter" type="integerwithdefault"
+                   first="0" last="500" step="10" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_JITTER_DESC"/>
+            <field name="event_image_list_thumbnail_first_item_height" id="event_image_list_thumbnail_first_item_height"
+                   type="integerwithdefault" first="1" last="10" step="1" default=""
+                   label="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_LABEL"
+                   description="COM_EVENTGALLERY_OPTIONS_EVENT_THUMBNAIL_HEIGHT_FIRSTITEM_DESC"/>
+            <field name="show_image_caption_overlay" type="radio" class="btn-group btn-group-yesno" default="" label="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_OVERLAY_LABEL"
+		           description="COM_EVENTGALLERY_OPTIONS_SHOW_IMAGE_CAPTION_DESC">
+		        <option value="">JGLOBAL_USE_GLOBAL</option>
+		        <option value="1">JYES</option>
+		        <option value="0">JNO</option>
+		    </field>
+		    <!-- AUTO GENERATED END -->
+		    
+        </fieldset>
+    </fields>
+</metadata>

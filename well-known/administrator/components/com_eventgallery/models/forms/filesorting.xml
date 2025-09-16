@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="file">
+    <fieldset name="general" label="COM_EVENTGALLERY_FILE_SORTING_POPUP_LABEL" description="COM_EVENTGALLERY_FILE_SORTING_POPUP_DESC">
+
+        <field name="sortattribute" type="list" default="" label="COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_LABEL" description="COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_DESC">
+            <option value="">JGLOBAL_USE_GLOBAL</option>
+            <option value="file">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_FILENAME</option>
+            <option value="creation_date">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_CREATION_DATE</option>
+        </field>
+
+        <field name="sortdirection" type="radio" default="asc" label="COM_EVENTGALLERY_FILE_SORTING_DIRECTION_LABEL" description="COM_EVENTGALLERY_FILE_SORTING_DIRECTION_DESCRIPTION">
+            <option value="">JGLOBAL_USE_GLOBAL</option>
+            <option value="asc">COM_EVENTGALLERY_FILE_SORTING_DIRECTION_ASC</option>
+            <option value="desc">COM_EVENTGALLERY_FILE_SORTING_DIRECTION_DESC</option>
+        </field>
+
+    </fieldset>
+</form>

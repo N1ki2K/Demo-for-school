@@ -8,6 +8,8 @@ import CalendarManagerTab from './CalendarManagerTab';
 import PatronManagerTab from './PatronManagerTab';
 import UsefulLinksManagerTab from './UsefulLinksManagerTab';
 import TranslationsManagerTab from './TranslationsManagerTab';
+import ConfirmDialog from './ConfirmDialog';
+import { useConfirm } from '../../hooks/useConfirm';
 import DocumentsMenuManagerTab from './DocumentsMenuManagerTab';
 import ProjectsMenuManagerTab from './ProjectsMenuManagerTab';
 import AchievementsDirectorsManager from './AchievementsDirectorsManager';
@@ -601,7 +603,7 @@ const SchoolTeamTab: React.FC = () => {
       
       setShowAddForm(false);
       setEditingMember(null);
-      alert('Team member saved successfully!');
+      alert(t.cms.schoolTeam.memberSaved);
     } catch (error) {
       console.error('Failed to save team member:', error);
       alert('Failed to save team member. Please try again.');
@@ -609,7 +611,15 @@ const SchoolTeamTab: React.FC = () => {
   };
 
   const handleDeleteMember = async (memberId: string) => {
-    if (!confirm('Are you sure you want to delete this team member?')) return;
+    const confirmed = await confirm({
+      title: 'Delete Team Member',
+      message: 'Are you sure you want to delete this team member?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) return;
 
     try {
       await deleteSchoolStaffMember(memberId);
@@ -668,7 +678,7 @@ const SchoolTeamTab: React.FC = () => {
       setTeamGroupPhoto(imageUrl);
       
       console.log('✅ Team group photo saved:', filename);
-      alert('Team group photo updated successfully!');
+      alert(t.cms.schoolTeam.teamPhoto.photoUpdated);
     } catch (error) {
       console.error('❌ Failed to save team photo:', error);
       alert(`Failed to save team photo: ${error.message || 'Please try again.'}`);
@@ -683,7 +693,7 @@ const SchoolTeamTab: React.FC = () => {
           {t.cms.schoolTeam.title}
         </h3>
         <p className="text-sm text-blue-700">
-          Add, edit, and manage school staff members. You can reorder members by changing their position numbers.
+          {t.cms.schoolTeam.description}
         </p>
       </div>
 
@@ -697,8 +707,8 @@ const SchoolTeamTab: React.FC = () => {
       <div className="bg-gradient-to-r from-purple-50 to-indigo-50 border border-purple-200 p-6 rounded-lg">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <h4 className="text-lg font-semibold text-purple-800 mb-1">🏫 Team Group Photo</h4>
-            <p className="text-sm text-purple-600">Manage the main team photo that appears on the team page</p>
+            <h4 className="text-lg font-semibold text-purple-800 mb-1">🏫 {t.cms.schoolTeam.teamPhoto.title}</h4>
+            <p className="text-sm text-purple-600">{t.cms.schoolTeam.teamPhoto.description}</p>
           </div>
           <button
             onClick={() => setShowTeamPhotoManager(true)}
@@ -707,7 +717,7 @@ const SchoolTeamTab: React.FC = () => {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
             </svg>
-            Manage Photo
+{t.cms.schoolTeam.teamPhoto.managePhoto}
           </button>
         </div>
         
@@ -725,20 +735,20 @@ const SchoolTeamTab: React.FC = () => {
                   <svg className="w-12 h-12 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
-                  <p className="text-sm">No team photo set</p>
+                  <p className="text-sm">{t.cms.schoolTeam.teamPhoto.noPhotoSet}</p>
                 </div>
               </div>
             )}
           </div>
           <p className="text-sm text-gray-600 mt-2">
-            Current photo: {teamGroupPhoto ? teamGroupPhoto.split('/').pop() || 'Unknown' : 'None selected'}
+            {t.cms.schoolTeam.teamPhoto.currentPhoto}: {teamGroupPhoto ? teamGroupPhoto.split('/').pop() || 'Unknown' : t.cms.schoolTeam.teamPhoto.noPhotoSet}
           </p>
         </div>
       </div>
 
       {/* Add New Member Button */}
       <div className="flex justify-between items-center">
-        <h4 className="text-xl font-semibold text-gray-800">Team Members ({staffMembers.length})</h4>
+        <h4 className="text-xl font-semibold text-gray-800">{t.cms.schoolTeam.membersCount.replace('{count}', staffMembers.length.toString())}</h4>
         <button
           onClick={handleAddMember}
           className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition-colors flex items-center gap-2"
@@ -746,7 +756,7 @@ const SchoolTeamTab: React.FC = () => {
           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
           </svg>
-          Add Team Member
+{t.cms.schoolTeam.addMember}
         </button>
       </div>
 
@@ -843,13 +853,13 @@ const SchoolTeamTab: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 w-full max-w-md max-h-[90vh] overflow-y-auto">
             <h3 className="text-lg font-semibold mb-4">
-              {staffMembers.find(m => m.id === editingMember.id) ? 'Edit Team Member' : 'Add Team Member'}
+              {staffMembers.find(m => m.id === editingMember.id) ? t.cms.schoolTeam.editMember : t.cms.schoolTeam.addMember}
             </h3>
             
             <div className="space-y-4">
               {/* Profile Image */}
               <div>
-                <label className="block text-sm font-medium text-gray-600 mb-2">Profile Image</label>
+                <label className="block text-sm font-medium text-gray-600 mb-2">{t.cms.schoolTeam.profileImage}</label>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 bg-gray-200 rounded-full overflow-hidden">
                     {staffImages[editingMember.id] ? (
@@ -870,7 +880,7 @@ const SchoolTeamTab: React.FC = () => {
                       onClick={() => setShowImagePicker(true)}
                       className="px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50 transition-colors"
                     >
-                      📁 Choose from Pictures
+📁 {t.cms.schoolTeam.chooseFromPictures}
                     </button>
                     {staffImages[editingMember.id] && (
                       <button
@@ -1454,14 +1464,21 @@ const MediaManagerTab: React.FC = () => {
   };
 
   const handleDeleteImage = async (filename: string) => {
-    if (!confirm(`Are you sure you want to delete "${filename}" from the Pictures folder? This action cannot be undone.`)) {
+    const confirmed = await confirm({
+      title: 'Delete Image',
+      message: `Are you sure you want to delete "${filename}" from the Pictures folder? This action cannot be undone.`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) {
       return;
     }
 
     try {
       await apiService.deletePictureImage(filename);
       setPicturesImages(prev => prev.filter(img => img.filename !== filename));
-      alert('Image deleted successfully!');
     } catch (error) {
       console.error('❌ Failed to delete image:', error);
       alert(`Failed to delete image: ${error.message || 'Please try again.'}`);
@@ -1694,7 +1711,15 @@ const DocumentManagerTab: React.FC = () => {
   };
 
   const handleDeleteDocument = async (filename: string) => {
-    if (!confirm(t.cms.documentManager.deleteConfirm.replace('{filename}', filename))) {
+    const confirmed = await confirm({
+      title: 'Delete Document',
+      message: t.cms.documentManager.deleteConfirm.replace('{filename}', filename),
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -1963,7 +1988,15 @@ const PowerPointManagerTab: React.FC = () => {
   };
 
   const handleDeletePresentation = async (filename: string) => {
-    if (!confirm(`Are you sure you want to delete the presentation "${filename}"?`)) {
+    const confirmed = await confirm({
+      title: 'Delete Presentation',
+      message: `Are you sure you want to delete the presentation "${filename}"?`,
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -2233,7 +2266,15 @@ const NewsManagerTab: React.FC = () => {
   };
 
   const handleDeleteNews = async (article: any) => {
-    if (!confirm(getTranslation("cms.newsManager.messages.deleteConfirm", "Are you sure you want to delete this news article?"))) {
+    const confirmed = await confirm({
+      title: 'Delete News Article',
+      message: getTranslation("cms.newsManager.messages.deleteConfirm", "Are you sure you want to delete this news article?"),
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) {
       return;
     }
 
@@ -2623,15 +2664,21 @@ const GalleryTab: React.FC = () => {
   };
 
   const handleDeleteImage = async (imageId: string) => {
-    if (!confirm('Are you sure you want to delete this image from the gallery?')) return;
+    const confirmed = await confirm({
+      title: 'Delete Gallery Image',
+      message: 'Are you sure you want to delete this image from the gallery?',
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) return;
 
     try {
       await apiService.deleteImageMapping(imageId);
       setGalleryImages(prev => prev.filter(img => img.id !== imageId));
-      alert('Image deleted successfully!');
     } catch (error) {
       console.error('Failed to delete image:', error);
-      alert('Failed to delete image. Please try again.');
     }
   };
 
@@ -2646,10 +2693,13 @@ const GalleryTab: React.FC = () => {
         // Check for duplicate URLs when adding new image
         const duplicateUrl = galleryImages.find(img => img.url === editingImage.url);
         if (duplicateUrl) {
-          const proceed = confirm(
-            `An image with the same URL already exists in the gallery (ID: ${duplicateUrl.id}). ` +
-            `Do you want to add it anyway as a duplicate?`
-          );
+          const proceed = await confirm({
+            title: 'Duplicate URL',
+            message: `An image with the same URL already exists in the gallery (ID: ${duplicateUrl.id}). Do you want to add it anyway as a duplicate?`,
+            confirmText: 'Add Anyway',
+            cancelText: 'Cancel',
+            isDangerous: false
+          });
           if (!proceed) {
             return;
           }
@@ -2662,10 +2712,13 @@ const GalleryTab: React.FC = () => {
           img.original_name === filename
         );
         if (duplicateFilename) {
-          const proceed = confirm(
-            `An image with filename "${filename}" already exists in the gallery (ID: ${duplicateFilename.id}). ` +
-            `Do you want to add it anyway as a duplicate?`
-          );
+          const proceed = await confirm({
+            title: 'Duplicate Filename',
+            message: `An image with filename "${filename}" already exists in the gallery (ID: ${duplicateFilename.id}). Do you want to add it anyway as a duplicate?`,
+            confirmText: 'Add Anyway',
+            cancelText: 'Cancel',
+            isDangerous: false
+          });
           if (!proceed) {
             return;
           }
@@ -3007,6 +3060,7 @@ const CMSDashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState('media');
   const { isLoggedIn, logout } = useCMS();
   const [openDropdowns, setOpenDropdowns] = useState<{[key: string]: boolean}>({});
+  const { confirm, dialogProps } = useConfirm();
 
   // Organize tabs into categories
   const tabCategories = useMemo(() => [
@@ -3241,6 +3295,8 @@ const CMSDashboard: React.FC = () => {
         {activeTab === 'documents-menu' && <DocumentsMenuManagerTab isActive={true} />}
         {activeTab !== 'projects-menu' && activeTab !== 'documents-menu' && allTabs.find(tab => tab.id === activeTab)?.content}
       </div>
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 };

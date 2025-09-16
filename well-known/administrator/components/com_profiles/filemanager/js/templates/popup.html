@@ -1,0 +1,48 @@
+<div class="headerWrap">
+<table border="0" cellpadding="0" cellspacing="0" class="headerTable">
+	<tbody>
+		<tr>
+			<td width="10px" valign="top" class="mNoSelect"><img
+				src="%imageuri_corner-top-left.png" class="noBorder toLeft" /></td>
+			<td class="headerBackground mNoSelect" id="mPopupHeader%name"
+				style="cursor: move;"
+				onmousedown="javascript: mPopupArray['%name'].pressed(this);"
+				onmouseup="javascript: mPopupArray['%name'].released(this);"><span
+				class="mPopupWindowTitle" onselectstart="javascript: return false;">%title</span></td>
+			<td width="31px" class="headerBackground mNoSelect" style="width: 31px;">
+			<div style="width: 108px;">
+				<a href=""
+					id="reduce_%name"
+					onclick="javascript: reducePopup('%name'); return false;"
+					class="buttonSizeNormal" title="%reduce"> <img
+					src="components/com_profiles/filemanager/images/spacer.png" /> </a>
+					
+				<a href=""
+					id="maximize_%name"
+					onclick="javascript: maximizePopup('%name'); return false;"
+					class="buttonSizeFullscreen" title="%maximize"> <img
+					src="components/com_profiles/filemanager/images/spacer.png" /> </a>
+			
+				<a href=""
+					onclick="javascript: closePopup('%name'); return false;"
+					class="buttonWindowClose" title="%close"> <img
+					src="components/com_profiles/filemanager/images/spacer.png" /> </a>
+			</div>
+			</td>
+			<td width="10px"><img
+				src="%imageuri_corner-top-right.png"
+				class="noBorder toLeft mNoSelect" /></td>
+		</tr>
+	</tbody>
+</table>
+</div>
+<div class="innerWrap" style="height: 100%; padding-bottom: 5px;"><!-- Content Wrap -->
+<div class="contentWrap" style="height: 100%;" id="mPopupContent%name"
+	rel="wrapper" onselectstart="javascript: return true;">%content</div>
+<!-- EOF Content Wrap --></div>
+<span id="mPopupResizeButton%name" class="popupSizeButton"
+	onmousedown="javascript: resizePopupWindow = mPopupArray['%name']; return false;"
+	onmouseover="javascript: document.body.style.cursor = 'nw-resize';"
+	onmouseout="javascript: document.body.style.cursor = 'auto';"
+	onselectstart="javascript: return false;"
+	onselect="javascript:return false;" /><script>if(_Browser.IEVersion() <= 6) document.write(".");</script></span>

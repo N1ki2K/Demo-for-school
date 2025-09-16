@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="event">
+    <fieldset name="general" label="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EVENTS_OPTIONS_DETAILS_DESC"
+    	addfieldpath="/administrator/components/com_categories/models/fields">
+    	<field name="id" type="hidden" default="0" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+				<field name="name" type="hidden" default="com_eventgallery.event" label="JGLOBAL_FIELD_ID_LABEL"
+			readonly="true" class="readonly"
+			description="JGLOBAL_FIELD_ID_DESC"/>
+			
+        <field name="foldertypeid"
+               type="foldertype"
+               label="COM_EVENTGALLERY_EVENTS_FOLDERTYPE"
+               description="COM_EVENTGALLERY_EVENTS_FOLDERTYPE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_FOLDERTYPE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+                
+        <field name="folder"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_FOLDERNAME"
+               description="COM_EVENTGALLERY_EVENTS_FOLDERNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_FOLDERNAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+               readonly="true"
+                />
+
+
+        <field name="picasakey"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_PICASA_KEY"
+               description="COM_EVENTGALLERY_EVENTS_PICASA_KEY_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_PICASA_KEY_PLACEHOLDER"
+               required="false"
+               validate=""
+               class=""
+               readonly="true"
+                />
+
+                
+       <field name="description"
+               type="localizabletext"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_DISPLAYNAME"
+               description="COM_EVENTGALLERY_EVENTS_DISPLAYNAME_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_DISPLAYNAME_PLACEHOLDER"
+               required="true"
+               validate=""
+               class="input-xlarge"
+               
+                />
+
+		<field name="date"
+               type="calendar"
+               default="NOW"
+               label="COM_EVENTGALLERY_EVENTS_EVENT_DATE"
+               description="COM_EVENTGALLERY_EVENTS_EVENT_DATE_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_EVENT_DATE_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               format="%Y-%m-%d %H:%M:%S" filter="user_utc"
+                />
+
+        <field name="catid"
+			type="categoryedit"
+			extension="com_eventgallery"
+			label="JCATEGORY"
+			description="JFIELD_CATEGORY_DESC"
+			class="inputbox"
+		></field>
+
+        <field name="tags" type="tag"
+               label="JTAG" description="JTAG_DESC"
+               class="inputbox small" multiple="true"
+               mode="ajax"
+                >
+        </field>
+
+        <field name="password"
+               type="text"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_PASSWORD"
+               description="COM_EVENTGALLERY_EVENTS_PASSWORD_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_PASSWORD_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+
+        <field name="passwordhint"
+               type="localizabletext"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_PASSWORDHINT"
+               description="COM_EVENTGALLERY_EVENTS_PASSWORDHINT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_PASSWORDHINT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+
+                />
+
+        <field 	name="usergroups" 
+				type="usergroup" 
+				default="" 
+				multiple="true"
+				label="COM_EVENTGALLERY_EVENTS_USERGROUPS" 
+				description="COM_EVENTGALLERY_EVENTS_USERGROUPS_DESCRIPTION" />
+				                        
+
+		<field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EVENTS_PUBLISHED" description="COM_EVENTGALLERY_EVENTS_PUBLISHED_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="cartable" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EVENTS_CARTABLE" description="COM_EVENTGALLERY_EVENTS_CARTABLE_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+		
+		<field name="imagetypesetid"
+               type="imagetypeset"
+               label="COM_EVENTGALLERY_EVENTS_IMAGETYPESET"
+               description="COM_EVENTGALLERY_EVENTS_IMAGETYPESET_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_IMAGETYPESET_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+        
+        <field name="watermarkid"
+               type="watermark"
+               label="COM_EVENTGALLERY_EVENTS_WATERMARK"
+               description="COM_EVENTGALLERY_EVENTS_WATERMARK_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_WATERMARK_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+                />
+		
+		<field name="text"
+               type="localizableeditor"
+               inputtype="text"
+               label="COM_EVENTGALLERY_EVENTS_TEXT"
+               description="COM_EVENTGALLERY_EVENTS_TEXT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EVENTS_TEXT_PLACEHOLDER"
+               required="false"
+               validate=""
+               class="input-xlarge"
+               filter="EventgalleryLibraryDatabaseLocalizablestring::filterText"
+               buttons="true"
+               height="200"
+                />
+                
+         
+    </fieldset>
+	<fieldset name="sorting" label="COM_EVENTGALLERY_EVENT_OPTIONS_SORTINGS_LABEL" description="COM_EVENTGALLERY_EVENT_OPTIONS_SORTINGS_DESC">
+
+		<field name="sortattribute" type="list" default="" label="COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_LABEL" description="COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_DESC">
+			<option value="">JGLOBAL_USE_GLOBAL</option>
+			<option value="ordering">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_ORDERING</option>
+			<option value="file">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_FILENAME</option>
+			<option value="creation_date">COM_EVENTGALLERY_FILE_SORTING_ATTRIBUTE_CREATION_DATE</option>
+		</field>
+
+		<field name="sortdirection" type="radio" default="" label="COM_EVENTGALLERY_FILE_SORTING_DIRECTION_LABEL" description="COM_EVENTGALLERY_FILE_SORTING_DIRECTION_DESCRIPTION">
+			<option value="">JGLOBAL_USE_GLOBAL</option>
+			<option value="asc">COM_EVENTGALLERY_FILE_SORTING_DIRECTION_ASC</option>
+			<option value="desc">COM_EVENTGALLERY_FILE_SORTING_DIRECTION_DESC</option>
+		</field>
+
+		<field name="shuffle_images" type="radio" class="btn-group btn-group-yesno" default="0" label="COM_EVENTGALLERY_OPTIONS_COMMON_SHUFFLEIMAGES_LABEL" description="COM_EVENTGALLERY_OPTIONS_COMMON_SHUFFLEIMAGES_DESCRIPTION">
+			<option value="0">JNO</option>
+			<option value="1">JYES</option>
+		</field>
+
+	</fieldset>
+    <fields name="attribs">
+		<fieldset name="basic" label="COM_EVENTGALLERY_EVENT_OPTIONS">
+			<field
+				name="use_social_sharing"
+				type="radio"
+				class="btn-group"
+				default="1"
+				label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_BUTTON_LABEL"
+				description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_BUTTON_DESCRIPTION"
+				labelclass="control-label">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_facebook" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_FACEBOOK_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_google" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_GOOGLE_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_GOOGLE_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_twitter" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_TWITTER_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_TWITTER_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_pinterest" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_PINTEREST_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_PINTEREST_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_email" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_EMAIL_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_EMAIL_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+			<field name="use_social_sharing_download" type="radio" class="btn-group" default="1" 
+			            label="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_DOWNLOAD_LABEL" 
+			      description="COM_EVENTGALLERY_OPTIONS_COMMON_USE_SOCIAL_SHARING_DOWNLOAD_DESCRIPTION">
+				<option value="0">JNO</option>
+				<option value="1">JYES</option>
+			</field>
+			
+
+		</fieldset>
+	</fields>
+	<fields name="metadata">
+		<fieldset name="metadata" label="COM_EVENTGALLERY_EVENT_METADATA">
+			<field name="metakey" type="textarea"
+				label="JFIELD_META_KEYWORDS_LABEL" description="JFIELD_META_KEYWORDS_DESC"
+				class="inputbox" rows="3" cols="30" />
+
+			<field name="metadesc" type="textarea"
+				label="JFIELD_META_DESCRIPTION_LABEL" description="JFIELD_META_DESCRIPTION_DESC"
+				class="inputbox" rows="3" cols="30" />
+		</fieldset>
+	</fields>
+</form>

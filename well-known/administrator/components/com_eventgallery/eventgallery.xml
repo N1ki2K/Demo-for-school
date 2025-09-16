@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" version="3.0.0" method="upgrade">
+	<name>COM_EVENTGALLERY</name>
+	<author>Sven Blüge</author>
+	<creationDate>18/02/2018</creationDate>
+	<copyright></copyright>
+	<license>GNU General Public License version 2 or later</license>
+	<authorEmail>svenbluege@gmail.com</authorEmail>
+	<authorUrl>www.svenbluege.de</authorUrl>
+	<version>3.8.2</version>
+	<description>COM_EVENTGALLERY_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">sql/install/install.mysql.sql</file>
+		</sql>
+	</install>
+    <uninstall>
+	  <sql>
+	    <file charset="utf8" driver="mysql">sql/install/uninstall.mysql.sql</file>
+	  </sql>
+	</uninstall>
+	<!--<update> 
+    	<schemas> 
+	    	<schemapath type="mysql">sql/updates/mysql</schemapath>	    	
+        </schemas> 
+	</update>-->
+
+	<files folder="site">
+		<folder>controllers</folder>
+		<folder>language</folder>
+		<folder>helpers</folder>
+		<folder>library</folder>
+		<folder>models</folder>
+		<folder>views</folder>
+		<folder>vendor</folder>
+		
+		<filename>controller.php</filename>
+		<filename>eventgallery.php</filename>
+		<filename>router.php</filename>
+		<filename>index.html</filename>
+		<filename>config.php</filename>
+	</files>
+		
+	<media folder="media" destination="com_eventgallery">
+        <filename>index.html</filename>
+        <folder>backend</folder>
+        <folder>common</folder>
+        <folder>frontend</folder>
+    </media>
+
+	<administration>
+		<menu img="class:media">COM_EVENTGALLERY_MENU</menu>
+		<submenu>
+			<menu img="class:media"  link="option=com_eventgallery&amp;view=events">COM_EVENTGALLERY_MENU_EVENTS</menu>
+			<menu img="class:article"  link="option=com_eventgallery&amp;view=comments">COM_EVENTGALLERY_MENU_COMMENTS</menu>
+			<menu img="class:article"  link="option=com_eventgallery&amp;view=orders">COM_EVENTGALLERY_MENU_ORDERS</menu>
+		</submenu>		
+		<files folder="admin">
+			<folder>controllers</folder>
+			<folder>helpers</folder>
+			<folder>language</folder>
+			<folder>models</folder>
+			<folder>tables</folder>
+			<folder>views</folder>
+			<folder>sql</folder>
+			<filename>access.xml</filename>
+			<filename>eventgallery.php</filename>
+			<filename>version.php</filename>
+			<filename>config.xml</filename>
+			<filename>controller.php</filename>
+			<filename>index.html</filename>
+		</files>
+		
+	</administration>
+	
+</extension>

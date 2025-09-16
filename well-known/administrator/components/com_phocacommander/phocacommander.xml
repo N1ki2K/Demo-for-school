@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension type="component" method="upgrade" version="4.0">
+	<name>com_phocacommander</name>
+	<author>Jan Pavelka (www.phoca.cz)</author>
+	<creationDate>01/05/2022</creationDate>
+	<authorEmail></authorEmail>
+	<authorUrl>https://www.phoca.cz</authorUrl>
+	<copyright>Jan Pavelka</copyright>
+	<license>GNU/GPL</license>
+	<version>4.0.0</version>
+	<description>COM_PHOCACOMMANDER_XML_DESCRIPTION</description>
+	<scriptfile>script.php</scriptfile>
+	<projectName>PhocaCommander</projectName>
+
+	<install>
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/mysql/install.utf8.sql</file>
+		</sql>
+	</install>
+
+	<uninstall>
+		<sql>
+			<file driver="mysql" charset="utf8">install/sql/mysql/uninstall.utf8.sql</file>
+		</sql>
+	</uninstall>
+
+	<update>
+		<schemas>
+			<schemapath type="mysql">update/sql/mysql</schemapath>
+		</schemas>
+	</update>
+
+	<files folder="site">
+		<filename>index.html</filename>
+	</files>
+
+	<media destination="com_phocacommander" folder="media">
+		<folder>duotone</folder>
+		<folder>css</folder>
+		<folder>js</folder>
+		<folder>images</folder>
+		<filename>index.html</filename>
+	</media>
+
+	<languages folder="admin/language">
+		<language tag="en-GB" client="site">en-GB/en-GB.com_phocacommander.ini</language>
+		<language tag="en-GB" client="site">en-GB/en-GB.com_phocacommander.sys.ini</language>
+	</languages>
+
+	<administration>
+
+		<menu img="media/com_phocacommander/images/administrator/" alt="COM_PHOCACOMMANDER" link="option=com_phocacommander">COM_PHOCACOMMANDER</menu>
+
+			<submenu>
+				<menu img="media/com_phocacommander/images/administrator/" alt="COM_PHOCACOMMANDER_CONTROLPANEL" view="" link="option=com_phocacommander">COM_PHOCACOMMANDER_CONTROLPANEL</menu>
+				<menu img="media/com_phocacommander/images/administrator/" alt="COM_PHOCACOMMANDER_INFO" view="phocacommanderinfo" link="option=com_phocacommander&amp;view=phocacommanderinfo">COM_PHOCACOMMANDER_INFO</menu>
+			</submenu>
+
+		<files folder="admin">
+			<folder>controllers</folder>
+			<folder>install</folder>
+			<folder>update</folder>
+			<folder>tables</folder>
+			<folder>helpers</folder>
+			<folder>views</folder>
+			<folder>help</folder>
+			<folder>models</folder>
+			<filename>index.html</filename>
+			<filename>config.xml</filename>
+			<filename>phocacommander.php</filename>
+			<filename>access.xml</filename>
+			<filename>controller.php</filename>
+		</files>
+
+		<languages folder="admin/language">
+			<language tag="en-GB">en-GB/en-GB.com_phocacommander.ini</language>
+			<language tag="en-GB">en-GB/en-GB.com_phocacommander.sys.ini</language>
+		</languages>
+	</administration>
+	
+	
+
+	<updateservers>
+		<server type="extension" name="COM_PHOCACOMMANDER" priority="1"><![CDATA[https://raw.githubusercontent.com/PhocaCz/PhocaCommander/master/manifest.xml]]></server>
+	</updateservers>
+</extension>

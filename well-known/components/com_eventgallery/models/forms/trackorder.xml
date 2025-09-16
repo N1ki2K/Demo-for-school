@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="trackorder">
+	<fieldset name="credentials"
+		label="COM_EVENTGALLERY_TRACKORDER_FORM_LABEL"	>
+
+		<field name="orderid" type="html5text"
+			class="validate"
+			filter=""
+			inputtype="text"
+			label="COM_EVENTGALLERY_TRACKORDER_FORM_ORDERID_LABEL"
+			description="COM_EVENTGALLERY_TRACKORDER_FORM_ORDERID_DESC"
+			placeholder="COM_EVENTGALLERY_TRACKORDER_FORM_ORDERID_PLACEHOLDER"
+			required="true"
+			validate="required"
+		/>
+
+		<field name="email" type="html5text"
+			class="validate-email"
+			filter=""
+			inputtype="email"
+			label="COM_EVENTGALLERY_TRACKORDER_FORM_EMAIL_LABEL"
+			description="COM_EVENTGALLERY_TRACKORDER_FORM_EMAIL_DESC"
+			placeholder="COM_EVENTGALLERY_TRACKORDER_FORM_EMAIL_PLACEHOLDER"
+			required="true"
+			validate="required email"
+		/>
+		
+	</fieldset>
+</form>

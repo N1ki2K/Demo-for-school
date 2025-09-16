@@ -1,0 +1,111 @@
+.eg-icon-published,
+.eg-icon-comments,
+.eg-icon-mainimage,
+.eg-icon-mainimageonly,
+.icon-eg-published,
+.icon-eg-comments,
+.icon-eg-mainimage,
+.icon-eg-mainimageonly,
+.icon-eg-published-inactive,
+.icon-eg-comments-inactive,
+.icon-eg-mainimage-inactive,
+.icon-eg-mainimageonly-inactive,
+li.button span.icon-32-eg-published,
+li.button span.icon-32-eg-comments,
+li.button span.icon-32-eg-mainimage,
+li.button span.icon-32-eg-mainimageonly,
+li.button span.icon-32-eg-published-inactive,
+li.button span.icon-32-eg-comments-inactive,
+li.button span.icon-32-eg-mainimage-inactive,
+li.button span.icon-32-eg-mainimageonly-inactive {
+	width: 20px !important;
+	height: 16px !important;
+	display: block;
+	float: left;
+	background-image: url(../img/icons.png);
+	background-repeat: no-repeat;
+	margin-right: 5px;
+}
+
+.eg-icon-published,
+.icon-eg-published-inactive,
+span.icon-32-eg-published-inactive {
+	background-position: -43px -16px;
+}
+
+.eg-icon-comments,
+.icon-eg-comments-inactive,
+span.icon-32-eg-comments-inactive {
+	background-position: -22px -16px;
+}
+
+.eg-icon-mainimage,
+.icon-eg-mainimage-inactive,
+span.icon-32-eg-mainimage-inactive {
+	background-position: 0 -16px;
+}
+
+.eg-icon-mainimageonly,
+.icon-eg-mainimageonly-inactive,
+span.icon-32-eg-mainimageonly-inactive {
+	background-position: -62px -16px;
+	margin-right: 0;
+}
+
+.active .eg-icon-published,
+.icon-eg-published,
+span.icon-32-eg-published {
+	background-position: -43px 0;
+}
+
+.active .eg-icon-comments,
+.icon-eg-comments,
+span.icon-32-eg-comments {
+	background-position: -22px 0;
+}
+
+.active .eg-icon-mainimage,
+.icon-eg-mainimage,
+span.icon-32-eg-mainimage {
+	background-position: 0 0;
+}
+
+.active .eg-icon-mainimageonly,
+.icon-eg-mainimageonly,
+span.icon-32-eg-mainimageonly {
+	background-position: -62px 0;
+}
+
+.watermark-preview {
+    height: 150px;
+    float: left;
+  -webkit-transition: all 1s ease-in-out;
+  -moz-transition: all 1s ease-in-out;
+  -o-transition: all 1s ease-in-out;
+  transition: all 1s ease-in-out;
+}
+
+.watermark-preview:hover {
+    height: 426px;
+}
+
+.scale-price-editor-container  div.scale-price-editor-line{
+    display: block;
+    margin-bottom: 10px;
+}
+
+/*
+* Order Detail Page
+ */
+.cart-items .file,
+.cart-items .quantity,
+.cart-items .displayname,
+.cart-items .singleprice,
+.cart-items .description
+{
+	display: block;
+}
+
+.cart-items .thumbnail {
+	display: inline-block;
+}

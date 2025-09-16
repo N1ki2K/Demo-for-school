@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<form name="order">
+    <fieldset name="general" label="COM_EVENTGALLERY_EMAILTEMPLATE_OPTIONS_DETAILS_LABEL" description="COM_EVENTGALLERY_EMAILTEMPLATE_OPTIONS_DETAILS_DESC">
+    	<field name="id" 
+        type="hidden" 
+        default="0" 
+        label="JGLOBAL_FIELD_ID_LABEL"
+  			readonly="true" 
+        class="readonly"
+  			description="JGLOBAL_FIELD_ID_DESC"
+      />
+                
+      <field name="language" type="language" client="site" default="*" label="COM_EVENTGALLERY_EMAILTEMPLATE_LANGUAGE" description="COM_EVENTGALLERY_EMAILTEMPLATE_LANGUAGE_DESCRIPTION" >
+        <option value="*">JALL</option>
+      </field>
+
+      <field name="published" type="radio" class="btn-group" default="0" label="COM_EVENTGALLERY_EMAILTEMPLATE_PUBLISHED" description="COM_EVENTGALLERY_EMAILTEMPLATE_PUBLISHED_DESCRIPTION">
+        <option value="0">JNO</option>
+        <option value="1">JYES</option>
+      </field>
+
+      <field name="key"
+        type="emailtemplatekeys"
+        inputtype="select"
+        label="COM_EVENTGALLERY_EMAILTEMPLATE_KEY"
+        description="COM_EVENTGALLERY_EMAILTEMPLATE_KEY_DESCRIPTION"
+        required="true"
+        validate=""
+        class="input-xlarge"
+      />
+
+      <field name="subject"
+        type="textarea"
+        inputtype="text"
+        label="COM_EVENTGALLERY_EMAILTEMPLATE_SUBJECT"
+        description="COM_EVENTGALLERY_EMAILTEMPLATE_SUBJECT_DESCRIPTION"
+        placeholder="COM_EVENTGALLERY_EMAILTEMPLATE_SUBJECT_PLACEHOLDER"
+        required="false"
+        validate=""
+        class="inputbox table"
+        filter="JComponentHelper::filterText"
+        rows="10"
+        cols="160"
+      />
+
+	  <field name="body"
+       type="textarea"
+       inputtype="text"
+       label="COM_EVENTGALLERY_EMAILTEMPLATE_BODY"
+       description="COM_EVENTGALLERY_EMAILTEMPLATE_BODY_DESCRIPTION"
+       required="false"
+       validate=""
+       class="inputbox table"
+       filter="JComponentHelper::filterText"
+       buttons="true"
+       rows="20"
+       cols="160"
+        />
+
+        <field name="attachments"
+               type="filelist"
+               label="COM_EVENTGALLERY_EMAILTEMPLATE_ATTACHMENT"
+               description="COM_EVENTGALLERY_EMAILTEMPLATE_ATTACHMENT_DESCRIPTION"
+               placeholder="COM_EVENTGALLERY_EMAILTEMPLATE_ATTACHMENT_PLACEHOLDER"
+               preview="false"
+               directory="images"
+               filter="pdf"
+               multiple="true"
+               hide_default="true"
+
+                />
+
+    </fieldset>
+</form>

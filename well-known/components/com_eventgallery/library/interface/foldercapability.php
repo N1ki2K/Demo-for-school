@@ -1,0 +1,42 @@
+<?php
+/**
+ * @package     Sven.Bluege
+ * @subpackage  com_eventgallery
+ *
+ * @copyright   Copyright (C) 2005 - 2013 Sven Bluege All rights reserved.
+ * @license     GNU General Public License version 2 or later; see LICENSE.txt
+ */
+
+defined('_JEXEC') or die;
+
+interface  EventgalleryLibraryInterfaceFoldercapability {
+
+    /**
+     * Defines if a folder is sortable using the back office
+     *
+     * @return boolean
+     */
+    public function isSortable();
+
+    /**
+     * does the folder supports uploads?
+     *
+     * @return boolean
+     */
+    public function supportsFileUpload();
+
+    /**
+     * does the folder supports file deletion?
+     *
+     * @return boolean
+     */
+    public function supportsFileDeletion();
+
+    /**
+     * defines if the folder has files where you can edit meta data.
+     *
+     * @return boolean
+     */
+    public function supportsImageDataEditing();
+
+}

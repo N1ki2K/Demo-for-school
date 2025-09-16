@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<metadata>
+	<layout title="COM_EVENTGALLERY_LAYOUT_CHECKOUT">
+		<message>
+			<![CDATA[COM_EVENTGALLERY_LAYOUT_CHECKOUT_MESSAGE]]>
+		</message>
+	</layout>
+	<!-- Add fields to the request variables for the layout. -->
+	<fields name="request">
+	</fields>
+	<fields name="params">
+	</fields>
+</metadata>

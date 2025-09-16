@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { apiService } from '../../src/services/api';
 import { useNavigationContext } from '../../context/NavigationContext';
+import { useConfirm } from '../../hooks/useConfirm';
+import ConfirmDialog from './ConfirmDialog';
 
 interface MenuItem {
   id: string;
@@ -23,6 +25,7 @@ interface ProjectsMenuManagerTabProps {
 const ProjectsMenuManagerTab: React.FC<ProjectsMenuManagerTabProps> = ({ isActive }) => {
   const { t, getTranslation } = useLanguage();
   const { reloadNavigation } = useNavigationContext();
+  const { confirm, dialogProps } = useConfirm();
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -164,7 +167,15 @@ const ProjectsMenuManagerTab: React.FC<ProjectsMenuManagerTabProps> = ({ isActiv
   };
 
   const handleDeleteItem = async (itemId: string) => {
-    if (!confirm(getTranslation('cms.projectsMenuManager.deleteConfirm', 'Are you sure you want to delete this menu item?'))) {
+    const confirmed = await confirm({
+      title: 'Delete Menu Item',
+      message: getTranslation('cms.projectsMenuManager.deleteConfirm', 'Are you sure you want to delete this menu item?'),
+      confirmText: 'Delete',
+      cancelText: 'Cancel',
+      isDangerous: true
+    });
+
+    if (!confirmed) {
       return;
     }
     
@@ -734,6 +745,8 @@ const ProjectsMenuManagerTab: React.FC<ProjectsMenuManagerTabProps> = ({ isActiv
           </div>
         </div>
       )}
+
+      <ConfirmDialog {...dialogProps} />
     </div>
   );
 };
