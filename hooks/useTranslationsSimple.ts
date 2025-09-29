@@ -989,7 +989,7 @@ export const useTranslationsSimple = (language: string = 'bg') => {
     if (!databaseTranslations[language]) {
       setLoading(true);
       
-      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${language}`)
+      fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/translations?lang=${language}`)
         .then(response => response.json())
         .then(data => {
           databaseTranslations[language] = data;
@@ -1033,7 +1033,7 @@ export const useTranslationsSimple = (language: string = 'bg') => {
     setLoading(true);
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${targetLang}`);
+      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/translations?lang=${targetLang}`);
       const data = await response.json();
       databaseTranslations[targetLang] = data;
       forceUpdate({});

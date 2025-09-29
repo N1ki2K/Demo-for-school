@@ -132,8 +132,8 @@ router.post('/admin', authenticateToken, async (req: AuthRequest, res: Response)
   }
 
   const id = uuidv4();
-  const now = new Date().toISOString();
-  const publishDate = published_date || now;
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL format
+  const publishDate = published_date ? new Date(published_date).toISOString().slice(0, 19).replace('T', ' ') : now;
 
   try {
     await db.execute(
@@ -181,7 +181,7 @@ router.put('/admin/:id', authenticateToken, async (req: AuthRequest, res: Respon
     return res.status(400).json({ error: 'Title and excerpt are required in both languages' });
   }
 
-  const now = new Date().toISOString();
+  const now = new Date().toISOString().slice(0, 19).replace('T', ' '); // Convert to MySQL format
 
   try {
     const [result] = await db.execute(
@@ -193,7 +193,7 @@ router.put('/admin/:id', authenticateToken, async (req: AuthRequest, res: Respon
       [
         title_bg, title_en, excerpt_bg, excerpt_en, content_bg, content_en,
         featured_image_url, featured_image_alt, is_published, is_featured,
-        published_date, now, id
+        published_date ? new Date(published_date).toISOString().slice(0, 19).replace('T', ' ') : published_date, now, id
       ]
     );
 

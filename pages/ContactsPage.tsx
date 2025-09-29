@@ -47,7 +47,6 @@ const ContactsPage: React.FC = () => {
                 {c.phones.title}
             </h3>
             <p><strong>{c.phones.director}:</strong> <EditableText id="director-phone" defaultContent="+359 42 123 456" tag="span" /></p>
-            <p><strong>{c.phones.office}:</strong> <EditableText id="office-phone" defaultContent="+359 42 123 457" tag="span" /></p>
           </div>
           
           <div>

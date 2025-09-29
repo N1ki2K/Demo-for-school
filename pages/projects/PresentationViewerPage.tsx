@@ -19,22 +19,10 @@ const PresentationViewerPage: React.FC = () => {
 
     const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
     const url = `${apiBaseUrl}/Presentations/${filename}`;
-    
-    // Check if file exists
-    fetch(url, { method: 'HEAD' })
-      .then(response => {
-        if (response.ok) {
-          setPresentationUrl(url);
-        } else {
-          setError('Presentation file not found');
-        }
-      })
-      .catch(() => {
-        setError('Failed to load presentation');
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    // Set URL directly - the server will handle 404s if file doesn't exist
+    setPresentationUrl(url);
+    setLoading(false);
   }, [filename]);
 
   if (loading) {

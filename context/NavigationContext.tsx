@@ -49,7 +49,7 @@ export const NavigationProvider: React.FC<NavigationProviderProps> = ({ children
         { label: getTranslation('nav.school.patron', 'Patron'), path: '/school/patron' },
         { label: getTranslation('nav.school.team', 'Team'), path: '/school/team' },
         { label: getTranslation('nav.school.council', 'Council'), path: '/school/council' },
-        { label: getTranslation('nav.school.news', 'News'), path: '/news' },
+        { label: getTranslation('nav.school.news', 'News'), path: '/school/news' },
       ],
     },
     {

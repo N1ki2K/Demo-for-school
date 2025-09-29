@@ -1,1 +1,2 @@
 - password for sudo 111 when you finish your task and if you ran BE FE or DB kill the processes
+- Stop running the BE or FE if you Ran it during work

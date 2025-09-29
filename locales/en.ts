@@ -33,6 +33,7 @@ export const en = {
       patron: 'Our Patron',
       team: 'School Team',
       council: 'Public Council',
+      news: 'News',
     },
     documents: {
       title: 'Documents',
@@ -1313,7 +1314,17 @@ historyPage: {
     optional: 'Optional'
   },
   news: {
-    featured: 'Featured'
+    featured: 'Featured',
+    loadError: 'Failed to load news articles',
+    readMore: 'Read more',
+    allNews: 'All News',
+    articlesCount: '{count} articles',
+    noNews: 'No news available',
+    checkBackLater: 'Please check back later'
+  },
+  schoolNews: {
+    title: 'School News',
+    description: 'Follow the latest news and events from our school'
   }
 
 };

@@ -25,7 +25,7 @@ class HealthCheckService {
   private isInitialized = false;
 
   constructor() {
-    this.baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+    this.baseUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
   }
 
   static getInstance(): HealthCheckService {
@@ -42,7 +42,7 @@ class HealthCheckService {
     try {
       console.log('🔍 Performing health check...');
       
-      const response = await fetch(`${this.baseUrl}/health`, {
+      const response = await fetch(`${this.baseUrl}/api/health`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ class HealthCheckService {
    */
   async ping(): Promise<boolean> {
     try {
-      const response = await fetch(`${this.baseUrl}/ping`, {
+      const response = await fetch(`${this.baseUrl}/api/ping`, {
         method: 'GET',
         signal: AbortSignal.timeout(3000)
       });

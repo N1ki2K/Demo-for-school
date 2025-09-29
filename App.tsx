@@ -13,6 +13,7 @@ import HistoryPage from './pages/school/HistoryPage';
 import PatronPage from './pages/school/PatronPage';
 import TeamPage from './pages/school/TeamPage';
 import CouncilPage from './pages/school/CouncilPage';
+import SchoolNewsPage from './pages/school/SchoolNewsPage';
 import CalendarPage from './pages/documents/CalendarPage';
 import SchedulesPage from './pages/documents/SchedulesPage';
 import BudgetReportsPage from './pages/documents/BudgetReportsPage';
@@ -66,6 +67,7 @@ const App: React.FC = () => {
               <Route path="/school/patron" element={<PatronPage />} />
               <Route path="/school/team" element={<TeamPage />} />
               <Route path="/school/council" element={<CouncilPage />} />
+              <Route path="/school/news" element={<SchoolNewsPage />} />
 
               {/* Документи */}
               <Route path="/documents/calendar" element={<CalendarPage />} />

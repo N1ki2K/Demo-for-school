@@ -369,7 +369,17 @@ export const bg = {
     optional: 'По избор'
   },
   news: {
-    featured: 'Препоръчана'
+    featured: 'Препоръчана',
+    loadError: 'Неуспешно зареждане на новини',
+    readMore: 'Прочети повече',
+    allNews: 'Всички новини',
+    articlesCount: '{count} статии',
+    noNews: 'Няма налични новини',
+    checkBackLater: 'Моля, проверете отново по-късно'
+  },
+  schoolNews: {
+    title: 'Училищни новини',
+    description: 'Следете последните новини и събития от нашето училище'
   },
   header: {
     title: 'ОУ "Кольо Ганчев"',
@@ -405,6 +415,7 @@ export const bg = {
       patron: 'Нашият патрон',
       team: 'Училищен екип',
       council: 'Обществен съвет',
+      news: 'Новини',
     },
     documents: {
       title: 'Документи',

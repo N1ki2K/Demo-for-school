@@ -112,33 +112,8 @@ const HomePage: React.FC = () => {
         setNewsItems(formattedNews);
       } catch (error) {
         console.error('Error loading featured news:', error);
-        // Fallback to static news items if API fails
-        setNewsItems([
-          { 
-            id: 'news-1',
-            title: t.homePage.news.item1.title,
-            date: t.homePage.news.item1.date,
-            excerpt: t.homePage.news.item1.excerpt,
-            link: "/documents/announcement",
-            imageUrl: "https://picsum.photos/400/300?random=2"
-          },
-          { 
-            id: 'news-2',
-            title: t.homePage.news.item2.title,
-            date: t.homePage.news.item2.date,
-            excerpt: t.homePage.news.item2.excerpt,
-            link: "/documents/olympiads",
-            imageUrl: "https://picsum.photos/400/300?random=3"
-          },
-          { 
-            id: 'news-3',
-            title: t.homePage.news.item3.title,
-            date: t.homePage.news.item3.date,
-            excerpt: t.homePage.news.item3.excerpt,
-            link: "/projects/education-for-tomorrow",
-            imageUrl: "https://picsum.photos/400/300?random=4"
-          }
-        ]);
+        // If API fails, set empty array to hide news section
+        setNewsItems([]);
       } finally {
         setIsLoadingNews(false);
       }
@@ -187,25 +162,27 @@ const HomePage: React.FC = () => {
     <div className="bg-gray-50">
       <HeroSection />
 
-      <section className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-          <EditableText
-            id="news-title"
-            defaultContent={getTranslation('homePage.news.title', 'Новини')}
-            tag="h2"
-            className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
-          />
-          {isLoadingNews ? (
-            <div className="flex justify-center items-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
-              {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
-            </div>
-          )}
-        </div>
-      </section>
+      {(isLoadingNews || newsItems.length > 0) && (
+        <section className="py-12 sm:py-16 md:py-24">
+          <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+            <EditableText
+              id="news-title"
+              defaultContent={getTranslation('homePage.news.title', 'Новини')}
+              tag="h2"
+              className="text-2xl sm:text-3xl md:text-4xl font-bold text-center text-brand-blue mb-8 sm:mb-12"
+            />
+            {isLoadingNews ? (
+              <div className="flex justify-center items-center py-12">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue"></div>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+                {newsItems.map((item, index) => <NewsCard key={index} {...item} />)}
+              </div>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="bg-white py-12 sm:py-16 md:py-24">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">

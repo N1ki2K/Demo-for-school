@@ -57,7 +57,11 @@
       "Bash(mysql:*)",
       "Bash(mariadb:*)",
       "Bash(kill:*)",
-      "Bash(timeout 10s npm run dev)"
+      "Bash(timeout 10s npm run dev)",
+      "Bash(lsof:*)",
+      "Bash(awk:*)",
+      "Bash(xargs kill:*)",
+      "Bash(timeout 30 npm run dev)"
     ],
     "deny": [],
     "ask": []

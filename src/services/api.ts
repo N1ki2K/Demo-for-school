@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001/api';
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
 
 class ApiError extends Error {
   constructor(public status: number, message: string) {
@@ -15,7 +15,7 @@ class ApiService {
   }
 
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
-    const url = `${API_BASE_URL}${endpoint}`;
+    const url = `${API_BASE_URL}/api${endpoint}`;
     const headers: HeadersInit = {
       'Content-Type': 'application/json',
       ...options.headers,
@@ -151,7 +151,7 @@ class ApiService {
     const formData = new FormData();
     formData.append('image', file);
 
-    const url = `${API_BASE_URL}/upload/image`;
+    const url = `${API_BASE_URL}/api/upload/image`;
     const headers: HeadersInit = {};
 
     if (this.token) {
@@ -371,7 +371,7 @@ class ApiService {
     const formData = new FormData();
     formData.append('document', file);
 
-    const url = `${API_BASE_URL}/upload/document`;
+    const url = `${API_BASE_URL}/api/upload/document`;
     const headers: HeadersInit = {};
 
     if (this.token) {
@@ -415,7 +415,7 @@ class ApiService {
   async uploadPresentation(file: File): Promise<{ url: string; filename: string; originalName: string; size: number; message: string }> {
     const formData = new FormData();
     formData.append('presentation', file);
-    const url = `${API_BASE_URL}/upload/presentation`;
+    const url = `${API_BASE_URL}/api/upload/presentation`;
     const headers: HeadersInit = {};
     if (this.token) {
       headers.Authorization = `Bearer ${this.token}`;
@@ -449,7 +449,7 @@ class ApiService {
       formData.append('altText', altText);
     }
 
-    const response = await fetch(`${API_BASE_URL}/upload/single`, {
+    const response = await fetch(`${API_BASE_URL}/api/upload/single`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.token}`,
@@ -471,7 +471,7 @@ class ApiService {
       formData.append('files', file);
     });
 
-    const response = await fetch(`${API_BASE_URL}/upload/multiple`, {
+    const response = await fetch(`${API_BASE_URL}/api/upload/multiple`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${this.token}`,

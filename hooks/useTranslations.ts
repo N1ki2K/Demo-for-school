@@ -72,7 +72,7 @@ export const useTranslations = (language: string = 'bg') => {
 
     loadPromise = (async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001/api'}/translations?lang=${lang}`);
+        const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/translations?lang=${lang}`);
         
         if (!response.ok) {
           throw new Error('Failed to load translations');
